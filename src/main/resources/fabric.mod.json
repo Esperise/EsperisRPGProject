@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "esperis",
+  "version": "${version}",
+  "name": "EsperisRPGProject",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/esperis/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.altale.esperis.client.EsperisRPGDataGenerator"
+    ],
+    "client": [
+      "com.altale.esperis.client.EsperisRPGClient"
+    ],
+    "main": [
+      "com.altale.esperis.EsperisRPG"
+    ]
+  },
+  "mixins": [
+    "esperis.mixins.json",
+    {
+      "config": "esperis.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
