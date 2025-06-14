@@ -7,5 +7,6 @@ public class EsperisRPG implements ModInitializer {
     @Override
     public void onInitialize() {
         System.out.println("[EsperisRPG] 모드 초기화 완료!");
+        System.out.println("[EsperisRPG] 모드 초기화 완료!");
     }
 }
