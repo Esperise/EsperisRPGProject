@@ -41,7 +41,7 @@ public class EsperisRPG implements ModInitializer {
                             SoundCategory.PLAYERS,
                             1.0F,
                             1.0F
-    );;
+    );
                     }
                 }
 
