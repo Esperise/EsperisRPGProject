@@ -1,4 +1,6 @@
 package com.altale.esperis;
+import com.altale.esperis.skillTest1.DashLandingHandler;
+import com.altale.esperis.skillTest1.SwordDashHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.block.Block;
@@ -19,6 +21,10 @@ public class EsperisRPG implements ModInitializer {
     private static final Random random = new Random();
     @Override
     public void onInitialize() {
+        SwordDashHandler.register();
+        DashLandingHandler.register();
+
+
         System.out.println("[EsperisRPG] 모드 초기화 완료!");
         System.out.println("[EsperisRPG] 모드 초기화 완료!");
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
