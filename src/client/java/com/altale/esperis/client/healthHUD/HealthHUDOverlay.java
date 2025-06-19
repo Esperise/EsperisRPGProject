@@ -20,7 +20,8 @@ public class HealthHUDOverlay {
             if (client.player != null) {
                 float cur = client.player.getHealth();
                 float max = client.player.getMaxHealth();
-                String disp = String.format("%.0f/%.0f", cur, max);
+                float absorption = client.player.getAbsorptionAmount();
+                String disp = String.format("%.0f/%.0f(+%.0f)", cur, max, absorption);
 
                 OrderedText text = Text.literal(disp).asOrderedText();
                 Matrix4f matrix = matrices.peek().getPositionMatrix();

@@ -3,6 +3,7 @@ package com.altale.esperis.skillTest1;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.particle.ParticleTypes;
@@ -10,6 +11,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
+import org.lwjgl.system.linux.XGenericEvent;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,7 +23,6 @@ public class KnockedAirborne {
 
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
-
             // 1. 지연된 공중 고정 처리
             Iterator<Map.Entry<LivingEntity, Integer>> delayIter = delayedAirborneMap.entrySet().iterator();
             while (delayIter.hasNext()) {
@@ -35,10 +36,10 @@ public class KnockedAirborne {
                 }
 
                 if (ticksLeft <= 0) {
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 30,5));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 50,5));
                     entity.setNoGravity(true);
                     entity.setVelocity(Vec3d.ZERO);
-                    airborneMap.put(entity, 30); // 고정 20틱 등록
+                    airborneMap.put(entity, 50); // 고정 20틱 등록
                     delayIter.remove();
                 } else {
                     delayedAirborneMap.put(entity, ticksLeft);
@@ -61,7 +62,8 @@ public class KnockedAirborne {
                     iterator.remove();
                     continue;
                 }
-
+                float entityHealth = entity.getMaxHealth();
+                entity.damage(entity.getRecentDamageSource(),entityHealth/20);
                 // 파티클
                 if (entity.getWorld() instanceof ServerWorld serverWorld) {
                     Vec3d pos = entity.getPos();
