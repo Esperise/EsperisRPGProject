@@ -21,11 +21,24 @@ public class HealthBarOverlay {
                 // 바 길이 설정
                 int barWidth = 80;
                 int barHeight = 11;
-                int filledWidth = (int)((cur / max) * barWidth);
-                String healthText = String.format("%.0f (+%.0f) / %.0f",cur,aborption,max);
-                // 위치 (왼쪽 아래)
+                int filledWidth = (int)((cur / healthWithAborption) * barWidth);
+                int aborptionBar = (int)((aborption / healthWithAborption) * barWidth);
+
+                String healthText = "";float textX=0;float textY=0;
                 int x = 125;
                 int y = client.getWindow().getScaledHeight() - 41;
+                if(aborption > 0) {
+                    healthText = String.format("%.0f (+%.0f) / %.0f",cur,aborption,max);
+                                textX = x+8;
+                                textY = y+2;
+                }
+                else if(aborption == 0) {
+                    healthText = String.format("%.0f / %.0f",cur,max);
+                    textX = x+18;
+                    textY = y+2;
+                }
+                // 위치 (왼쪽 아래)
+
 
                 // 배경
                 drawContext.fill(x, y, x + barWidth, y + barHeight, 0xFF333333);
@@ -36,13 +49,12 @@ public class HealthBarOverlay {
                 drawContext.fill( x - 1, y - 2, x + barWidth + 1, y + barHeight + 2, 0xFF000000);
 
             drawContext.fill( x, y, x + filledWidth, y +barHeight, 0xFFFF5555);
-
+            drawContext.fill( x+filledWidth, y, x + filledWidth+aborptionBar, y +barHeight, 0xFFFFFFFF);
             // 3. 텍스트 렌더링 (흰색 + 검정 outline)
             TextRenderer renderer = client.textRenderer;
             OrderedText text = Text.literal(healthText).asOrderedText();
 
-            float textX = x+8;
-            float textY = y+2;
+
 
             renderer.drawWithOutline(
                 text,

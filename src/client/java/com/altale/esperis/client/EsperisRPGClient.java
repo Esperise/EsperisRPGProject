@@ -6,7 +6,7 @@ public class EsperisRPGClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        HealthHUDOverlay.register();
+//        HealthHUDOverlay.register();
         LookingEntityHealthHUD.register();
         HealthBarOverlay.register();
     }
