@@ -35,11 +35,9 @@ public class DashLandingHandler {
                             if (entity instanceof LivingEntity living && entity != player) {
                                 DamageSource source = ((ServerWorld) player.getWorld()).getDamageSources().playerAttack(player);
                                 living.damage(source, 0.0f);
-                                living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 70,2));
+                                living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100,1));
                                 Vec3d currentVelocity = entity.getVelocity();
-//                                entity.setVelocity(currentVelocity.x, 1.0f, currentVelocity.z);
-//                                entity.velocityModified = true;
-                                KnockedAirborne.giveKnockedAirborne(entity);
+                                KnockedAirborne.giveKnockedAirborne(entity,player);
                                 player.sendMessage(net.minecraft.text.Text.literal("적 적중시 보호막 획득 및 체력 회복"), true);
 //                                player.addStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 100, 0));
                                 float playerAborptionAmount = player.getAbsorptionAmount();
@@ -52,7 +50,7 @@ public class DashLandingHandler {
                             player.getX(),
                             player.getY(),
                             player.getZ(),
-                            SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP,
+                            SoundEvents.BLOCK_ANVIL_PLACE,
                             SoundCategory.PLAYERS,
                             1.0f,
                             1.0f

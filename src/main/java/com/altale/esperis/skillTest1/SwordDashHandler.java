@@ -29,10 +29,10 @@ public class SwordDashHandler {
                 if (player.getStackInHand(hand).getItem() == Items.DIAMOND_SWORD) {
 
                     Vec3d look = player.getRotationVec(1.0f);
-                    double power = 1.0; // 이동 속도 (넉백 강도)
+                    double power = 2.0; // 이동 속도 (넉백 강도)
 
                     // 수직 이동을 약간 제한
-                    Vec3d velocity = new Vec3d(look.x * power, Math.max(1.0, look.y * power), look.z * power);
+                    Vec3d velocity = new Vec3d(look.x * power, Math.max(0.45, look.y), look.z * power);
                     player.addVelocity(velocity.x, velocity.y, velocity.z);
                     player.velocityModified = true;
                                             ((ServerWorld) player.getWorld()).spawnParticles(

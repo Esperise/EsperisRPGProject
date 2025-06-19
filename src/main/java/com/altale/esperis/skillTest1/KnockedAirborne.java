@@ -1,16 +1,21 @@
 package com.altale.esperis.skillTest1;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Vector3f;
 import org.lwjgl.system.linux.XGenericEvent;
 
 import java.util.HashMap;
@@ -77,24 +82,31 @@ public class KnockedAirborne {
                         ParticleTypes.CRIT,
                         pos.x, pos.y, pos.z,
                         3,
-                        0.5, 0.3, 0.5,
-                        0.01
+                        0.4, 0.3, 0.4,
+                        0.1
                     );
                     serverWorld.spawnParticles(
-                        ParticleTypes.CLOUD,
+                        ParticleTypes.FALLING_DRIPSTONE_LAVA,
                         pos.x, pos.y, pos.z,
-                        1,
-                        0.2, 0.4, 0.2,
-                        0.01
+                        10,
+                        0.5, 0.8, 0.5,
+                        0.3
+                    );
+                    serverWorld.spawnParticles(
+                            new DustParticleEffect(new Vector3f(1.0f, 0.0f, 0.0f),0.5f),
+                        pos.x, pos.y, pos.z,
+                        40,
+                        0.6, 0.8, 0.6,
+                        0.1
                     );
                     entity.getWorld().playSound(
                             null,
                             entity.getX(),
                             entity.getY(),
                             entity.getZ(),
-                            SoundEvents.ENTITY_ARROW_HIT,
+                            SoundEvents.BLOCK_GLASS_BREAK,
                             SoundCategory.PLAYERS,
-                            0.5f,
+                            1.4f,
                             1.0f
 
                     );
@@ -102,6 +114,39 @@ public class KnockedAirborne {
 
                 if (ticksLeft <= 0) {
                     entity.setNoGravity(false);
+                    if (entity.getWorld() instanceof ServerWorld serverWorld) {
+                        Vec3d pos = entity.getPos();
+                        serverWorld.spawnParticles(
+                                ParticleTypes.FALLING_DRIPSTONE_LAVA,
+                                pos.x, pos.y, pos.z,
+                                300,
+                                0.7, 0.75, 0.7,
+                                0.1
+                        );
+                        serverWorld.spawnParticles(
+                                new DustParticleEffect(new Vector3f(1.0f, 0.0f, 0.0f),0.5f),
+                                pos.x, pos.y, pos.z,
+                                2000,
+                                1.0, 0.7, 1.0,
+                                0.01
+                        );}
+
+                    entity.getWorld().playSound(
+                            null,
+                            entity.getX(),
+                            entity.getY(),
+                            entity.getZ(),
+                            SoundEvents.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
+                            SoundCategory.PLAYERS,
+                            1.4f,
+                            1.0f
+
+                    );
+                    float entityMaxHealth = entity.getMaxHealth();
+                    float lostHealth = entityMaxHealth -entity.getHealth();
+                    float entityLossHealthCoefficient = (float) ((lostHealth / entityMaxHealth)*1.5 +1);
+//                    System.out.println(max(8.0f *entityLossHealthCoefficient,(entityMaxHealth*entityLossHealthCoefficient/10)));
+                    entity.damage(entity.getRecentDamageSource(),max(8.0f *entityLossHealthCoefficient,(entityMaxHealth*entityLossHealthCoefficient/10)));
                     iterator.remove();
                 } else {
                     airborneMap.put(entity, ticksLeft);
@@ -110,7 +155,7 @@ public class KnockedAirborne {
         });
     }
 
-    public static void giveKnockedAirborne(Entity entity) {
+    public static void giveKnockedAirborne(Entity entity, ServerPlayerEntity player) {
         if (!(entity instanceof LivingEntity living)) return;
 
         // 1. 위로 띄우기만 하고 고정은 지연시킴
