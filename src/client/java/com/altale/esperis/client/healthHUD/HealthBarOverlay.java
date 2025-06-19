@@ -20,12 +20,12 @@ public class HealthBarOverlay {
 
                 // 바 길이 설정
                 int barWidth = 80;
-                int barHeight = 7;
+                int barHeight = 10;
                 int filledWidth = (int)((cur / max) * barWidth);
                 String healthText = String.format("%.0f (+%.0f) / %.0f",cur,aborption,max);
                 // 위치 (왼쪽 아래)
                 int x = 125;
-                int y = client.getWindow().getScaledHeight() - 45;
+                int y = client.getWindow().getScaledHeight() - 38;
 
                 // 배경
                 drawContext.fill(x, y, x + barWidth, y + barHeight, 0xFF333333);
@@ -42,7 +42,7 @@ public class HealthBarOverlay {
             OrderedText text = Text.literal(healthText).asOrderedText();
 
             float textX = x+5;
-            float textY = y+2;
+            float textY = y;
 
             renderer.drawWithOutline(
                 text,

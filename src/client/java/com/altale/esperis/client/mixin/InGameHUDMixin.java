@@ -29,4 +29,10 @@ public class InGameHUDMixin {
             CallbackInfo ci) {
         ci.cancel();
     }
+    @Inject(method = "renderStatusBars", at = @At("HEAD"), cancellable = true)
+    private void cancelStatusBars(DrawContext context, CallbackInfo ci) {
+        ci.cancel(); // 체력, 방어구, 공기 등 상태바 전체 제거
+    }
+
 }
+
