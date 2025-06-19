@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static java.lang.Math.max;
+
 public class KnockedAirborne {
     private static final Map<LivingEntity, Integer> airborneMap = new HashMap<>();
     private static final Map<LivingEntity, Integer> delayedAirborneMap = new HashMap<>();
@@ -53,6 +55,11 @@ public class KnockedAirborne {
                 LivingEntity entity = entry.getKey();
                 int ticksLeft = entry.getValue() - 1;
                 if (ticksLeft > 0) {
+                    entity.timeUntilRegen=8;
+                    entity.hurtTime=8;
+                    float entityHealth = entity.getMaxHealth();
+                    entity.damage(entity.getRecentDamageSource(),max(0.15f,entityHealth/500));
+
                     entity.setVelocity(Vec3d.ZERO); // 외부 넉백 무효화
                     entity.velocityModified = true;
                     entity.setNoGravity(true);
@@ -62,8 +69,7 @@ public class KnockedAirborne {
                     iterator.remove();
                     continue;
                 }
-                float entityHealth = entity.getMaxHealth();
-                entity.damage(entity.getRecentDamageSource(),entityHealth/20);
+
                 // 파티클
                 if (entity.getWorld() instanceof ServerWorld serverWorld) {
                     Vec3d pos = entity.getPos();
