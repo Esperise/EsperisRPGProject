@@ -1,6 +1,7 @@
 package com.altale.esperis;
 import com.altale.esperis.skillTest1.DashLandingHandler;
 import com.altale.esperis.skillTest1.SwordDashHandler;
+import com.altale.esperis.skillTest1.KnockedAirborne;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.block.Block;
@@ -23,6 +24,7 @@ public class EsperisRPG implements ModInitializer {
     public void onInitialize() {
         SwordDashHandler.register();
         DashLandingHandler.register();
+        KnockedAirborne.register();
 
 
         System.out.println("[EsperisRPG] 모드 초기화 완료!");

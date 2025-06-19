@@ -1,4 +1,5 @@
 package com.altale.esperis.skillTest1;
+import com.altale.esperis.skillTest1.KnockedAirborne;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.mixin.event.lifecycle.LivingEntityMixin;
 import net.minecraft.entity.Entity;
@@ -36,8 +37,9 @@ public class DashLandingHandler {
                                 living.damage(source, 6.0f);
                                 living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 70,2));
                                 Vec3d currentVelocity = entity.getVelocity();
-                                entity.setVelocity(currentVelocity.x, 1.0f, currentVelocity.z);
-                                entity.velocityModified = true;
+//                                entity.setVelocity(currentVelocity.x, 1.0f, currentVelocity.z);
+//                                entity.velocityModified = true;
+                                KnockedAirborne.giveKnockedAirborne(entity);
                                 player.sendMessage(net.minecraft.text.Text.literal("적 적중시 보호막 획득 및 체력 회복"), true);
                                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 100, 0));
                                 player.heal(0.5f);
