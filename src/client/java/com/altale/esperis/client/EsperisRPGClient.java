@@ -5,6 +5,7 @@ import com.altale.esperis.client.healthHUD.*;
 import com.altale.esperis.client.packet.AbsorptionSyncReceiver;
 import com.altale.esperis.serverSide.packet.AbsorptionSyncS2CPacket;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class EsperisRPGClient implements ClientModInitializer {
 
@@ -15,5 +16,6 @@ public class EsperisRPGClient implements ClientModInitializer {
         HealthBarOverlay.register();
         AbsorptionSyncReceiver.register();
         AbsorptionCacheCleaner.register();
+
     }
 }

@@ -1,4 +1,5 @@
 package com.altale.esperis;
+import com.altale.esperis.serverSide.TickHandler;
 import com.altale.esperis.skillTest1.DashLandingHandler;
 import com.altale.esperis.skillTest1.SwordDashHandler;
 import com.altale.esperis.skillTest1.KnockedAirborne;
@@ -17,6 +18,7 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.world.tick.Tick;
 
 public class EsperisRPG implements ModInitializer {
     private static final Random random = new Random();
@@ -25,6 +27,7 @@ public class EsperisRPG implements ModInitializer {
         SwordDashHandler.register();
         DashLandingHandler.register();
         KnockedAirborne.register();
+        TickHandler.register();
 
 
         System.out.println("[EsperisRPG] 모드 초기화 완료!");

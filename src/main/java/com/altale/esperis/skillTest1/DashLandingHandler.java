@@ -34,12 +34,8 @@ public class DashLandingHandler {
                                 DamageSource source = ((ServerWorld) player.getWorld()).getDamageSources().playerAttack(player);
                                 living.damage(source, 0.0f);
                                 living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100,1));
+                                living.setAbsorptionAmount(4.0f);
 
-//                                if(entity instanceof CustomAbsorptionAccessor accessor){
-//                                    accessor.setCustomAbsorption(5.0f);
-//                                    living.setAbsorptionAmount(5.0f);
-//                                }
-//                                living.setCustomAbsorption(5.0f);
                                 Vec3d currentVelocity = entity.getVelocity();
                                 KnockedAirborne.giveKnockedAirborne(entity,player);
                                 player.sendMessage(net.minecraft.text.Text.literal("적 적중시 보호막 획득 및 체력 회복"), true);

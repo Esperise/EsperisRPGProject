@@ -14,6 +14,7 @@ public class AbsorptionCache {
     }
 
     public static float getAbsorption(LivingEntity entity) {
+//        System.out.println(absorptionMap);
         return absorptionMap.getOrDefault(entity.getId(), 0f);
     }
     public static Set<Integer> getAllIds() {

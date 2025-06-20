@@ -14,5 +14,8 @@ public class AbsorptionSyncS2CPacket {
         buf.writeFloat(absorption);
 
         ServerPlayNetworking.send(player, ID, buf);
+//            System.out.println(player);
+//            System.out.println(ID);
+//            System.out.println(buf);
     }
 }
