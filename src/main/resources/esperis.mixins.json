@@ -1,15 +1,15 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.altale.esperis.client.mixin",
+  "package": "com.altale.esperis.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "InGameHUDMixin"
+
   ]
 }

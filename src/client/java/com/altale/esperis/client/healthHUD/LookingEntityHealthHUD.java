@@ -2,6 +2,8 @@ package com.altale.esperis.client.healthHUD;
 // com.altale.esperis.client.LookingEntityHealthHUD.java
 
 
+import com.altale.esperis.accessor.CustomAbsorptionAccessor;
+import com.altale.esperis.client.cache.AbsorptionCache;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -9,14 +11,13 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.OrderedText;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class LookingEntityHealthHUD {
             double closestDist = maxDistance;
 
             for (Entity entity : entities) {
-                Box entityBox = entity.getBoundingBox().expand(0.3);
+                Box entityBox = entity.getBoundingBox().expand(1.3);
                 Vec3d intersection = entityBox.raycast(cameraPos, end).orElse(null);
 
                 if (intersection != null) {
@@ -57,28 +58,35 @@ public class LookingEntityHealthHUD {
             }
 
             if (closestEntity != null) {
+
+
+//                if( closestEntity instanceof CustomAbsorptionAccessor accessor) {
+//                    absorption=accessor.getCustomAbsorption();
+//                }
                 float cur = closestEntity.getHealth();
                 float max = closestEntity.getMaxHealth();
-                float absorption = closestEntity.getAbsorptionAmount();
+                float absorption = AbsorptionCache.getAbsorption(closestEntity);
+                System.out.println(absorption);
                 float hpWithAbsorption = max + absorption;
-                String disp = String.format("%.0f/%.0f", cur, max);
                 int barWidth = 240;
-                int barHeight = 20;
-                int hpBar= (int)((cur/hpWithAbsorption)*160);
-                int aborptionBar = (int)((absorption/hpWithAbsorption)*160);
+                int barHeight = 9;
+                int hpBar= (int)((cur/hpWithAbsorption)*barWidth);
+                int aborptionBar = (int)((absorption/hpWithAbsorption)*barHeight);
                 int barLocateX= client.getWindow().getScaledWidth()/2- barWidth/2;
-                int barLocateY=  barHeight+4;
+                int barLocateY=  barHeight/3;
                 String healthText=""; float textX = 0; float textY = 0;
                 if(aborptionBar>0){
                     healthText= String.format("%.0f (+%.0f) / %.0f",cur,absorption,max);
-                    textX= barLocateX+ 20;
-                    textY= barLocateY+4;
+                    textX= barLocateX+ 10;
+                    textY= barLocateY;
+                    System.out.println(aborptionBar);
                 }
                 else if(aborptionBar==0){
                     healthText = String.format("%.0f / %.0f",cur,max);
-                    textX = barLocateX+20;
-                    textY = barLocateY+4;
+                    textX = barLocateX+10;
+                    textY = barLocateY;
                 }
+                ctx.fill(barLocateX-1,barLocateY-1,barLocateX+barWidth+1,barLocateY+barHeight+1,0x55FFFFFF);
                 ctx.fill(barLocateX,barLocateY,barLocateX+barWidth,barLocateY+barHeight,0xFF000000);
 
                 ctx.fill(barLocateX,barLocateY,barLocateX+hpBar+1,barLocateY+barHeight,0xFFFF3333);
