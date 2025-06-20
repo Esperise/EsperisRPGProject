@@ -4,6 +4,7 @@ package com.altale.esperis.client.healthHUD;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -58,23 +59,59 @@ public class LookingEntityHealthHUD {
             if (closestEntity != null) {
                 float cur = closestEntity.getHealth();
                 float max = closestEntity.getMaxHealth();
+                float absorption = closestEntity.getAbsorptionAmount();
+                float hpWithAbsorption = max + absorption;
                 String disp = String.format("%.0f/%.0f", cur, max);
+                int barWidth = 240;
+                int barHeight = 20;
+                int hpBar= (int)((cur/hpWithAbsorption)*160);
+                int aborptionBar = (int)((absorption/hpWithAbsorption)*160);
+                int barLocateX= client.getWindow().getScaledWidth()/2- barWidth/2;
+                int barLocateY=  barHeight+4;
+                String healthText=""; float textX = 0; float textY = 0;
+                if(aborptionBar>0){
+                    healthText= String.format("%.0f (+%.0f) / %.0f",cur,absorption,max);
+                    textX= barLocateX+ 20;
+                    textY= barLocateY+4;
+                }
+                else if(aborptionBar==0){
+                    healthText = String.format("%.0f / %.0f",cur,max);
+                    textX = barLocateX+20;
+                    textY = barLocateY+4;
+                }
+                ctx.fill(barLocateX,barLocateY,barLocateX+barWidth,barLocateY+barHeight,0xFF000000);
+
+                ctx.fill(barLocateX,barLocateY,barLocateX+hpBar+1,barLocateY+barHeight,0xFFFF3333);
+
+                ctx.fill(barLocateX+hpBar+1 ,barLocateY,barLocateX+hpBar+1+aborptionBar,barLocateY+barHeight,0xFFFFFFFF);
+                TextRenderer renderer = client.textRenderer;
+                OrderedText text = Text.literal(healthText).asOrderedText();
 
                 MatrixStack matrices = ctx.getMatrices();
-                OrderedText text = Text.literal(disp).asOrderedText();
-                var matrix = matrices.peek().getPositionMatrix();
-                var consumers = ctx.getVertexConsumers();
-                int light = 15728880;
-
-                client.textRenderer.drawWithOutline(
-                    text,
-                    10f, 30f,
-                    0xFF5555,
-                    0x000000,
-                    matrix,
-                    consumers,
-                    light
+                renderer.drawWithOutline(
+                        text,
+                        textX,
+                        textY,
+                        0xFFFFFF,
+                        0x000000,
+                        matrices.peek().getPositionMatrix(),
+                        ctx.getVertexConsumers(),
+                        15728880
                 );
+//                OrderedText text = Text.literal(disp).asOrderedText();
+//                var matrix = matrices.peek().getPositionMatrix();
+//                var consumers = ctx.getVertexConsumers();
+//                int light = 15728880;
+//
+//                client.textRenderer.drawWithOutline(
+//                    text,
+//                    10f, 30f,
+//                    0xFF5555,
+//                    0x000000,
+//                    matrix,
+//                    consumers,
+//                    light
+//                );
             }
         });
     }
