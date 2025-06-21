@@ -81,21 +81,21 @@ public class KnockedAirborne {
                     serverWorld.spawnParticles(
                         ParticleTypes.CRIT,
                         pos.x, pos.y, pos.z,
-                        3,
-                        0.4, 0.3, 0.4,
+                        2,
+                        0.8, 1.0, 0.8,
                         0.1
                     );
                     serverWorld.spawnParticles(
                         ParticleTypes.FALLING_DRIPSTONE_LAVA,
                         pos.x, pos.y, pos.z,
-                        10,
+                        5,
                         0.5, 0.8, 0.5,
                         0.3
                     );
                     serverWorld.spawnParticles(
                             new DustParticleEffect(new Vector3f(1.0f, 0.0f, 0.0f),0.5f),
                         pos.x, pos.y, pos.z,
-                        40,
+                        20,
                         0.6, 0.8, 0.6,
                         0.1
                     );
@@ -114,19 +114,24 @@ public class KnockedAirborne {
 
                 if (ticksLeft <= 0) {
                     entity.setNoGravity(false);
+                    float entityMaxHealth = entity.getMaxHealth();
+                    float lostHealth = entityMaxHealth -entity.getHealth();
+                    float entityLossHealthCoefficient = (float) ((lostHealth / entityMaxHealth)*1.5 +1);
+//                    System.out.println(max(8.0f *entityLossHealthCoefficient,(entityMaxHealth*entityLossHealthCoefficient/10)));
+                    entity.damage(entity.getRecentDamageSource(),max(8.0f *entityLossHealthCoefficient,(entityMaxHealth*entityLossHealthCoefficient/10)));
                     if (entity.getWorld() instanceof ServerWorld serverWorld) {
                         Vec3d pos = entity.getPos();
                         serverWorld.spawnParticles(
                                 ParticleTypes.FALLING_DRIPSTONE_LAVA,
                                 pos.x, pos.y, pos.z,
-                                300,
+                                (int)(12*((lostHealth / entityMaxHealth)*30 +1)),
                                 0.7, 0.75, 0.7,
                                 0.1
                         );
                         serverWorld.spawnParticles(
                                 new DustParticleEffect(new Vector3f(1.0f, 0.0f, 0.0f),0.5f),
                                 pos.x, pos.y, pos.z,
-                                2000,
+                                (int)(150*((lostHealth / entityMaxHealth)*30 +1)),
                                 1.0, 0.7, 1.0,
                                 0.01
                         );}
@@ -142,11 +147,7 @@ public class KnockedAirborne {
                             1.0f
 
                     );
-                    float entityMaxHealth = entity.getMaxHealth();
-                    float lostHealth = entityMaxHealth -entity.getHealth();
-                    float entityLossHealthCoefficient = (float) ((lostHealth / entityMaxHealth)*1.5 +1);
-//                    System.out.println(max(8.0f *entityLossHealthCoefficient,(entityMaxHealth*entityLossHealthCoefficient/10)));
-                    entity.damage(entity.getRecentDamageSource(),max(8.0f *entityLossHealthCoefficient,(entityMaxHealth*entityLossHealthCoefficient/10)));
+
                     iterator.remove();
                 } else {
                     airborneMap.put(entity, ticksLeft);

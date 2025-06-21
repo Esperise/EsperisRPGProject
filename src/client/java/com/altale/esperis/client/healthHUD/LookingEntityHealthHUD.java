@@ -87,7 +87,7 @@ public class LookingEntityHealthHUD {
                 float max = closestEntity.getMaxHealth();
                 float absorption = AbsorptionCache.getAbsorption(closestEntity);
                 float hpWithAbsorption = max + absorption;
-                int barWidth = 100;
+                int barWidth = client.getWindow().getScaledWidth()/3;
                 int barHeight = 9;
 //                int hpDiffBar = (int)((hpDiff/hpWithAbsorption)*barWidth);
                 int hpBar= (int)((cur/hpWithAbsorption)*barWidth);

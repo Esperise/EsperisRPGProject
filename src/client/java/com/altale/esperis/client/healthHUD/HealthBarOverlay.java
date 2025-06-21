@@ -19,22 +19,22 @@ public class HealthBarOverlay {
                 float healthWithAbsorption = max+absorption;
 
                 // 바 길이 설정
-                int barWidth = 80;
-                int barHeight = 11;
+                int barWidth = 82;
+                int barHeight = 12;
                 int filledWidth = (int)((cur / healthWithAbsorption) * barWidth);
                 int absorptionBar = (int)((absorption / healthWithAbsorption) * barWidth);
 
                 String healthText = "";float textX=0;float textY=0;
                 int x = client.getWindow().getScaledWidth()/2 -barWidth -8;
-                int y = client.getWindow().getScaledHeight() - 41;
+                int y = client.getWindow().getScaledHeight() - 43;
                 if(absorption > 0) {
-                    healthText = String.format("%.0f (+%.0f) / %.0f",cur,absorption,max);
-                                textX = x+8;
+                    healthText = String.format("%.0f(+%.0f)/%.0f",cur,absorption,max);
+                                textX = x+2;
                                 textY = y+2;
                 }
                 else if(absorption == 0) {
                     healthText = String.format("%.0f / %.0f",cur,max);
-                    textX = x+18;
+                    textX = x+20;
                     textY = y+2;
                 }
                 // 위치 (왼쪽 아래)
