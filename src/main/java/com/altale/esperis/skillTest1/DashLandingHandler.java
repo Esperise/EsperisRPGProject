@@ -32,9 +32,10 @@ public class DashLandingHandler {
                         for (Entity entity : nearby) {
                             if (entity instanceof LivingEntity living && entity != player) {
                                 DamageSource source = ((ServerWorld) player.getWorld()).getDamageSources().playerAttack(player);
-                                living.damage(source, 0.0f);
+                                living.damage(source, 1.0f);
                                 living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100,1));
-                                living.setAbsorptionAmount(4.0f);
+                                float livingAbsorption = living.getAbsorptionAmount();
+                                living.setAbsorptionAmount(livingAbsorption+6.0f);
 
                                 Vec3d currentVelocity = entity.getVelocity();
                                 KnockedAirborne.giveKnockedAirborne(entity,player);

@@ -5,6 +5,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.particle.BlockStateParticleEffect;
@@ -28,6 +30,7 @@ public class KnockedAirborne {
     private static final Map<LivingEntity, Integer> airborneMap = new HashMap<>();
     private static final Map<LivingEntity, Integer> delayedAirborneMap = new HashMap<>();
 
+
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             // 1. 지연된 공중 고정 처리
@@ -43,10 +46,10 @@ public class KnockedAirborne {
                 }
 
                 if (ticksLeft <= 0) {
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 50,5));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60,4));
                     entity.setNoGravity(true);
                     entity.setVelocity(Vec3d.ZERO);
-                    airborneMap.put(entity, 50); // 고정 20틱 등록
+                    airborneMap.put(entity, 60); // 고정 20틱 등록
                     delayIter.remove();
                 } else {
                     delayedAirborneMap.put(entity, ticksLeft);
@@ -60,10 +63,16 @@ public class KnockedAirborne {
                 LivingEntity entity = entry.getKey();
                 int ticksLeft = entry.getValue() - 1;
                 if (ticksLeft > 0) {
-                    entity.timeUntilRegen=8;
-                    entity.hurtTime=8;
-                    float entityHealth = entity.getMaxHealth();
-                    entity.damage(entity.getRecentDamageSource(),max(0.15f,entityHealth/500));
+                    entity.setVelocity(Vec3d.ZERO);
+                    if(ticksLeft%4==0){
+                        entity.setVelocity(Vec3d.ZERO);
+                        entity.timeUntilRegen=8;
+                        entity.hurtTime=8;
+                        float entityHealth = entity.getMaxHealth();
+                        DamageSource source = entity.getWorld().getDamageSources().generic();
+                        entity.damage(source,max(0.15f,entityHealth/500));
+                    }
+
 
                     entity.setVelocity(Vec3d.ZERO); // 외부 넉백 무효화
                     entity.velocityModified = true;
@@ -165,6 +174,7 @@ public class KnockedAirborne {
 
         // 0.5초 후 고정
         delayedAirborneMap.put(living, 10);
+        ServerPlayerEntity damageSourcePlayer = player;
     }
 }
 
