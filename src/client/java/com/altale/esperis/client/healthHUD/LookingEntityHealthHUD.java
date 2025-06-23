@@ -127,9 +127,9 @@ public class LookingEntityHealthHUD {
                 float hpWithAbsorption = max + absorption;
                 int barWidth = client.getWindow().getScaledWidth()/3;
                 int barHeight = 9;
-                int hpDiffBar = (int)((hpDiff/hpWithAbsorption)*barWidth);
-                int hpBar= (int)((cur/hpWithAbsorption)*barWidth);
-                int absorptionBar = (int)((absorption/hpWithAbsorption)*barWidth);
+                int hpDiffBar = (int)((hpDiff/(hpWithAbsorption+hpDiff))*barWidth);
+                int hpBar= (int)((cur/(hpWithAbsorption+hpDiff))*barWidth);
+                int absorptionBar = (int)((absorption/(hpWithAbsorption+hpDiff))*barWidth);
 //                int barLocateX= client.getWindow().getScaledWidth()/2- barWidth/2;
                 int barLocateX= 7;
                 int barLocateY=  barHeight/2;
