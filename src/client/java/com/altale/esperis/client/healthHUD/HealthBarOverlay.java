@@ -48,8 +48,8 @@ public class HealthBarOverlay {
                 }
                 beforeHpMap.put(client.player, curPlusAbsorption);
                 hpDiffMap.put(client.player, hpDiff);
-                System.out.println("hpDiffMap.get(player): "+hpDiffMap.get(client.player));
-                System.out.println("hpDiffTemp: "+hpDiffTemp);
+//                System.out.println("hpDiffMap.get(player): "+hpDiffMap.get(client.player));
+//                System.out.println("hpDiffTemp: "+hpDiffTemp);
                 hpDiffTimeMap.putIfAbsent(client.player, hpDiffCurrentTime+30);//보는 즉시 그 대상이 Map에 없으면 1초 생성 계속셈
                 long hpTime= hpDiffTimeMap.get(client.player);//hpTime: hp 변동 초기화 하는 시간
                 if(beforeHp != curPlusAbsorption) {//보호막에 피해시에도  추가 지속

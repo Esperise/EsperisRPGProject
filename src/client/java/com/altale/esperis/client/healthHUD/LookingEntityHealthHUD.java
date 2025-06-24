@@ -86,7 +86,7 @@ public class LookingEntityHealthHUD {
                     hpDiffTemp=hpDiff;
                     hpDiffAbs= beforeHp- curPlusAbsorption;
 
-                    System.out.println("hpDiff: "+ hpDiff);
+//                    System.out.println("hpDiff: "+ hpDiff);
                     if(curPlusAbsorption < beforeHp) {
                         hpDiff= hpDiff+ (beforeHp- curPlusAbsorption);
                     }
@@ -96,21 +96,21 @@ public class LookingEntityHealthHUD {
                 }
                 beforeHpMap.put(closestEntity, curPlusAbsorption);
                 hpDiffMap.put(closestEntity, hpDiff);
-                System.out.println("hpDiffMap.get(closestEntity): "+hpDiffMap.get(closestEntity));
-                System.out.println("hpDiffTemp: "+hpDiffTemp);
+//                System.out.println("hpDiffMap.get(closestEntity): "+hpDiffMap.get(closestEntity));
+//                System.out.println("hpDiffTemp: "+hpDiffTemp);
                 long hpDiffCurrentTime= closestEntity.getWorld().getTime();
                 hpDiffTimeMap.putIfAbsent(closestEntity, hpDiffCurrentTime+20);//보는 즉시 그 대상이 Map에 없으면 1초 생성 계속셈
                 long hpTime= hpDiffTimeMap.get(closestEntity);//hpTime: hp 변동 초기화 하는 시간
                 if(hpDiffTemp != hpDiffMap.get(closestEntity)) {
-                    hpDiffTimeMap.put(closestEntity, max(hpTime+3,hpDiffCurrentTime+6));//남은 시간에 따라 0.3초 혹은 0.5초 증가
+                    hpDiffTimeMap.put(closestEntity, max(hpTime+1,hpDiffCurrentTime+2));//남은 시간에 따라 0.3초 혹은 0.5초 증가
                 }
                 else if(beforeHp != curPlusAbsorption) {//보호막에 피해시에도  추가 지속
-                    hpDiffTimeMap.put(closestEntity, max(hpTime+3,hpDiffCurrentTime+6));
+                    hpDiffTimeMap.put(closestEntity, max(hpTime+1,hpDiffCurrentTime+2));
                 }
 
-                System.out.println("hpDiffCurrentTime: "+hpDiffCurrentTime);
-                System.out.println("현재 hpDiffTimeMap 값: "+hpDiffTimeMap.get(closestEntity));
-                System.out.println(hpDiffTimeMap.get(closestEntity)- hpDiffCurrentTime);
+//                System.out.println("hpDiffCurrentTime: "+hpDiffCurrentTime);
+//                System.out.println("현재 hpDiffTimeMap 값: "+hpDiffTimeMap.get(closestEntity));
+//                System.out.println(hpDiffTimeMap.get(closestEntity)- hpDiffCurrentTime);
 
                 if(hpDiffTimeMap.get(closestEntity)-hpDiffCurrentTime <=0 ){
                     System.out.println("time <=0 -> Map clear");

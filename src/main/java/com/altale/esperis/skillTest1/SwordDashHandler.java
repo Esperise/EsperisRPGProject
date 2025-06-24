@@ -1,5 +1,6 @@
 package com.altale.esperis.skillTest1;
 import com.altale.esperis.skillTest1.PlayerFallHandler;
+import com.altale.esperis.skills.DotDamage;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.entity.Entity;
@@ -52,9 +53,12 @@ public class SwordDashHandler {
 
                     );
                     for (Entity entity : world.getOtherEntities(player, player.getBoundingBox().expand(3.0))) {
-                        if (entity instanceof LivingEntity && entity != player) {
+                        if (entity instanceof LivingEntity living && entity != player) {
                             DamageSource source = ((ServerWorld) world).getDamageSources().playerAttack(player);
-                            ((LivingEntity) entity).damage(source, 4.0f); // 10 데미지
+//                            living.damage(source, 4.0f); // 10 데미지
+                            DotDamage.giveDotDamage(living, player, 40, 2, 10F);
+
+
                         }
                     }
                     PlayerFallHandler.enableIgnoreFall(player);

@@ -1,5 +1,4 @@
-package com.altale.esperis.skillTest1;
-
+package com.altale.esperis.skills;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -26,7 +25,7 @@ import java.util.Map;
 
 import static java.lang.Math.max;
 
-public class KnockedAirborne {
+public class KnockedAirborneVer2 {
     private static final Map<LivingEntity, Integer> airborneMap = new HashMap<>();
     private static final Map<LivingEntity, Integer> delayedAirborneMap = new HashMap<>();
 
@@ -64,16 +63,6 @@ public class KnockedAirborne {
                 int ticksLeft = entry.getValue() - 1;
                 if (ticksLeft > 0) {
                     entity.setVelocity(Vec3d.ZERO);
-                    if(ticksLeft%4==0){
-                        entity.setVelocity(Vec3d.ZERO);
-                        entity.timeUntilRegen=8;
-                        entity.hurtTime=8;
-                        float entityHealth = entity.getMaxHealth();
-                        DamageSource source = entity.getWorld().getDamageSources().generic();
-                        entity.damage(source,max(0.15f,entityHealth/500));
-                    }
-
-
                     entity.setVelocity(Vec3d.ZERO); // 외부 넉백 무효화
                     entity.velocityModified = true;
                     entity.setNoGravity(true);
@@ -85,78 +74,32 @@ public class KnockedAirborne {
                 }
 
                 // 파티클
-                if (entity.getWorld() instanceof ServerWorld serverWorld) {
-                    Vec3d pos = entity.getPos();
-                    serverWorld.spawnParticles(
-                        ParticleTypes.CRIT,
-                        pos.x, pos.y, pos.z,
-                        2,
-                        0.8, 1.0, 0.8,
-                        0.1
-                    );
-                    serverWorld.spawnParticles(
-                        ParticleTypes.FALLING_DRIPSTONE_LAVA,
-                        pos.x, pos.y, pos.z,
-                        5,
-                        0.5, 0.8, 0.5,
-                        0.3
-                    );
-                    serverWorld.spawnParticles(
-                            new DustParticleEffect(new Vector3f(1.0f, 0.0f, 0.0f),0.5f),
-                        pos.x, pos.y, pos.z,
-                        20,
-                        0.6, 0.8, 0.6,
-                        0.1
-                    );
-                    entity.getWorld().playSound(
-                            null,
-                            entity.getX(),
-                            entity.getY(),
-                            entity.getZ(),
-                            SoundEvents.BLOCK_GLASS_BREAK,
-                            SoundCategory.PLAYERS,
-                            1.4f,
-                            1.0f
+                if(ticksLeft % 5 ==0){
+                    if (entity.getWorld() instanceof ServerWorld serverWorld) {
+                        Vec3d pos = entity.getPos();
+                        serverWorld.spawnParticles(
+                                ParticleTypes.CLOUD,
+                                pos.x, pos.y, pos.z,
+                                8,
+                                0.8, 0.2, 0.8,
+                                0.1
+                        );
+                        entity.getWorld().playSound(
+                                null,
+                                entity.getX(),
+                                entity.getY(),
+                                entity.getZ(),
+                                SoundEvents.ENTITY_ILLUSIONER_PREPARE_BLINDNESS,
+                                SoundCategory.PLAYERS,
+                                1.0f,
+                                0.6f
 
-                    );
+                        );
+                    }
                 }
 
                 if (ticksLeft <= 0) {
                     entity.setNoGravity(false);
-                    float entityMaxHealth = entity.getMaxHealth();
-                    float lostHealth = entityMaxHealth -entity.getHealth();
-                    float entityLossHealthCoefficient = (float) ((lostHealth / entityMaxHealth)*1.5 +1);
-//                    System.out.println(max(8.0f *entityLossHealthCoefficient,(entityMaxHealth*entityLossHealthCoefficient/10)));
-                    entity.damage(entity.getRecentDamageSource(),max(8.0f *entityLossHealthCoefficient,(entityMaxHealth*entityLossHealthCoefficient/10)));
-                    if (entity.getWorld() instanceof ServerWorld serverWorld) {
-                        Vec3d pos = entity.getPos();
-                        serverWorld.spawnParticles(
-                                ParticleTypes.FALLING_DRIPSTONE_LAVA,
-                                pos.x, pos.y, pos.z,
-                                (int)(12*((lostHealth / entityMaxHealth)*30 +1)),
-                                0.7, 0.75, 0.7,
-                                0.1
-                        );
-                        serverWorld.spawnParticles(
-                                new DustParticleEffect(new Vector3f(1.0f, 0.0f, 0.0f),0.5f),
-                                pos.x, pos.y, pos.z,
-                                (int)(150*((lostHealth / entityMaxHealth)*30 +1)),
-                                1.0, 0.7, 1.0,
-                                0.01
-                        );}
-
-                    entity.getWorld().playSound(
-                            null,
-                            entity.getX(),
-                            entity.getY(),
-                            entity.getZ(),
-                            SoundEvents.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
-                            SoundCategory.PLAYERS,
-                            1.4f,
-                            1.0f
-
-                    );
-
                     iterator.remove();
                 } else {
                     airborneMap.put(entity, ticksLeft);
@@ -165,7 +108,7 @@ public class KnockedAirborne {
         });
     }
 
-    public static void giveKnockedAirborne(Entity entity, ServerPlayerEntity player) {
+    public static void giveKnockedAirborneVer2(Entity entity, ServerPlayerEntity player) {
         if (!(entity instanceof LivingEntity living)) return;
 
         // 1. 위로 띄우기만 하고 고정은 지연시킴
@@ -177,4 +120,5 @@ public class KnockedAirborne {
         ServerPlayerEntity damageSourcePlayer = player;
     }
 }
+
 

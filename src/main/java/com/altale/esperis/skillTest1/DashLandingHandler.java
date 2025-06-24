@@ -1,5 +1,7 @@
 package com.altale.esperis.skillTest1;
 import com.altale.esperis.accessor.CustomAbsorptionAccessor;
+import com.altale.esperis.skills.DotDamage;
+import com.altale.esperis.skills.KnockedAirborneVer2;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -35,15 +37,16 @@ public class DashLandingHandler {
                                 living.damage(source, 1.0f);
                                 living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100,1));
                                 float livingAbsorption = living.getAbsorptionAmount();
-                                living.setAbsorptionAmount(livingAbsorption+6.0f);
+//                                living.setAbsorptionAmount(livingAbsorption+6.0f);
 
                                 Vec3d currentVelocity = entity.getVelocity();
-                                KnockedAirborne.giveKnockedAirborne(entity,player);
+                                KnockedAirborneVer2.giveKnockedAirborneVer2(entity,player);
+//                                DotDamage.giveDotDamage(living, player, 40,2,0.1F);
                                 player.sendMessage(net.minecraft.text.Text.literal("적 적중시 보호막 획득 및 체력 회복"), true);
-//                                player.addStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 100, 0));
                                 float playerAborptionAmount = player.getAbsorptionAmount();
                                 player.setAbsorptionAmount(playerAborptionAmount+1.0f);
-                                player.heal(1.0f);
+                                player.heal(2.0f);
+
                             }
                         }
                     player.getWorld().playSound(
