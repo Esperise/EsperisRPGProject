@@ -1,4 +1,5 @@
 package com.altale.esperis.skillTest1;
+import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.DotTypeVer2;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
@@ -20,8 +21,8 @@ public class SwordDashHandler {
             // 서버에서만 처리
             if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
                 // 다이아몬드 검일 경우
-                if (player.getStackInHand(hand).getItem() == Items.DIAMOND_SWORD) {
-
+                if (player.getStackInHand(hand).getItem() == Items.DIAMOND_SWORD && !CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, "sword_dash")) {
+                    CoolTimeManager.setCoolTime((ServerPlayerEntity) player,"sword_dash",200);
                     Vec3d look = player.getRotationVec(1.0f);
                     double power = 2.0; // 이동 속도 (넉백 강도)
 
@@ -63,6 +64,11 @@ public class SwordDashHandler {
 
                     return TypedActionResult.success(player.getStackInHand(hand));
                 }
+                else if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, "sword_dash")) {
+                    CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "sword_dash");
+                }
+
+
             }
 
             return TypedActionResult.pass(player.getStackInHand(hand));

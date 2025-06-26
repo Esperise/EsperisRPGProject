@@ -43,7 +43,7 @@ public class KnockedAirborneVer2 {
                 }
 
                 if (ticksLeft <= 0) {
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60,4));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, Duration.duration,4));
                     entity.setNoGravity(true);
                     entity.setVelocity(Vec3d.ZERO);
                     airborneMap.put(entity, Duration.duration); // 고정 20틱 등록

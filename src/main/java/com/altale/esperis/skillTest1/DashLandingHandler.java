@@ -38,7 +38,7 @@ public class DashLandingHandler {
 //                                living.setAbsorptionAmount(livingAbsorption+6.0f);
 
                                 Vec3d currentVelocity = entity.getVelocity();
-                                KnockedAirborneVer2.giveKnockedAirborneVer2(entity,player,200);
+                                KnockedAirborneVer2.giveKnockedAirborneVer2(entity,player,20);
 //                                DotDamage.giveDotDamage(living, player, 40,2,0.1F);
                                 player.sendMessage(net.minecraft.text.Text.literal("적 적중시 보호막 획득 및 체력 회복"), true);
                                 float playerAborptionAmount = player.getAbsorptionAmount();
