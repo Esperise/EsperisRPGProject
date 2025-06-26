@@ -113,7 +113,7 @@ public class LookingEntityHealthHUD {
 //                System.out.println(hpDiffTimeMap.get(closestEntity)- hpDiffCurrentTime);
 
                 if(hpDiffTimeMap.get(closestEntity)-hpDiffCurrentTime <=0 ){
-                    System.out.println("time <=0 -> Map clear");
+//                    System.out.println("time <=0 -> Map clear");
                     beforeHpMap.clear();
                     hpDiffMap.clear();
                     hpDiffTimeMap.clear();

@@ -56,7 +56,7 @@ public class HealthBarOverlay {
                     hpDiffTimeMap.put(client.player, max(hpTime+3,hpDiffCurrentTime+10));
                 }
                 if(hpDiffTimeMap.get(client.player)-hpDiffCurrentTime <=0 ){
-                    System.out.println("time <=0 -> Map clear");
+//                    System.out.println("time <=0 -> Map clear");
                     beforeHpMap.clear();
                     hpDiffMap.clear();
                     hpDiffTimeMap.clear();

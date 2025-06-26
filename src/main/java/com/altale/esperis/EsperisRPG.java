@@ -2,9 +2,11 @@ package com.altale.esperis;
 import com.altale.esperis.serverSide.TickHandler;
 import com.altale.esperis.skillTest1.DashLandingHandler;
 import com.altale.esperis.skillTest1.SwordDashHandler;
-import com.altale.esperis.skillTest1.KnockedAirborne;
-import com.altale.esperis.skills.DotDamage;
-import com.altale.esperis.skills.KnockedAirborneVer2;
+import com.altale.esperis.skills.debuff.DotDamageVer2;
+import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
+import com.altale.esperis.skills.lukStatSkill.DobleStep;
+import com.altale.esperis.skills.test1;
+import com.altale.esperis.skills.coolTime.CoolTimeTickManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.block.Block;
@@ -15,12 +17,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.Random;
-import net.fabricmc.api.ModInitializer;
-import net.minecraft.world.tick.Tick;
 
 public class EsperisRPG implements ModInitializer {
     private static final Random random = new Random();
@@ -30,8 +28,12 @@ public class EsperisRPG implements ModInitializer {
         DashLandingHandler.register();
 //        KnockedAirborne.register();
         TickHandler.register();
-        DotDamage.register();
+//        DotDamage.register();
+        DotDamageVer2.register();
         KnockedAirborneVer2.register();
+        DobleStep.register();
+        test1.register();
+        CoolTimeTickManager.register();
 
 
         System.out.println("[EsperisRPG] 모드 초기화 완료!");

@@ -20,7 +20,7 @@ public class TickHandler {
                 count = 0;
                 //0.5초 마다 서버에서 실행할 거 기술
                 for (ServerPlayerEntity player :world.getPlayers()){
-                    Entity targetEntity= GetEntityLookingAt.getEntityLookingAt(player, 17);
+                    Entity targetEntity= GetEntityLookingAt.getEntityLookingAt(player, 17, 1.3);
                     if(targetEntity instanceof LivingEntity living){
                         float targetEntityAbsorption= living.getAbsorptionAmount();
                         AbsorptionSyncS2CPacket.send(player, living.getId(), targetEntityAbsorption);

@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import java.util.List;
 
 public class GetEntityLookingAt {
-    public static Entity getEntityLookingAt(ServerPlayerEntity player, double maxDistance) {
+    public static Entity getEntityLookingAt(ServerPlayerEntity player, double maxDistance, double width) {
         Vec3d playerCameraPos= player.getCameraPosVec(1.0F);
         Vec3d playerLookVec = player.getRotationVec(1.0F);
         Vec3d end= playerCameraPos.add(playerLookVec.multiply(maxDistance));
@@ -21,7 +21,7 @@ public class GetEntityLookingAt {
             double closestDist = maxDistance;
 
             for (Entity entity : entities) {
-                Box entityBox = entity.getBoundingBox().expand(1.3);
+                Box entityBox = entity.getBoundingBox().expand(width);
                 Vec3d intersection = entityBox.raycast(playerCameraPos, end).orElse(null);
 
                 if (intersection != null) {

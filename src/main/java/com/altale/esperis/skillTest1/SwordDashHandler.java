@@ -1,25 +1,18 @@
 package com.altale.esperis.skillTest1;
-import com.altale.esperis.skillTest1.PlayerFallHandler;
-import com.altale.esperis.skills.DotDamage;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import com.altale.esperis.skills.debuff.DotDamageVer2;
+import com.altale.esperis.skills.debuff.DotTypeVer2;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.world.World;
-
-import java.util.List;
 
 public class SwordDashHandler {
     public static void register() {
@@ -56,7 +49,7 @@ public class SwordDashHandler {
                         if (entity instanceof LivingEntity living && entity != player) {
                             DamageSource source = ((ServerWorld) world).getDamageSources().playerAttack(player);
 //                            living.damage(source, 4.0f); // 10 데미지
-                            DotDamage.giveDotDamage(living, player, 40, 2, 10F);
+                            DotDamageVer2.giveDotDamage(living, player, 40, 2, 10F, DotTypeVer2.Bleed,true,"swordDash");
 
 
                         }

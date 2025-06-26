@@ -1,23 +1,15 @@
-package com.altale.esperis.skills;
+package com.altale.esperis.skills.debuff;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Vector3f;
-import org.lwjgl.system.linux.XGenericEvent;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,6 +18,12 @@ import java.util.Map;
 import static java.lang.Math.max;
 
 public class KnockedAirborneVer2 {
+    static class Duration{
+        static int duration;
+        Duration(int duration){
+            this.duration = duration;
+        }
+    }
     private static final Map<LivingEntity, Integer> airborneMap = new HashMap<>();
     private static final Map<LivingEntity, Integer> delayedAirborneMap = new HashMap<>();
 
@@ -48,7 +46,7 @@ public class KnockedAirborneVer2 {
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60,4));
                     entity.setNoGravity(true);
                     entity.setVelocity(Vec3d.ZERO);
-                    airborneMap.put(entity, 60); // 고정 20틱 등록
+                    airborneMap.put(entity, Duration.duration); // 고정 20틱 등록
                     delayIter.remove();
                 } else {
                     delayedAirborneMap.put(entity, ticksLeft);
@@ -108,7 +106,7 @@ public class KnockedAirborneVer2 {
         });
     }
 
-    public static void giveKnockedAirborneVer2(Entity entity, ServerPlayerEntity player) {
+    public static void giveKnockedAirborneVer2(Entity entity, ServerPlayerEntity player, int duration) {
         if (!(entity instanceof LivingEntity living)) return;
 
         // 1. 위로 띄우기만 하고 고정은 지연시킴
@@ -117,7 +115,7 @@ public class KnockedAirborneVer2 {
 
         // 0.5초 후 고정
         delayedAirborneMap.put(living, 3);
-        ServerPlayerEntity damageSourcePlayer = player;
+        Duration airBorneDuration = new Duration(duration);
     }
 }
 
