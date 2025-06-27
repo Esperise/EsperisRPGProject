@@ -162,7 +162,7 @@ public class DobleStep {
             living.velocityModified = true;
             // 출혈 DOT
             DotDamageVer2.giveDotDamage(living, player, 10, 5, 5.0F, DotTypeVer2.Bleed, false, "doubleStep");
-            CoolTimeManager.allCoolTimeReduction(player, 20);
+            CoolTimeManager.allCoolTimePercentReduction(player, 10);
         }
         else{
             for (Entity e : world.getOtherEntities(player, box)) {

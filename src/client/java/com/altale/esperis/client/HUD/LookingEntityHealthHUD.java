@@ -1,4 +1,4 @@
-package com.altale.esperis.client.healthHUD;
+package com.altale.esperis.client.HUD;
 // com.altale.esperis.client.LookingEntityHealthHUD.java
 
 
@@ -17,7 +17,6 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
-import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

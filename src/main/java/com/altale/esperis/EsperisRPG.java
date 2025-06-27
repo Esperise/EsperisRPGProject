@@ -1,5 +1,6 @@
 package com.altale.esperis;
 import com.altale.esperis.serverSide.TickHandler;
+import com.altale.esperis.serverSide.packet.CoolTimeS2CPacket;
 import com.altale.esperis.skillTest1.DashLandingHandler;
 import com.altale.esperis.skillTest1.SwordDashHandler;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
@@ -26,14 +27,13 @@ public class EsperisRPG implements ModInitializer {
     public void onInitialize() {
         SwordDashHandler.register();
         DashLandingHandler.register();
-//        KnockedAirborne.register();
         TickHandler.register();
-//        DotDamage.register();
         DotDamageVer2.register();
         KnockedAirborneVer2.register();
         DobleStep.register();
         test1.register();
         CoolTimeTickManager.register();
+
 
 
         System.out.println("[EsperisRPG] 모드 초기화 완료!");

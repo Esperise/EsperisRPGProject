@@ -1,5 +1,6 @@
 package com.altale.esperis.skills;
 
+import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.DotTypeVer2;
 import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
@@ -29,10 +30,13 @@ public class test1 {
     public static void register() {
         // 1) UseItem 이벤트에서 즉시 효과 + 10틱 뒤 스케줄 등록
         UseItemCallback.EVENT.register((player, world, hand) -> {
-            if (!world.isClient && player.getStackInHand(hand).getItem() == Items.WOODEN_SWORD) {
+            if (!world.isClient && player.getStackInHand(hand).getItem() == Items.WOODEN_SWORD && !CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, "test1")) {
+
+
                 ServerWorld serverWorld = (ServerWorld) world;
                 long now = world.getTime();
-
+                String a= String.format("test%d",now);
+                CoolTimeManager.setCoolTime((ServerPlayerEntity) player, a, 10000);
                 // 즉시 효과 실행
                 doStepEffect((ServerPlayerEntity) player, serverWorld);
 

@@ -1,4 +1,4 @@
-package com.altale.esperis.client.healthHUD;
+package com.altale.esperis.client.HUD;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
@@ -13,7 +13,6 @@ import java.util.Map;
 
 import static java.lang.Long.max;
 import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
 
 public class HealthBarOverlay {
     private static final Map<LivingEntity, Float> beforeHpMap = new HashMap<>();
