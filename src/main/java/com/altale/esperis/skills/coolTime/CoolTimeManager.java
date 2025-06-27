@@ -10,12 +10,13 @@ import static java.lang.Math.max;
 public class CoolTimeManager {
     //                 <unique id, <skill id,coolTime(Tick)>>
     private static final Map<UUID, Map<String, Integer>> coolTimeMap = new HashMap<>();
-
+    private static final Map<UUID, Map<String,  Integer>> recentCoolTimeReducedMap = new HashMap<>();
     //쿨타임 설정
     public static void setCoolTime(ServerPlayerEntity player, String skillId, int coolTimeTick) {
         coolTimeMap.computeIfAbsent(player.getUuid(), u -> new HashMap<>())
                 .put(skillId, coolTimeTick);
-
+        recentCoolTimeReducedMap.computeIfAbsent(player.getUuid(), u -> new HashMap<>())
+                .put(skillId, 0);
     }
     //player의 스킬(skillId)쿨타임 여부: 쿨이면 true , 아니면 false
     public static boolean isOnCoolTime(ServerPlayerEntity player, String skillId) {
@@ -35,6 +36,8 @@ public class CoolTimeManager {
     public static void allCoolTimePercentReduction(ServerPlayerEntity player, double coolTimeReductionPercent) {
         Map<String, Integer> playerCoolTimeMap = coolTimeMap.getOrDefault(player.getUuid(), Collections.emptyMap());
         playerCoolTimeMap.replaceAll((skillId, coolTimeTick)-> (int) ((1-(coolTimeReductionPercent/100))*coolTimeTick));
+        Map<String, Integer> recentCoolTimeReduced = recentCoolTimeReducedMap.getOrDefault(player.getUuid(), Collections.emptyMap());
+        recentCoolTimeReduced.replaceAll((skillId, recentTick)-> 10);
 //        String text = String.format("모든 스킬 쿨타임 %.1f 감소", coolTimeReductionPercent);
 //        player.sendMessage(net.minecraft.text.Text.literal(text), true);
     }
@@ -74,7 +77,9 @@ public class CoolTimeManager {
         for(Map<String, Integer> playerCoolTime : coolTimeMap.values()) {
             playerCoolTime.replaceAll((skillId, coolTimeTick)-> max(coolTimeTick-1,0));
         }
-
+        for(Map<String, Integer> recentCoolTimeReduced : recentCoolTimeReducedMap.values()) {
+            recentCoolTimeReduced.replaceAll((skillId, coolTimeTick)-> max(coolTimeTick-1,0));
+        }
 
     }
     public static String coolTimeText(ServerPlayerEntity player){
@@ -82,9 +87,24 @@ public class CoolTimeManager {
         StringBuilder coolTimeText = new StringBuilder();
         UUID playerUuid = player.getUuid();
         Map<String, Integer> playerCoolTimeMap = coolTimeMap.getOrDefault(playerUuid, Collections.emptyMap());
+        Map<String, Integer> recentCoolTimeReduced = recentCoolTimeReducedMap.getOrDefault(player.getUuid(), Collections.emptyMap());
+        Iterator<Map.Entry<String, Integer>> iterator = recentCoolTimeReduced.entrySet().iterator();
         List<Map.Entry<String, Integer>> sortedEntries = new ArrayList<>(playerCoolTimeMap.entrySet());
         sortedEntries.sort(Comparator.comparingInt(Map.Entry::getValue));
         for(Map.Entry<String, Integer> entry : sortedEntries) {
+            if(iterator.hasNext()){
+                Map.Entry<String, Integer> next = iterator.next();
+                if(next.getKey().equals(entry.getKey())){
+                    String skillID= entry.getKey();
+                    double coolTimeTick= entry.getValue()/20.0;
+                    if(coolTimeTick>0) {
+                        String textTemp= String.format("%s: %.1f초\n", skillID, coolTimeTick);
+                        coolTimeText.append(textTemp);
+                        count+=1;
+                        continue;
+                    }
+                }
+            }
             if(count<5){
                 String skillID= entry.getKey();
                 double coolTimeTick= entry.getValue()/20.0;
