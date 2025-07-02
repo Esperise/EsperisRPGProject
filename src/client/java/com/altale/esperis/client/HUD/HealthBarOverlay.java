@@ -61,7 +61,7 @@ public class HealthBarOverlay {
                     hpDiffTimeMap.clear();
                 }
                 // 바 길이 설정
-                int barWidth = 82;
+                int barWidth = 80;
                 int barHeight = 12;
                 int filledWidth = (int) ceil((cur / healthWithAbsorption) * barWidth);
                 int absorptionBar = (int)((absorption / healthWithAbsorption) * barWidth);
@@ -73,8 +73,8 @@ public class HealthBarOverlay {
                 }
 
                 String healthText = "";float textX=0;float textY=0;
-                int x = client.getWindow().getScaledWidth()/2 -barWidth -8;
-                int y = client.getWindow().getScaledHeight() - 43;
+                int x = client.getWindow().getScaledWidth()/2 -barWidth -9;
+                int y = client.getWindow().getScaledHeight() - 36;
                 if(absorption > 0) {
                     healthText = String.format("%.0f(+%.0f)/%.0f",cur,absorption,max);
                                 textX = x+2;

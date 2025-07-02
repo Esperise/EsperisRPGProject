@@ -36,7 +36,7 @@ public class test1 {
                 ServerWorld serverWorld = (ServerWorld) world;
                 long now = world.getTime();
                 String a= String.format("test%d",now);
-                CoolTimeManager.setCoolTime((ServerPlayerEntity) player, a, 10000);
+                CoolTimeManager.setCoolTime((ServerPlayerEntity) player, a, (int) (100000* Math.random()));
                 // 즉시 효과 실행
                 doStepEffect((ServerPlayerEntity) player, serverWorld);
 

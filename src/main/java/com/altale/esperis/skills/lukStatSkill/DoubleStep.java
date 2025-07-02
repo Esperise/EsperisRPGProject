@@ -1,6 +1,7 @@
 package com.altale.esperis.skills.lukStatSkill;
 
 import com.altale.esperis.serverSide.GetEntityLookingAt;
+import com.altale.esperis.skills.buff.AbsorptionBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.DotTypeVer2;
@@ -11,12 +12,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.Items;
 import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -24,10 +23,50 @@ import org.joml.Vector3f;
 
 import java.util.*;
 
-public class DobleStep {
+public class DoubleStep {
     // World별, 실행할 시간 → 실행 로직(Runnable) 맵
     private static final Map<ServerWorld, Map<UUID, Map<Long, Runnable>>> delayedTasks = new HashMap<>();
+    public static void doubleStepCommand(ServerPlayerEntity player, ServerWorld world1) {
+        // 효과는 기존 doStepEffect() 내용
+        ServerWorld serverWorld = (ServerWorld) world1;
+        long now = world1.getTime();
 
+        if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player,"double_step")){
+            CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "double_step");
+        }
+        else{
+            CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "double_step", 150);
+
+            // 즉시 효과 실행
+            doStepEffect((ServerPlayerEntity) player, serverWorld);
+            int skillLevel=1;
+
+            // 10틱(0.5초) 뒤에 다시 실행되도록 스케줄
+            for(long trig=now; trig<=now+(2*skillLevel); trig+=2){
+                delayedTasks
+                        .computeIfAbsent(serverWorld, w -> new HashMap<>())
+                        .computeIfAbsent(player.getUuid(), u -> new HashMap<>())
+                        .put(trig, () -> doStepEffect((ServerPlayerEntity) player, serverWorld));
+            }
+        }
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            for (ServerWorld world : server.getWorlds()) {
+                Map<UUID, Map<Long, Runnable>> UuidTasks = delayedTasks.get(world);
+                if (UuidTasks == null) continue;
+                else{
+                    for (Map.Entry<UUID, Map<Long, Runnable>> uuidEntry : UuidTasks.entrySet()) {
+                        Map<Long, Runnable> taskMap = uuidEntry.getValue();
+                        long t = world.getTime();
+                        Runnable task = taskMap.remove(t);
+                        if (task != null) task.run();
+                        if (UuidTasks.isEmpty()) delayedTasks.remove(world);
+                    }
+
+                }
+
+            }
+        });
+    }
     public static void register() {
         // 1) UseItem 이벤트에서 즉시 효과 + 10틱 뒤 스케줄 등록
         UseItemCallback.EVENT.register((player, world, hand) -> {
@@ -35,11 +74,11 @@ public class DobleStep {
                 ServerWorld serverWorld = (ServerWorld) world;
                 long now = world.getTime();
 
-                if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player,"double_step")){
-                    CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "double_step");
+                if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player,"double_step_rc")){
+                    CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "double_step_rc");
                 }
                 else{
-                    CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "double_step", 100);
+                    CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "double_step_rc", 100);
 
                     // 즉시 효과 실행
                     doStepEffect((ServerPlayerEntity) player, serverWorld);
@@ -86,13 +125,13 @@ public class DobleStep {
 
     // 이펙트 + 데미지 + 출혈 DOT 주는 로직을 메서드로 분리
     private static void doStepEffect(ServerPlayerEntity player, ServerWorld world) {
-
+        AbsorptionBuff.giveAbsorptionBuff(world,player, "double_step", 10 , 200);
         Vec3d eye = player.getCameraPosVec(1.0F);
         Vec3d dir = player.getRotationVec(1.0F).normalize();
 
 // 횡방향: dir × up
         Vec3d lateral = dir.crossProduct(new Vec3d(0, 1, 0)).normalize();
-        double randint= Math.random()*2 +1;
+        double randint= Math.random()*2 ;
         double sideOffset = randint;
         double randint2 = randint;
         if(new Random().nextBoolean()) {
@@ -107,7 +146,7 @@ public class DobleStep {
 
         Vec3d offsetEye = eye.add(lateral.multiply(sideOffset));
 
-        for (double d = 0; d <= 8.0; d += 0.05) {
+        for (double d = 0; d <= 5.0; d += 0.05) {
             if(d<1.25){
                 Vec3d pos = offsetEye.add(dir.multiply(d));
                 world.spawnParticles(new DustParticleEffect(new Vector3f(0.0f, 0.0f, 0.0f),0.5f), pos.x, pos.y+(randint2/2), pos.z, 25, 0, 0.175, 0, 0);
@@ -119,7 +158,7 @@ public class DobleStep {
 
             else {
                 Vec3d pos = offsetEye.add(dir.multiply(d));
-                world.spawnParticles(new DustParticleEffect(new Vector3f(1.0f, 1.0f, 1.0f),0.5f), pos.x, pos.y+(randint2/2), pos.z, 40, 0, 0.25-(d/30), 0, 0);
+                world.spawnParticles(new DustParticleEffect(new Vector3f(1.0f, 1.0f, 1.0f),0.5f), pos.x, pos.y+(randint2/2), pos.z, 40, 0, 0.251-(d/20), 0, 0);
             }
         }
         player.getWorld().playSound(
@@ -137,7 +176,7 @@ public class DobleStep {
 
 
         // 사거리 7짜리 박스로 주변 엔티티 처리
-        Box box = player.getBoundingBox().stretch(dir.multiply(6.0F+randint)).expand(randint, 0.5, randint);
+        Box box = player.getBoundingBox().stretch(dir.multiply(2.0F+randint)).expand(randint, 0.5, randint);
         int entityCount =0;
         Entity entity =GetEntityLookingAt.getEntityLookingAt(player, 6.0F+randint, randint);
         if(entity != null){
@@ -161,11 +200,13 @@ public class DobleStep {
             living.setVelocity(Vec3d.ZERO);
             living.velocityModified = true;
             // 출혈 DOT
-            DotDamageVer2.giveDotDamage(living, player, 10, 5, 5.0F, DotTypeVer2.Bleed, false, "doubleStep");
-            CoolTimeManager.allCoolTimePercentReduction(player, 10);
+            DotDamageVer2.giveDotDamage(living, player, 60, 10, 5.0F, DotTypeVer2.Bleed, false, "doubleStep");
+//            CoolTimeManager.allCoolTimePercentReduction(player, 30);
         }
         else{
-            for (Entity e : world.getOtherEntities(player, box)) {
+            Box box2 = player.getBoundingBox().stretch(dir.multiply(2.5F)).expand(randint, 0.5, randint);
+
+            for (Entity e : world.getOtherEntities(player, box2)) {
                 if (!(e instanceof LivingEntity)) continue;
                 entityCount++;
                 if(entityCount >=2) {
@@ -193,8 +234,12 @@ public class DobleStep {
                 living.velocityModified = true;
                 // 출혈 DOT
                 DotDamageVer2.giveDotDamage(living, player, 10, 5, 5.0F, DotTypeVer2.Bleed, false, "doubleStep");
-                CoolTimeManager.specificCoolTimePercentReduction(player, "double_step", 25);
+                if(world.getOtherEntities(player, box).isEmpty()){
+
+                }
             }
+//            CoolTimeManager.specificCoolTimeReduction(player, "double_step", 40);
+
         }
 
     }
