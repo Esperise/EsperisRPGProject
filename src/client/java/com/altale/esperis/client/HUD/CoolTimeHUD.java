@@ -30,7 +30,7 @@ public class CoolTimeHUD {
                     OrderedText text = Text.literal(coolTime).asOrderedText();
                     client.textRenderer.drawWithOutline(
                             text,
-                            20f, (float) (client.getWindow().getScaledHeight() - (9.0*(i+1))),
+                            13f, (float) (client.getWindow().getScaledHeight() - (9.0*(i+1))),
                             0xFFFFFF,
                             0x000000,
                             matrix,

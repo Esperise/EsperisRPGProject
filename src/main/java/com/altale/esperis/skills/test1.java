@@ -108,7 +108,7 @@ public class test1 {
             // 즉시 데미지
             DamageSource src = world.getDamageSources().playerAttack(player);
             living.damage(src, living.getMaxHealth()/7);
-            KnockedAirborneVer2.giveKnockedAirborneVer2(living, player, 60);
+            KnockedAirborneVer2.giveKnockedAirborneVer2(living, player, 60,5);
             // 출혈 DOT
 
         }

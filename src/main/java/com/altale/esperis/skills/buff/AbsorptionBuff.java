@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 
 import java.util.*;
 
@@ -98,12 +100,16 @@ public class AbsorptionBuff {
                     uuidLivingEntityMap.get(uuid).setAbsorptionAmount(totalAmount);
                     LivingEntity entity = uuidLivingEntityMap.get(uuid);
                     ServerWorld world= (ServerWorld) entity.getWorld();
-                    DrawCircle.spawnSphereAroundBarrier(entity, world,16,1f,1f,1f,0.15f,1);//계속 나오는게 얘임
+                    DrawCircle.spawnSphereAroundBarrier(entity, world,24,1f,1f,1f,0.15f,1);//계속 나오는게 얘임
                 }
                 if(totalAmount==0){
+                    LivingEntity entity = uuidLivingEntityMap.get(uuid);
+                    ServerWorld world= (ServerWorld) entity.getWorld();
+                    world.playSound(null,entity.getX(),entity.getY(),entity.getZ(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS,5.0f,1.0f);
                     outerIter.remove();//uuid 아래 모든 skillId-data삭제
                     uuidLivingEntityMap.remove(uuid);
                     beforeAbsorptionBuffAmount.remove(uuid);
+
                 }
             }
 

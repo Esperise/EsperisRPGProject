@@ -21,7 +21,7 @@ public class KnockedAirborneVer2 {
     static class Duration{
         static int duration;
         Duration(int duration){
-            this.duration = duration;
+            Duration.duration = duration;
         }
     }
     private static final Map<LivingEntity, Integer> airborneMap = new HashMap<>();
@@ -43,7 +43,7 @@ public class KnockedAirborneVer2 {
                 }
 
                 if (ticksLeft <= 0) {
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, Duration.duration,4));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, Duration.duration,5));
                     entity.setNoGravity(true);
                     entity.setVelocity(Vec3d.ZERO);
                     airborneMap.put(entity, Duration.duration); // 고정 20틱 등록
@@ -106,15 +106,15 @@ public class KnockedAirborneVer2 {
         });
     }
 
-    public static void giveKnockedAirborneVer2(Entity entity, ServerPlayerEntity player, int duration) {
+    public static void giveKnockedAirborneVer2(Entity entity, ServerPlayerEntity player, int duration, int delay) {
         if (!(entity instanceof LivingEntity living)) return;
 
         // 1. 위로 띄우기만 하고 고정은 지연시킴
-        living.setVelocity(new Vec3d(0, 1.7, 0));
+        living.setVelocity(new Vec3d(0, 1.0, 0));
         living.velocityModified = true;
 
         // 0.5초 후 고정
-        delayedAirborneMap.put(living, 3);
+        delayedAirborneMap.put(living, delay);
         Duration airBorneDuration = new Duration(duration);
     }
 }

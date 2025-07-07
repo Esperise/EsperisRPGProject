@@ -35,7 +35,7 @@ public class DoubleStep {
             CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "double_step");
         }
         else{
-            CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "double_step", 150);
+            CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "double_step", 50);
 
             // 즉시 효과 실행
             doStepEffect((ServerPlayerEntity) player, serverWorld);
@@ -84,7 +84,7 @@ public class DoubleStep {
                     doStepEffect((ServerPlayerEntity) player, serverWorld);
 
                     // 10틱(0.5초) 뒤에 다시 실행되도록 스케줄
-                    for(long trig=now; trig<=now+4; trig+=2){
+                    for(long trig=now; trig<=now+8; trig+=2){
                         delayedTasks
                                 .computeIfAbsent(serverWorld, w -> new HashMap<>())
                                 .computeIfAbsent(player.getUuid(), u -> new HashMap<>())
@@ -125,7 +125,8 @@ public class DoubleStep {
 
     // 이펙트 + 데미지 + 출혈 DOT 주는 로직을 메서드로 분리
     private static void doStepEffect(ServerPlayerEntity player, ServerWorld world) {
-        AbsorptionBuff.giveAbsorptionBuff(world,player, "double_step", 10 , 200);
+        AbsorptionBuff.giveAbsorptionBuff(world,player, "double_step", 10 , 100);
+
         Vec3d eye = player.getCameraPosVec(1.0F);
         Vec3d dir = player.getRotationVec(1.0F).normalize();
 
@@ -181,6 +182,11 @@ public class DoubleStep {
         Entity entity =GetEntityLookingAt.getEntityLookingAt(player, 6.0F+randint, randint);
         if(entity != null){
             LivingEntity living = (LivingEntity) entity;
+            float entityAbsorption = living.getAbsorptionAmount();
+            float barrierAdditionalDamage=0;
+            if(entityAbsorption>0){
+                barrierAdditionalDamage=living.getAbsorptionAmount()/5;
+            }
             // 즉시 데미지
             living.getWorld().playSound(
                     null,
@@ -200,8 +206,8 @@ public class DoubleStep {
             living.setVelocity(Vec3d.ZERO);
             living.velocityModified = true;
             // 출혈 DOT
-            DotDamageVer2.giveDotDamage(living, player, 60, 10, 5.0F, DotTypeVer2.Bleed, false, "doubleStep");
-//            CoolTimeManager.allCoolTimePercentReduction(player, 30);
+            DotDamageVer2.giveDotDamage(living, player, 150, 15, 20.0F+barrierAdditionalDamage, DotTypeVer2.Bleed, true,0.1f, "doubleStep");
+            CoolTimeManager. specificCoolTimeReduction(player, "triple_jump",20);
         }
         else{
             Box box2 = player.getBoundingBox().stretch(dir.multiply(2.5F)).expand(randint, 0.5, randint);
@@ -233,7 +239,7 @@ public class DoubleStep {
                 living.setVelocity(Vec3d.ZERO);
                 living.velocityModified = true;
                 // 출혈 DOT
-                DotDamageVer2.giveDotDamage(living, player, 10, 5, 5.0F, DotTypeVer2.Bleed, false, "doubleStep");
+                DotDamageVer2.giveDotDamage(living, player, 20, 4, 15.0F, DotTypeVer2.Bleed, "doubleStep");
                 if(world.getOtherEntities(player, box).isEmpty()){
 
                 }

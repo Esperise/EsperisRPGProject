@@ -1,4 +1,6 @@
 package com.altale.esperis.skillTest1;
+import com.altale.esperis.skills.buff.AbsorptionBuff;
+import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
@@ -33,17 +35,15 @@ public class DashLandingHandler {
                             if (entity instanceof LivingEntity living && entity != player) {
                                 DamageSource source = ((ServerWorld) player.getWorld()).getDamageSources().playerAttack(player);
                                 living.damage(source, 1.0f);
+                                DotDamageVer2.instantDotDamage(living, player, 0);
                                 living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS,  100,1));
-                                float livingAbsorption = living.getAbsorptionAmount();
-//                                living.setAbsorptionAmount(livingAbsorption+6.0f);
+//                                AbsorptionBuff.giveAbsorptionBuff((ServerWorld) living.getWorld(),living,"DashLanding",500,200);
+
 
                                 Vec3d currentVelocity = entity.getVelocity();
-                                KnockedAirborneVer2.giveKnockedAirborneVer2(entity,player,20);
+                                KnockedAirborneVer2.giveKnockedAirborneVer2(entity,player,60,4);
 //                                DotDamage.giveDotDamage(living, player, 40,2,0.1F);
-                                player.sendMessage(net.minecraft.text.Text.literal("적 적중시 보호막 획득 및 체력 회복"), true);
-                                float playerAborptionAmount = player.getAbsorptionAmount();
-                                player.setAbsorptionAmount(playerAborptionAmount+1.0f);
-                                player.heal(2.0f);
+//                                AbsorptionBuff.giveAbsorptionBuff((ServerWorld) player.getWorld(),player,"DashLanding",5,30);
 
                             }
                         }

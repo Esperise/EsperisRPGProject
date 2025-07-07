@@ -2,6 +2,7 @@ package com.altale.esperis.commands;
 
 import com.altale.esperis.skills.dexStatSkill.DexJump;
 import com.altale.esperis.skills.lukStatSkill.DoubleStep;
+import com.altale.esperis.skills.lukStatSkill.ShadowTeleport;
 import com.altale.esperis.skills.lukStatSkill.TripleJump;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -38,15 +39,21 @@ public class ModCommands {
     private static void registerCommandsDoubleStep(CommandDispatcher<ServerCommandSource> serverCommandSourceCommandDispatcher,CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
         serverCommandSourceCommandDispatcher.register(
                 literal("skill_activation")
-                        .then(argument("double_step", StringArgumentType.word())
+                        .then(literal("double_step")
                                 .executes(context -> {
                                     ServerPlayerEntity player = context.getSource().getPlayer();
                                     ServerWorld world =  context.getSource().getWorld();
                                     DoubleStep.doubleStepCommand(player, world);
-                                    String skillName = StringArgumentType.getString(context, "double_step");
-                                    context.getSource().sendFeedback(() -> Text.literal("Hello, " + skillName + "!"), false);
                                     return 1;
                                 }))
+                        .then(literal("shadow_teleport")
+                                .executes(context -> {
+                                    ServerPlayerEntity player = context.getSource().getPlayer();
+                                    ServerWorld world =  context.getSource().getWorld();
+                                    ShadowTeleport.doShadowTeleportPlayer(player,world);
+                                    return 1;
+                                }))
+
         );
     }
     private static void registerCommandsJump(

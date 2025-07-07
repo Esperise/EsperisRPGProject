@@ -2,6 +2,7 @@ package com.altale.esperis.skills.dexStatSkill;
 
 import com.altale.esperis.serverSide.GetEntityLookingAt;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
+import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
 import com.altale.esperis.skills.visualEffect.DrawCircle;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.particle.DustParticleEffect;
@@ -24,16 +25,18 @@ public class DexJump {
 
     }
     private static void doDexJump(ServerPlayerEntity player, ServerWorld world) {
-        LivingEntity targetEntity = (LivingEntity) GetEntityLookingAt.getEntityLookingAt(player,2.5F,0.3F);
+        LivingEntity targetEntity = (LivingEntity) GetEntityLookingAt.getEntityLookingAt(player,4.0F,0.3F);
         Vec3d look= player.getRotationVec(1.0f);
         if( targetEntity != null){
-            CoolTimeManager.setCoolTime(player, "dexJump", 200);
-            double power = 0.6;
-            Vec3d velocity= new Vec3d(look.x * power ,0.35,look.z* power);
+            CoolTimeManager.setCoolTime(player, "dexJump", 300);
+            targetEntity.setVelocity(Vec3d.ZERO);
+            double power = 0.4;
+            Vec3d velocity= new Vec3d(look.x * power ,0.30,look.z* power);
             targetEntity.addVelocity(velocity.x, velocity.y, velocity.z);
             targetEntity.velocityModified = true;
+            KnockedAirborneVer2.giveKnockedAirborneVer2(targetEntity,player, 3,3);//0.3초 에어본
             double playerPower = -1.6;
-            Vec3d playerVelocity = new Vec3d(look.x * playerPower, 0.75, look.z * playerPower);
+            Vec3d playerVelocity = new Vec3d(look.x * playerPower, 0.65, look.z * playerPower);
             player.addVelocity(playerVelocity.x, playerVelocity.y, playerVelocity.z);
             player.velocityModified = true;
             DrawCircle.spawnCircle(player, world, 2.0, 2.0, 30, 0,1,0

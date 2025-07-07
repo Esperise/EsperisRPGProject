@@ -16,7 +16,6 @@ public class EsperisRPGClient implements ClientModInitializer {
         HealthBarOverlay.register();
         AbsorptionSyncReceiver.register();
         AbsorptionCacheCleaner.register();
-
         CoolTimePacketReceiver.register();
 
 

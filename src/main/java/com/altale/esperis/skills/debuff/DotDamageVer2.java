@@ -1,4 +1,5 @@
 package com.altale.esperis.skills.debuff;
+import com.altale.esperis.serverSide.HealthHanlder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -21,7 +22,7 @@ public class DotDamageVer2 {
     private static class DotData {
         int remainingTicks;
         int duration;
-        float damagePerTick;
+        float damagePerNTick;
         float expectedTotalDamage;
         int tickDelta;
         boolean overlap;
@@ -30,11 +31,16 @@ public class DotDamageVer2 {
         WeakReference<LivingEntity> targetRef;
         WeakReference<LivingEntity> sourceRef;
 
-        DotData(int remainingTicks, int tickDelta, float damagePerTicks, float expectTotalDamage, DotTypeVer2 dotTypeVer2,
+        DotData(int remainingTicks, int tickDelta, float damagePerNTicks, float expectTotalDamage, DotTypeVer2 dotTypeVer2,
+                LivingEntity target, LivingEntity source, String Id) {
+            this(remainingTicks, tickDelta,  damagePerNTicks,  expectTotalDamage,  dotTypeVer2,
+                    target, source,  false , Id);
+        }
+        DotData(int remainingTicks, int tickDelta, float damagePerNTicks, float expectTotalDamage, DotTypeVer2 dotTypeVer2,
                 LivingEntity target, LivingEntity source, boolean overlap, String Id) {
             this.remainingTicks = remainingTicks;
             this.duration = remainingTicks;
-            this.damagePerTick = damagePerTicks;
+            this.damagePerNTick = damagePerNTicks;
             this.expectedTotalDamage = expectTotalDamage;
             this.tickDelta = tickDelta;
             this.dotTypeVer2 = dotTypeVer2;
@@ -89,7 +95,7 @@ public class DotDamageVer2 {
                                 DamageSource ds = (source instanceof PlayerEntity)
                                         ? target.getWorld().getDamageSources().playerAttack((PlayerEntity) source)
                                         : target.getWorld().getDamageSources().mobAttack(source);
-                                target.damage(ds, data.damagePerTick);
+                                target.damage(ds, data.damagePerNTick);
                                 target.setVelocity(Vec3d.ZERO);
                                 target.velocityModified = true;
 
@@ -115,24 +121,24 @@ public class DotDamageVer2 {
                                 DamageSource ds = (source instanceof PlayerEntity)
                                         ? target.getWorld().getDamageSources().playerAttack((PlayerEntity) source)
                                         : target.getWorld().getDamageSources().mobAttack(source);
-                                target.damage(ds, data.damagePerTick);
+                                target.damage(ds, data.damagePerNTick);
                                 target.setVelocity(Vec3d.ZERO);
                                 target.velocityModified = true;
                                 float maxHp = target.getMaxHealth();
                                 float lost = maxHp - target.getHealth();
                                 float coef = (lost / maxHp) + 1;
-                                if (target.getWorld() instanceof ServerWorld serverWorld) {
-                                    Vec3d pos = target.getPos();
-                                    int blood = (int)(12*((lost/maxHp)*30+1));
-                                    int dust = (int)(150*((lost/maxHp)*30+1));
-                                    serverWorld.spawnParticles(ParticleTypes.FALLING_DRIPSTONE_LAVA,
-                                            pos.x, pos.y, pos.z, blood, 0.7, 0.75, 0.7, 0.1);
-                                    serverWorld.spawnParticles(new DustParticleEffect(new Vector3f(1.0f,0.0f,0.0f),0.5f),
-                                            pos.x, pos.y, pos.z, dust, 1.0, 0.7, 1.0, 0.01);
+//                                if (target.getWorld() instanceof ServerWorld serverWorld) {
+//                                    Vec3d pos = target.getPos();
+//                                    int blood = (int)(12*((lost/maxHp)*30+1));
+//                                    int dust = (int)(150*((lost/maxHp)*30+1));
+//                                    serverWorld.spawnParticles(ParticleTypes.FALLING_DRIPSTONE_LAVA,
+//                                            pos.x, pos.y, pos.z, blood, 0.7, 0.75, 0.7, 0.1);
+//                                    serverWorld.spawnParticles(new DustParticleEffect(new Vector3f(1.0f,0.0f,0.0f),0.5f),
+//                                            pos.x, pos.y, pos.z, dust, 1.0, 0.7, 1.0, 0.01);
 //                                    target.getWorld().playSound(null, pos.x, pos.y, pos.z,
 //                                            SoundEvents.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
 //                                            SoundCategory.PLAYERS, 1.4f, 1.0f);
-                                }
+//                                }
                                 dataList.remove();
                             }
                         }
@@ -155,15 +161,35 @@ public class DotDamageVer2 {
     }
 
     public static void giveDotDamage(LivingEntity target, LivingEntity source,
-                                        int duration, int tickDelta, float expectTotalDamage, DotTypeVer2 dotTypeVer2, boolean overlap, String Id) {
-        float damagePerTicks = expectTotalDamage * tickDelta / duration;
-        DotData newData = new DotData(duration, tickDelta, damagePerTicks,
+                                        int duration, int tickDelta, float expectTotalDamage, DotTypeVer2 dotTypeVer2, boolean overlap,float overlapCoeff, String Id) {
+        float damagePerNTicks = expectTotalDamage * tickDelta / duration;
+        DotData newData = new DotData(duration, tickDelta, damagePerNTicks,
                 expectTotalDamage, dotTypeVer2, target, source,overlap,Id);
         if(overlap){
-            dotDamageMap.computeIfAbsent(target.getUuid(), u -> new HashMap<>())
+            boolean found = false;
+            List<DotData> tempList=dotDamageMap.computeIfAbsent(target.getUuid(), u -> new HashMap<>())
                     .computeIfAbsent(source.getUuid(), u -> new HashMap<>())
                     .computeIfAbsent(dotTypeVer2, d -> new ArrayList<>())
-                    .add(newData);
+                    ;
+            if(!tempList.isEmpty()){
+                for (DotData data : tempList) {
+                    if (data.Id.equals(Id)) {
+                        data.remainingTicks = duration;
+                        data.expectedTotalDamage += expectTotalDamage * overlapCoeff;
+                        data.damagePerNTick += damagePerNTicks*overlapCoeff;
+                        found= true;
+                        break;
+                    }
+                }
+            }
+            if(!found){
+                dotDamageMap.computeIfAbsent(target.getUuid(), u -> new HashMap<>())
+                        .computeIfAbsent(source.getUuid(), u -> new HashMap<>())
+                        .computeIfAbsent(dotTypeVer2, d -> new ArrayList<>())
+                        .add(newData);
+            }
+
+
         }
         else{
             if(!dotDamageMap.isEmpty()) {
@@ -199,5 +225,98 @@ public class DotDamageVer2 {
 
     }
 }
+    public static void giveDotDamage(LivingEntity target, LivingEntity source
+            , int duration, int tickDelta, float expectTotalDamage, DotTypeVer2 dotTypeVer2, String Id) {
+        float damagePerNTicks = expectTotalDamage * tickDelta / duration;
+        DotData newData = new DotData(duration, tickDelta, damagePerNTicks,
+                expectTotalDamage, dotTypeVer2, target, source,Id);
+
+            if(!dotDamageMap.isEmpty()) {
+                if(dotDamageMap.containsKey(target.getUuid())) {
+                    List<DotData> dataList = dotDamageMap.get(target.getUuid()).get(source.getUuid()).get(dotTypeVer2);
+                    if(dataList == null){
+                        dotDamageMap.computeIfAbsent(target.getUuid(), u -> new HashMap<>())
+                                .computeIfAbsent(source.getUuid(), u -> new HashMap<>())
+                                .computeIfAbsent(dotTypeVer2, d -> new ArrayList<>())
+                                .add(newData);
+                    }
+                    else{
+                        Iterator<DotData> dataIter = dataList.iterator();
+                        while(dataIter.hasNext()){
+                            DotData data= dataIter.next();
+                            if(data.Id.equals(Id)) {
+                                if (data.remainingTicks < duration) {
+                                    data.remainingTicks += tickDelta;
+                                }
+                            }
+                        }
+                    }
+
+
+
+            }
+            else{
+                dotDamageMap.computeIfAbsent(target.getUuid(), u -> new HashMap<>())
+                        .computeIfAbsent(source.getUuid(), u -> new HashMap<>())
+                        .computeIfAbsent(dotTypeVer2, d -> new ArrayList<>())
+                        .add(newData);
+            }
+
+        }
+    }
+    public static boolean isDotDamage(LivingEntity target){
+        if(dotDamageMap.containsKey(target.getUuid())){
+            return dotDamageMap.containsKey(target.getUuid());
+        }
+        else{
+            return false;
+        }
+    }
+    public static void instantDotDamage(LivingEntity target, LivingEntity damageSource, double additionalCoeff){
+        if(isDotDamage(target)){
+            UUID uuid = target.getUuid();
+            float totalDotDamage=0;
+            Map<UUID, Map<DotTypeVer2, List<DotData>>> dotMap= dotDamageMap.get(uuid);
+            Iterator<Map.Entry<UUID,Map<DotTypeVer2,List<DotData>>>> iter = dotMap.entrySet().iterator();
+            while(iter.hasNext()){
+                Map.Entry<UUID,Map<DotTypeVer2,List<DotData>>> outerEntry = iter.next();
+                Iterator<Map.Entry<DotTypeVer2,List<DotData>>> innerIter = outerEntry.getValue().entrySet().iterator();
+                while(innerIter.hasNext()){
+                    Map.Entry<DotTypeVer2,List<DotData>> innerEntry = innerIter.next();
+                    List<DotData> dataList = innerEntry.getValue();
+                    Iterator<DotData> dataIter = dataList.iterator();
+                    while(dataIter.hasNext()){
+                        DotData data= dataIter.next();
+                        float remainDotDamage= data.remainingTicks*data.damagePerNTick /data.tickDelta;
+                        totalDotDamage+=remainDotDamage;
+                    }
+
+                }
+
+            }
+            if(totalDotDamage>=0){
+                dotDamageMap.remove(uuid);
+                DamageSource ds = (damageSource instanceof PlayerEntity)
+                        ? target.getWorld().getDamageSources().playerAttack((PlayerEntity) damageSource)
+                        : target.getWorld().getDamageSources().mobAttack(damageSource);
+                target.damage(ds, totalDotDamage* HealthHanlder.getLostHealthRatio(target
+                        ,true,additionalCoeff));
+                if (target.getWorld() instanceof ServerWorld serverWorld) {
+                    Vec3d pos = target.getPos();
+                    int blood = (int)(15*((HealthHanlder.getLostHealthRatio(target,false))*50+1));
+                    int dust = (int)(150*((HealthHanlder.getLostHealthRatio(target,false))*30+1));
+                    serverWorld.spawnParticles(ParticleTypes.FALLING_DRIPSTONE_LAVA,
+                            pos.x, pos.y, pos.z, blood, 0.7, 0.75, 0.7, 0.0);
+                    serverWorld.spawnParticles(new DustParticleEffect(new Vector3f(1.0f,0.0f,0.0f),0.5f),
+                            pos.x, pos.y, pos.z, dust, 1.0, 0.7, 1.0, 0.0);
+                    target.getWorld().playSound(null, pos.x, pos.y, pos.z,
+                            SoundEvents.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
+                            SoundCategory.PLAYERS, 3.4f, 1.0f);
+                }
+
+            }
+
+        }
+    }
 }
 

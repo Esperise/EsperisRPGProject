@@ -98,13 +98,13 @@ public class LookingEntityHealthHUD {
 //                System.out.println("hpDiffMap.get(closestEntity): "+hpDiffMap.get(closestEntity));
 //                System.out.println("hpDiffTemp: "+hpDiffTemp);
                 long hpDiffCurrentTime= closestEntity.getWorld().getTime();
-                hpDiffTimeMap.putIfAbsent(closestEntity, hpDiffCurrentTime+20);//보는 즉시 그 대상이 Map에 없으면 1초 생성 계속셈
+                hpDiffTimeMap.putIfAbsent(closestEntity, hpDiffCurrentTime+30);//보는 즉시 그 대상이 Map에 없으면 1초 생성 계속셈
                 long hpTime= hpDiffTimeMap.get(closestEntity);//hpTime: hp 변동 초기화 하는 시간
                 if(hpDiffTemp != hpDiffMap.get(closestEntity)) {
-                    hpDiffTimeMap.put(closestEntity, max(hpTime+1,hpDiffCurrentTime+2));//남은 시간에 따라 0.3초 혹은 0.5초 증가
+                    hpDiffTimeMap.put(closestEntity, max(hpTime+2,hpDiffCurrentTime+3));//남은 시간에 따라 0.3초 혹은 0.5초 증가
                 }
                 else if(beforeHp != curPlusAbsorption) {//보호막에 피해시에도  추가 지속
-                    hpDiffTimeMap.put(closestEntity, max(hpTime+1,hpDiffCurrentTime+2));
+                    hpDiffTimeMap.put(closestEntity, max(hpTime+2,hpDiffCurrentTime+3));
                 }
 
 //                System.out.println("hpDiffCurrentTime: "+hpDiffCurrentTime);
@@ -132,17 +132,19 @@ public class LookingEntityHealthHUD {
 //                int barLocateX= client.getWindow().getScaledWidth()/2- barWidth/2;
                 int barLocateX= 7;
                 int barLocateY=  barHeight/2;
+                int hpDiffText=0;
                 String healthText=""; float textX = 0; float textY = 0;
                 if(absorptionBar>0){
                     healthText= String.format("%.0f (+%.0f) / %.0f",cur,absorption,max);
                     textX= barLocateX+ 10;
                     textY= barLocateY+1;
-
+                    hpDiffText=108;
                 }
                 else if(absorptionBar==0){
                     healthText = String.format("%.0f / %.0f",cur,max);
                     textX = barLocateX+10;
                     textY = barLocateY+1;
+                    hpDiffText=81;
                 }
                 ctx.fill(barLocateX-1,barLocateY-1,barLocateX+barWidth+1,barLocateY+barHeight+1,0x55FFFFFF);//테두리
                 ctx.fill(barLocateX,barLocateY,barLocateX+barWidth,barLocateY+barHeight,0xFF000000);//안에 빈 체력(검정)
@@ -169,8 +171,21 @@ public class LookingEntityHealthHUD {
                         15728880
                 );
                 if(hpDiff>0){
-                    String damageText= String.format("%.1f의 데미지 입힘.",hpDiff);
-                    player.sendMessage(net.minecraft.text.Text.literal(damageText), true);
+                    String damageText= String.format("-%.1f",hpDiff);
+//                    player.sendMessage(net.minecraft.text.Text.literal(damageText), true);
+                    OrderedText text1 = Text.literal(damageText).asOrderedText();
+
+//                    MatrixStack matrices1 = ctx.getMatrices();
+                    renderer.drawWithOutline(
+                            text1,
+                            hpDiffText,
+                            textY,
+                            0xFFFFFF,
+                            0xFFFF3333,
+                            matrices.peek().getPositionMatrix(),
+                            ctx.getVertexConsumers(),
+                            15728880
+                    );
                 }
 
 //                OrderedText text = Text.literal(disp).asOrderedText();

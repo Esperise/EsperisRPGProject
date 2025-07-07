@@ -13,6 +13,8 @@ import org.joml.Vector3f;
 
 import java.util.Objects;
 
+import static com.google.common.primitives.Doubles.max;
+
 public class DrawCircle {
     public static void spawnCircle(ServerPlayerEntity player, ServerWorld world, double distance, double radius, int points, double vectorX, double vectorY, double vectorZ, float x, float y, float z, float red, float green, float blue, float dustSize, int amount) {
         Vec3d look = player.getRotationVec(1.0F).normalize(); // 시선 방향
@@ -45,11 +47,11 @@ public class DrawCircle {
         Vec3d center = entity.getPos().add(0, halfHeight, 0);
 
         // 2) 반지름: 엔티티 높이의 절반 (원하면 변경 가능)
-        double radius = halfHeight * 1.5;
+        double radius = halfHeight * 1.5 +0.5;
 
         // 3) θ 분할 수 (가로 둘레): points * 2 로 더 고해상도
-        int sectors = points;
-        int rings = points;
+        int sectors = (int) max(points,(points * halfHeight));
+        int rings =  (int) max(points,(points * halfHeight));
 
         // 4) 구면 좌표 공식으로 점 계산
         for (int i = 0; i < rings; i++) {
@@ -72,9 +74,9 @@ public class DrawCircle {
 //                        amount, 0, 0, 0, 0.0
 //                );
                 world.spawnParticles(
-                        new DustParticleEffect(new Vector3f(red, green, blue), dustSize),
+                        new DustParticleEffect(new Vector3f(red, green, blue), (float) max(dustSize,dustSize*(halfHeight*2-1))),
                         point.x, point.y, point.z,
-                        amount, 0, 0, 0, 0.0
+                        amount, 0.0, 0.0, 0.0, 0.0
                 );
                 //wax_on: 주황색 별 wax_off,ELECTRIC_SPARK: 네더의별 모양 GLOW: 청록/초록색 별 위로 올라감 SCRAPE:glow 유지 END_ROD
                 //FIREWORK 아래로 떨어지는 하얀 별 MYCELIUM: 지옥 회색 이펙트 오래 떠다님
@@ -85,16 +87,16 @@ public class DrawCircle {
                 //PORTAL : 아래 조금 떨어지고 좀 유지되는 보라색입자 REVERSE_PORTAL:유지되는 보라색 입자
                 //WITCH 위로 올라가는 x UNDERWATER: 작은 보라색 점
 //                world.spawnParticles(
-//                        ParticleTypes.DOLPHIN,
+//                        ParticleTypes.ELECTRIC_SPARK,
 //                        point.x, point.y, point.z,
 //                        amount, 0, 0, 0, 0
 //                );
             }
         }
-        for (int i = 0; i < rings/2; i++) {
-            double phi = Math.PI * i / ((double) rings /2 - 1);       // 0 ≤ φ ≤ π
-            for (int j = 0; j < sectors/2; j++) {
-                double theta = 2 * Math.PI * j / ((double) sectors /2); // 0 ≤ θ < 2π
+        for (int i = 0; i < rings/8; i++) {
+            double phi = Math.PI * i / ((double) rings /6 - 1);       // 0 ≤ φ ≤ π
+            for (int j = 0; j < sectors/6; j++) {
+                double theta = 2 * Math.PI * j / ((double) sectors /6); // 0 ≤ θ < 2π
 
                 double x = (radius+1) * Math.sin(phi) * Math.cos(theta);
                 double y = (radius+1) * Math.cos(phi);
@@ -102,9 +104,9 @@ public class DrawCircle {
 
                 Vec3d point = center.add(x, y, z);
                                 world.spawnParticles(
-                        ParticleTypes.UNDERWATER,
+                        ParticleTypes.ELECTRIC_SPARK,
                         point.x, point.y, point.z,
-                        amount, 0, 0, 0, 2.0
+                        amount, 0, 0, 0, 0
                 );
             }
         }

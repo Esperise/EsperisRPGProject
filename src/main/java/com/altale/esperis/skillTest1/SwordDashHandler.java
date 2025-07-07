@@ -1,4 +1,5 @@
 package com.altale.esperis.skillTest1;
+import com.altale.esperis.skills.buff.AbsorptionBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.DotTypeVer2;
@@ -50,7 +51,8 @@ public class SwordDashHandler {
                         if (entity instanceof LivingEntity living && entity != player) {
                             DamageSource source = ((ServerWorld) world).getDamageSources().playerAttack(player);
 //                            living.damage(source, 4.0f); // 10 데미지
-                            DotDamageVer2.giveDotDamage(living, player, 40, 2, 10F, DotTypeVer2.Bleed,true,"swordDash");
+                            DotDamageVer2.giveDotDamage(living, player, 200, 20, 25F, DotTypeVer2.Bleed,true,0.1f,"swordDash");
+                            AbsorptionBuff.giveAbsorptionBuff((ServerWorld) world, living, "sword_dash",40, 70);
 
 
                         }
