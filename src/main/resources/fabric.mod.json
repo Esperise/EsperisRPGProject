@@ -27,6 +27,9 @@
       "environment": "client"
     }
   ],
+  "entity_component": [
+  "com.altale.esperis.EsperisRPG"
+],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",

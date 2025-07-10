@@ -1,5 +1,6 @@
 package com.altale.esperis.commands;
 
+import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
 import com.altale.esperis.skills.dexStatSkill.DexJump;
 import com.altale.esperis.skills.lukStatSkill.DoubleStep;
 import com.altale.esperis.skills.lukStatSkill.ShadowTeleport;
@@ -16,6 +17,7 @@ import net.minecraft.text.Text;
 
 import java.util.Objects;
 
+import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -25,6 +27,7 @@ public class ModCommands {
         CommandRegistrationCallback.EVENT.register(ModCommands::registerCommands);
         CommandRegistrationCallback.EVENT.register(ModCommands::registerCommandsDoubleStep);
         CommandRegistrationCallback.EVENT.register(ModCommands::registerCommandsJump);
+        CommandRegistrationCallback.EVENT.register(ModCommands::registerMoneyData);
     }
 
     private static void registerCommands(CommandDispatcher<ServerCommandSource> serverCommandSourceCommandDispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
@@ -83,33 +86,48 @@ public class ModCommands {
                         )
         );
     }
+    private static void registerMoneyData(
+            CommandDispatcher<ServerCommandSource> dispatcher,
+            CommandRegistryAccess access,
+            CommandManager.RegistrationEnvironment env) {
 
-//    private static void registerCommandsJump(CommandDispatcher<ServerCommandSource> serverCommandSourceCommandDispatcher,CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
-//        serverCommandSourceCommandDispatcher.register(
-//
-//                literal("sa")
-//                        .then(argument("triple_jump", StringArgumentType.word())
-//                                .executes(context -> {
-//                                    ServerPlayerEntity player = context.getSource().getPlayer();
-//                                    ServerWorld world = context.getSource().getWorld();
-//                                    TripleJump.tripleJump(player, world);
-//                                    String skillName = StringArgumentType.getString(context, "triple_jump");
-//                                    context.getSource().sendFeedback(() -> Text.literal("TripleJump: " + skillName), false);
-//                                    return 1;
-//                                })
-//                        )
-//                        .then(argument("dex_jump", StringArgumentType.word())
-//                                .executes(context -> {
-//                                    ServerPlayerEntity player = context.getSource().getPlayer();
-//                                    ServerWorld world = context.getSource().getWorld();
-//                                    DexJump.dexJump(player, world);
-//                                    String skillName = StringArgumentType.getString(context, "dex_jump");
-//                                    context.getSource().sendFeedback(() -> Text.literal("DexJump: " + skillName), false);
-//                                    return 1;
-//                                })
-//                        )
-//        );
-//    }
+        dispatcher.register(
+                literal("입금")
+                        .then(argument("amount",integer(1))
+                                .executes(ctx -> {
+                                    System.out.println(ctx.getArgument("amount", Integer.class));
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    System.out.println(player);
+                                    PlayerMoneyComponent  component = PlayerMoneyComponent.KEY.get(Objects.requireNonNull(player));
+                                    System.out.println(component);
+                                    int[] a= component.deposit(ctx.getArgument("amount", Integer.class));
+                                    System.out.println(a[0]+" "+a[1]);
+                                    String text= String.format("%d esp 입금 완료, 현재 잔고: %d esp",a[1],a[0]);
+                                    System.out.println("입금 " + ctx.getSource().getPlayer());
+
+                                    System.out.println(text);
+                                    player.sendMessage(Text.literal(text), false);
+                                    ctx.getSource().sendFeedback(() -> Text.literal(text), false);
+                                    return 1;
+                                })
+                        )
+        );
+        dispatcher.register(
+                literal("출금")
+                        .then(argument("amount",integer(1))
+                                .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    PlayerMoneyComponent  component = PlayerMoneyComponent.KEY.get(Objects.requireNonNull(player));
+                                    int[] a= component.withdraw(ctx.getArgument("amount", Integer.class));
+                                    String text= String.format("%d esp 출금 완료, 현재 잔고: %d esp",a[1],a[0]);
+                                    player.sendMessage(Text.literal(text), false);
+                                    ctx.getSource().sendFeedback(() -> Text.literal(text), false);
+                                    return 1;
+                                })
+                        )
+        );
+    }
+
 
 }
 
