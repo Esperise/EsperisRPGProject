@@ -95,17 +95,11 @@ public class ModCommands {
                 literal("입금")
                         .then(argument("amount",integer(1))
                                 .executes(ctx -> {
-                                    System.out.println(ctx.getArgument("amount", Integer.class));
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
-                                    System.out.println(player);
                                     PlayerMoneyComponent  component = PlayerMoneyComponent.KEY.get(Objects.requireNonNull(player));
                                     System.out.println(component);
                                     int[] a= component.deposit(ctx.getArgument("amount", Integer.class));
-                                    System.out.println(a[0]+" "+a[1]);
                                     String text= String.format("%d esp 입금 완료, 현재 잔고: %d esp",a[1],a[0]);
-                                    System.out.println("입금 " + ctx.getSource().getPlayer());
-
-                                    System.out.println(text);
                                     player.sendMessage(Text.literal(text), false);
                                     ctx.getSource().sendFeedback(() -> Text.literal(text), false);
                                     return 1;
