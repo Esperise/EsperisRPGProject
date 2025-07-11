@@ -92,15 +92,13 @@ public class ModCommands {
             CommandManager.RegistrationEnvironment env) {
 
         dispatcher.register(
-                literal("입금")
+                literal("입금")//지폐 아이템 구현-> 사용 구현-> 기능 옮기고 삭제하기
                         .then(argument("amount",integer(1))
                                 .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerMoneyComponent  component = PlayerMoneyComponent.KEY.get(Objects.requireNonNull(player));
-                                    System.out.println(component);
                                     int[] a= component.deposit(ctx.getArgument("amount", Integer.class));
                                     String text= String.format("%d esp 입금 완료, 현재 잔고: %d esp",a[1],a[0]);
-                                    player.sendMessage(Text.literal(text), false);
                                     ctx.getSource().sendFeedback(() -> Text.literal(text), false);
                                     return 1;
                                 })
@@ -112,12 +110,25 @@ public class ModCommands {
                                 .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerMoneyComponent  component = PlayerMoneyComponent.KEY.get(Objects.requireNonNull(player));
-                                    int[] a= component.withdraw(ctx.getArgument("amount", Integer.class));
-                                    String text= String.format("%d esp 출금 완료, 현재 잔고: %d esp",a[1],a[0]);
-                                    player.sendMessage(Text.literal(text), false);
-                                    ctx.getSource().sendFeedback(() -> Text.literal(text), false);
-                                    return 1;
-                                })
+                                    if(component.canWithdraw(ctx.getArgument("amount", Integer.class))
+                                    && player.getInventory().getEmptySlot()!=-1){
+                                        int[] a= component.withdraw(ctx.getArgument("amount", Integer.class));
+                                        //아이템 구현-> 해당 명령어 치면 아이템 지급
+                                        String text= String.format("%d esp 출금 완료, 현재 잔고: %d esp",a[1],a[0]);
+                                        ctx.getSource().sendFeedback(() -> Text.literal(text), false);
+                                        return 1;
+                                    } else if(!component.canWithdraw(ctx.getArgument("amount", Integer.class))){
+                                        int currentBalance = component.getBalance();
+                                        String text = String.format("출금 불가능: 현재 잔고:%d esp", currentBalance);
+                                        ctx.getSource().sendFeedback(() -> Text.literal(text), false);
+                                        return 0;
+                                    } else if(player.getInventory().getEmptySlot()==-1){
+                                        ctx.getSource().sendFeedback(() -> Text.literal("인벤토리에 빈 슬롯이 없습니다."), false);
+                                        return 0;
+                                    }
+                                    return 0;
+                                }
+                                )
                         )
         );
     }

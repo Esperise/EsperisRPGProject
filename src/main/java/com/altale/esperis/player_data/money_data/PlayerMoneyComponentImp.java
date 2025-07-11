@@ -44,9 +44,7 @@ public class PlayerMoneyComponentImp implements PlayerMoneyComponent, AutoSynced
 
         return arr;
     }
-    public int withdraw(String wrongInput){
-        return 0;
-    }
+
 
     @Override
     public int[] deposit(int amount) {
@@ -55,6 +53,15 @@ public class PlayerMoneyComponentImp implements PlayerMoneyComponent, AutoSynced
         System.out.println("deposit: " + amount);
         return new int[]{balance, amount};
     }
+
+    @Override
+    public boolean canWithdraw(int amount) {
+        if(balance < amount){
+            return false;
+        }
+        return true;
+    }
+
     public int deposit(String wrongInput) {
         return 0;
     }

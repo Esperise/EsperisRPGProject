@@ -17,4 +17,6 @@ ComponentKey<PlayerMoneyComponent> KEY = ComponentRegistryV3.INSTANCE.getOrCreat
 
     int[] deposit(int amount);
 
+    boolean canWithdraw(int amount);
+
 }
