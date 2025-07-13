@@ -14,6 +14,7 @@ public interface PlayerLevelComponent extends Component{
     void setLevel(int level);
     int getCurrentExp();
     void setCurrentExp(int currentExp);
+    void addExp(int exp);
     int getMaxExp();
     void setMaxExp(int maxExp);
     boolean canLevelUp();
