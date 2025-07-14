@@ -13,28 +13,16 @@ public interface PlayerPointStatComponent extends Component {
 
     //stat
         //setter
-        void setAtk(int atkValue);
-        void setMaxHealth(int maxHealthValue);
-        void setDef(int defValue);
-        void setStr(int strValue);
-        void setDex(int dexValue);
-        void setLuk(int lukValue);
-        void setDur(int durValue);
-        void setSpd(int spdValue);
+        void setPointStat(StatType statType, double amount);
+
 
         //getter
-        int getAtk();
-        int getMaxHealth();
-        int getDef();
-        int getStr();
-        int getDex();
-        int getLuk();
-        int getDur();
-        int getSpd();
+        double getPointStat(StatType statType);
+
 
     //adder
-    void addStat(String strType, int statValue);
-    void subtractStat(String strType, int statValue);
+    void addStat(StatType statType, double statValue);
+    void subtractStat(StatType statType, double statValue);
 
 
 }

@@ -38,7 +38,6 @@ public class MoneyHUD {
                     ctx.fill(moneyX-5, moneyY-3, moneyX +69, moneyY+10, 0xFFFFFFFF);//하단 우측 흰
                     ctx.fill(moneyX-5, moneyY-3, moneyX +68, moneyY+9, 0xFFCCCCCC);//상단 좌측 검
 //                    ctx.fill(moneyX-5, moneyY-3, moneyX +69, moneyY+10, 0xFFCCCCCC);//상단 좌측 검
-
                     String str1= String.format("%,7d esp", money);
                     OrderedText text1 = Text.literal(str1).asOrderedText();
                     renderer.drawWithOutline(

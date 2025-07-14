@@ -1,7 +1,13 @@
 package com.altale.esperis;
 import com.altale.esperis.commands.ModCommands;
+import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
+import com.altale.esperis.player_data.level_data.PlayerLevelComponentImp;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponentImp;
+import com.altale.esperis.player_data.stat_data.PlayerEquipmentStatComponent;
+import com.altale.esperis.player_data.stat_data.PlayerEquipmentStatComponentImp;
+import com.altale.esperis.player_data.stat_data.PlayerPointStatComponent;
+import com.altale.esperis.player_data.stat_data.PlayerPointStatComponentImp;
 import com.altale.esperis.serverSide.TickHandler;
 import com.altale.esperis.skillTest1.DashLandingHandler;
 import com.altale.esperis.skillTest1.SwordDashHandler;
@@ -51,6 +57,27 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         entityComponentFactoryRegistry.registerForPlayers(
                 PlayerMoneyComponent.KEY,
                 PlayerMoneyComponentImp::new,
+                RespawnCopyStrategy.ALWAYS_COPY
+        );
+        entityComponentFactoryRegistry.registerForPlayers(
+                PlayerLevelComponent.KEY,
+                PlayerLevelComponentImp::new,
+                RespawnCopyStrategy.ALWAYS_COPY
+        );
+        entityComponentFactoryRegistry.registerForPlayers(
+                PlayerPointStatComponent.KEY,
+                PlayerPointStatComponentImp::new,
+                RespawnCopyStrategy.ALWAYS_COPY
+
+        );
+        entityComponentFactoryRegistry.registerForPlayers(
+                PlayerPointStatComponent.KEY,
+                PlayerPointStatComponentImp::new,
+                RespawnCopyStrategy.ALWAYS_COPY
+        );
+        entityComponentFactoryRegistry.registerForPlayers(
+                PlayerEquipmentStatComponent.KEY,
+                PlayerEquipmentStatComponentImp::new,
                 RespawnCopyStrategy.ALWAYS_COPY
         );
     }

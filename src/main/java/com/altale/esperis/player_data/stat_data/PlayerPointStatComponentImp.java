@@ -4,183 +4,64 @@ import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+
 public class PlayerPointStatComponentImp implements PlayerPointStatComponent,AutoSyncedComponent {
     private final PlayerEntity player;
-    public PlayerPointStatComponentImp(PlayerEntity player) {this.player = player;}
-    int atk=1;
-    int maxHealth=20;
-    int def=0;
-    int str=0;
-    int dex=0;
-    int luk=0;
-    int dur=0;
-    int spd = 100; //기본 이동속도 계수 : 100%
-
-
-    @Override
-    public void setAtk(int atkValue) {
-        this.atk = atkValue;
-        PlayerPointStatComponent.KEY.sync(this.player);
-    }
-
-    @Override
-    public void setMaxHealth(int maxHealthValue) {
-        this.maxHealth = maxHealthValue;
-        PlayerPointStatComponent.KEY.sync(this.player);
-    }
-
-    @Override
-    public void setDef(int defValue) {
-        this.def = defValue;
-        PlayerPointStatComponent.KEY.sync(this.player);
-    }
-
-    @Override
-    public void setStr(int strValue) {
-        this.str = strValue;
-        PlayerPointStatComponent.KEY.sync(this.player);
-
-    }
-
-    @Override
-    public void setDex(int dexValue) {
-        this.dex = dexValue;
-        PlayerPointStatComponent.KEY.sync(this.player);
-    }
-
-    @Override
-    public void setLuk(int lukValue) {
-        this.luk = lukValue;
-        PlayerPointStatComponent.KEY.sync(this.player);
-    }
-
-    @Override
-    public void setDur(int durValue) {
-        this.dur = durValue;
-        PlayerPointStatComponent.KEY.sync(this.player);
-    }
-
-
-    @Override
-    public void setSpd(int spdValue) {
-        this.spd = spdValue;
-        PlayerPointStatComponent.KEY.sync(this.player);
-
-    }
-
-    @Override
-    public int getAtk() {
-        return this.atk;
-    }
-
-    @Override
-    public int getMaxHealth() {
-        return this.maxHealth;
-    }
-
-    @Override
-    public int getDef() {
-        return this.def;
-    }
-
-    @Override
-    public int getStr() {
-        return this.str;
-    }
-
-    @Override
-    public int getDex() {
-        return 0;
-    }
-
-    @Override
-    public int getLuk() {
-        return 0;
-    }
-
-    @Override
-    public int getDur() {
-        return 0;
-    }
-
-    @Override
-    public int getSpd() {
-        return 0;
-    }
-
-    //add stat
-    @Override
-    public void addStat(String strType, int statValue) {
-        switch (strType) {
-            case "atk":
-                setAtk(getAtk()+statValue);
-                break;
-            case "def":
-                setAtk(getDef()+statValue);
-                break;
-            case "dex":
-                setDex(getDex()+statValue);
-                break;
-            case "luk":
-                setLuk(getLuk()+statValue);
-                break;
-            case "dur":
-                setDur(getDur()+statValue);
-                break;
-            case "spd":
-                setSpd(getSpd()+statValue);
-                break;
-            default:
-                break;
+    private final Map<StatType,Double> statMap = new EnumMap<>(StatType.class);
+    public PlayerPointStatComponentImp(PlayerEntity player) {
+        this.player = player;
+        for (StatType statType: StatType.values()){
+            statMap.put(statType,0.0);
         }
     }
 
+
     @Override
-    public void subtractStat(String strType, int statValue) {
-        switch (strType) {
-            case "atk":
-                setAtk(getAtk()-statValue);
-                break;
-            case "def":
-                setAtk(getDef()-statValue);
-                break;
-            case "dex":
-                setDex(getDex()-statValue);
-                break;
-            case "luk":
-                setLuk(getLuk()-statValue);
-                break;
-            case "dur":
-                setDur(getDur()-statValue);
-                break;
-            case "spd":
-                setSpd(getSpd()-statValue);
-                break;
-            default:
-                break;
-        }
+    public void setPointStat(StatType statType, double amount) {
+        statMap.put(statType, amount);
+        PlayerPointStatComponent.KEY.sync(this.player);
     }
+
+    @Override
+    public double getPointStat(StatType statType) {
+        return statMap.getOrDefault(statType, 0);
+    }
+
+    @Override
+    public void addStat(StatType statType, double statValue) {
+        double beforePointStat= getPointStat(statType);
+        setPointStat(statType, beforePointStat + statValue);
+    }
+
+    @Override
+    public void subtractStat(StatType statType, double statValue) {
+        double beforePointStat= getPointStat(statType);
+        setPointStat(statType, beforePointStat-statValue);
+    }
+
 
     @Override
     public void readFromNbt(NbtCompound nbtCompound) {
-        atk = nbtCompound.getInt("atk");
-        def = nbtCompound.getInt("def");
-        maxHealth = nbtCompound.getInt("maxHealth");
-        dex = nbtCompound.getInt("dex");
-        luk = nbtCompound.getInt("luk");
-        dur = nbtCompound.getInt("dur");
-        spd = nbtCompound.getInt("spd");
+        if(nbtCompound.contains("PointStats")) {
+            NbtCompound statTag = nbtCompound.getCompound("PointStats");
+            for(StatType statType: StatType.values()){
+                if(statTag.contains(statType.name())){
+                    statMap.put(statType,statTag.getDouble(statType.name()));
+                }
+            }
+        }
     }
 
     @Override
     public void writeToNbt(NbtCompound nbtCompound) {
-        nbtCompound.putInt("atk", atk);
-        nbtCompound.putInt("def", def);
-        nbtCompound.putInt("maxHealth", maxHealth);
-        nbtCompound.putInt("dex", dex);
-        nbtCompound.putInt("luk", luk);
-        nbtCompound.putInt("dur", dur);
-        nbtCompound.putInt("spd", spd);
+        NbtCompound statTag = new NbtCompound();
+        for(Map.Entry<StatType, Double> entry: statMap.entrySet()){
+            statTag.putDouble(entry.getKey().name(), entry.getValue());
+        }
+        nbtCompound.put("PointStats", statTag);
     }
 
     @Override

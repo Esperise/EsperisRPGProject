@@ -50,7 +50,6 @@ public class PlayerMoneyComponentImp implements PlayerMoneyComponent, AutoSynced
     public int[] deposit(int amount) {
         this.balance += amount;
         setBalance(balance);
-        System.out.println("deposit: " + amount);
         return new int[]{balance, amount};
     }
 
