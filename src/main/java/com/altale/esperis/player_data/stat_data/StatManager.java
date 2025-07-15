@@ -37,8 +37,7 @@ public class StatManager {
         double totalDex= pointDex + eqDex;
         double totalLuk= pointLuk + eqLuk;
         double totalDur= pointDur + eqDur;
-
-        double atk= Math.round(
+        double atk= (
                 0.5*(totalStr) + 0.1*(totalDex) + 0.25*(totalLuk)
                 + level+ eqAtk
                 //무기로 얻는 스탯 넣기
@@ -60,12 +59,12 @@ public class StatManager {
         double critDamage =(
                 1.75+(totalLuk * 0.005) +eqCritDamage
                 );// 기본 크뎀 배율 175% luk당 0.5%
-        double acc=(
-                totalDex/(totalDex+totalLuk + 1000)
-                );//명중률 계수 회피율 계수와 정량적인 뺄셈 진행-> randint로 공격 데미지 여부 결정
-        double avd=(
-                totalLuk/(totalLuk+500)
-                );
+        double acc= Math.round(
+                (totalDex/(totalDex+totalLuk + 1000))*100
+                )/100.0;//명중률 계수 회피율 계수와 정량적인 뺄셈 진행-> randint로 공격 데미지 여부 결정, 소수점 2자리 반올림
+        double avd= Math.round(
+                (totalLuk/(totalLuk+500) )*100
+                )/100.0;//소수점 2자리 반올림
         //최종 스펙 저장하는 component만들어서 저장하기!!!
 
             finalStatComponent.setFinalStat(StatType.STR, totalStr);
