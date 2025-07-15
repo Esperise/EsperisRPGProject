@@ -27,7 +27,7 @@ public class PlayerPointStatComponentImp implements PlayerPointStatComponent,Aut
 
     @Override
     public double getPointStat(StatType statType) {
-        return statMap.getOrDefault(statType, 0);
+        return statMap.getOrDefault(statType, 0.0);
     }
 
     @Override

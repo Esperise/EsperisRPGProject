@@ -35,11 +35,20 @@ public class PlayerFinalStatComponentImp implements PlayerFinalStatComponent, Au
 
     @Override
     public void readFromNbt(NbtCompound nbtCompound) {
-
+        if(nbtCompound.contains("FinalStats")) {
+            NbtCompound finalStatsTag = nbtCompound.getCompound("FinalStats");
+            for(StatType statType: StatType.values()){
+                FinalStatMap.put(statType, finalStatsTag.getDouble(statType.name()));
+            }
+        }
     }
 
     @Override
     public void writeToNbt(NbtCompound nbtCompound) {
-
+        NbtCompound finalStatsTag = new NbtCompound();
+        for(Map.Entry<StatType, Double> entry: FinalStatMap.entrySet()){
+            finalStatsTag.putDouble(entry.getKey().toString(), entry.getValue());
+        }
+        nbtCompound.put("FinalStats", finalStatsTag);
     }
 }
