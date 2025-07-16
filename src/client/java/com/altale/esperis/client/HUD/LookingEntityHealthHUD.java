@@ -34,7 +34,7 @@ public class LookingEntityHealthHUD {
             PlayerEntity player = client.player;
             if (player == null || client.world == null) return;
 
-            double maxDistance = 17.0;
+            double maxDistance = 25.0;
             Vec3d cameraPos = player.getCameraPosVec(tickDelta);
             Vec3d lookVec = player.getRotationVec(tickDelta);
             Vec3d end = cameraPos.add(lookVec.multiply(maxDistance));

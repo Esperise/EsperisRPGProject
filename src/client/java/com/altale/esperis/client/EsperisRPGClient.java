@@ -15,14 +15,19 @@ public class EsperisRPGClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         CoolTimeHUD.register();
-        LookingEntityHealthHUD.register();
         HealthBarOverlay.register();
         AbsorptionSyncReceiver.register();
         AbsorptionCacheCleaner.register();
         CoolTimePacketReceiver.register();
+        LevelHUD.register();
+        LookingEntityHealthHUD.register();
         MoneyHUD.register();
 //        InventoryScreenHUD.register();
         InventoryReceipeAdditionalButton.register();
         InventoryStatTest.register();
+
+
+        //반드시 맨 아래 두기!
+        CurrentTimeHUD.register();
     }
 }

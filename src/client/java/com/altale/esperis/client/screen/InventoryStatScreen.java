@@ -1,12 +1,19 @@
 package com.altale.esperis.client.screen;
 
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
+import com.altale.esperis.player_data.stat_data.StatPointType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.client.MinecraftClient;
+
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class InventoryStatScreen extends Screen {
@@ -46,7 +53,21 @@ public class InventoryStatScreen extends Screen {
 
         // 타이틀 텍스트
 //        ctx.drawCenteredText(this.textRenderer, this.title, this.width / 2, y + 8, 0xFFFFFF);
-
+        MinecraftClient client= MinecraftClient.getInstance();
+        PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(Objects.requireNonNull(client.player));
+        int unusedSP= pointStatComponent.getSP(StatPointType.UnusedSP);
+        TextRenderer renderer = Objects.requireNonNull(client).textRenderer;
+            MatrixStack matrices = ctx.getMatrices();
+        String unusedSpText= String.format("미사용 StatPoint: %d", unusedSP);
+        OrderedText text = Text.literal(unusedSpText).asOrderedText();
+            textRenderer.drawWithOutline(
+                    text, x+5, y+5,
+                    0xFFFFFF, // 글자색
+                    0x000000, // 테두리색
+                    matrices.peek().getPositionMatrix(),
+                    ctx.getVertexConsumers(),
+                    15728880
+            );
         // 버튼 등 자식 위젯 렌더
         super.render(ctx, mouseX, mouseY, delta);
     }

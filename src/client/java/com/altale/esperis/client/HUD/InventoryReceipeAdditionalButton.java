@@ -40,14 +40,14 @@ public class InventoryReceipeAdditionalButton {
                     if (!open) {
                         recipeButton.visible = false;
                         // 필요시 텍스트도 같이 그릴 수 있음
-                        ctx.drawText(
-                                MinecraftClient.getInstance().textRenderer,
-                                Text.literal("button"),
-                                x + guiWidth - 16,
-                                y + 30,
-                                0xFFFFFF,
-                                false
-                        );
+//                        ctx.drawText(
+//                                MinecraftClient.getInstance().textRenderer,
+//                                Text.literal("button"),
+//                                x + guiWidth - 16,
+//                                y + 30,
+//                                0xFFFFFF,
+//                                false
+//                        );
                     }
                 });
             });

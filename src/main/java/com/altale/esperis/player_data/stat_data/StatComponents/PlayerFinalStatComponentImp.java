@@ -1,5 +1,7 @@
-package com.altale.esperis.player_data.stat_data;
+package com.altale.esperis.player_data.stat_data.StatComponents;
 
+import com.altale.esperis.player_data.stat_data.StatPointType;
+import com.altale.esperis.player_data.stat_data.StatType;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -17,6 +19,7 @@ public class PlayerFinalStatComponentImp implements PlayerFinalStatComponent, Au
         }
     }
 
+
     @Override
     public void setFinalStat(StatType statType, double value) {
         FinalStatMap.put(statType, value);
@@ -27,6 +30,7 @@ public class PlayerFinalStatComponentImp implements PlayerFinalStatComponent, Au
     public void setAllFinalStat() {
         PlayerFinalStatComponent.KEY.sync(this.player);
     }
+
 
     @Override
     public double getFinalStat(StatType statType) {

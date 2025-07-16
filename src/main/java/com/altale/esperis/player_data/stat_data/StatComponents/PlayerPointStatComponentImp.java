@@ -1,23 +1,25 @@
-package com.altale.esperis.player_data.stat_data;
+package com.altale.esperis.player_data.stat_data.StatComponents;
 
+import com.altale.esperis.player_data.stat_data.StatPointType;
+import com.altale.esperis.player_data.stat_data.StatType;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 
+import javax.swing.text.SimpleAttributeSet;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerPointStatComponentImp implements PlayerPointStatComponent,AutoSyncedComponent {
     private final PlayerEntity player;
     private final Map<StatType,Double> statMap = new EnumMap<>(StatType.class);
+    private final Map<StatPointType, Integer> StatPointMap = new EnumMap<>(StatPointType.class);
     public PlayerPointStatComponentImp(PlayerEntity player) {
         this.player = player;
         for (StatType statType: StatType.values()){
             statMap.put(statType,0.0);
         }
     }
-
 
     @Override
     public void setPointStat(StatType statType, double amount) {
@@ -29,6 +31,39 @@ public class PlayerPointStatComponentImp implements PlayerPointStatComponent,Aut
     public double getPointStat(StatType statType) {
         return statMap.getOrDefault(statType, 0.0);
     }
+
+    //statPoint(스탯 포인트 관련 method)
+    @Override
+    public void setSP(StatPointType spType, int amount) {
+        StatPointMap.put(spType, amount);
+        PlayerPointStatComponent.KEY.sync(this.player);
+    }
+    @Override
+    public void useSP(StatType statType, int amount){
+        subtractSP(StatPointType.UnusedSP, amount);//미사용 sp amount만큼 감소
+        addSP(StatPointType.UsedSP , amount);//사용한 sp 값 증가 시킴
+        addStat(statType, amount);//addStat안에 setStat이 있음-> 동기화 됨, amount만큼 스탯 증가 시킴
+    }
+
+    @Override
+    public int getSP(StatPointType statPointType){
+        return StatPointMap.getOrDefault(statPointType, 0);
+    }
+    @Override
+    public void addSP(StatPointType spType, int amount){
+        int beforeSP = getSP(spType);
+        setSP(spType, beforeSP + amount);//levelup 안에서 addSP(StatPointType.UnusedSP, 5) 넣어서 미사용 sp 5추가
+    }
+    @Override
+    public void subtractSP(StatPointType spType, int amount){
+        int beforeSP = getSP(spType);
+        setSP(spType, beforeSP - amount);
+    }
+
+    public void giveLevelUpSP(){
+        addSP(StatPointType.UnusedSP, 5);
+    }
+
 
     @Override
     public void addStat(StatType statType, double statValue) {
@@ -52,6 +87,11 @@ public class PlayerPointStatComponentImp implements PlayerPointStatComponent,Aut
                     statMap.put(statType,statTag.getDouble(statType.name()));
                 }
             }
+            for(StatPointType statPointType: StatPointType.values()){
+                if(statTag.contains(statPointType.name())){
+                    StatPointMap.put(statPointType,statTag.getInt(statPointType.name()));
+                }
+            }
         }
     }
 
@@ -60,6 +100,9 @@ public class PlayerPointStatComponentImp implements PlayerPointStatComponent,Aut
         NbtCompound statTag = new NbtCompound();
         for(Map.Entry<StatType, Double> entry: statMap.entrySet()){
             statTag.putDouble(entry.getKey().name(), entry.getValue());
+        }
+        for(Map.Entry<StatPointType, Integer> entry: StatPointMap.entrySet()){
+            statTag.putInt(entry.getKey().name(), entry.getValue());
         }
         nbtCompound.put("PointStats", statTag);
     }

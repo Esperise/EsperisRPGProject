@@ -1,10 +1,13 @@
 package com.altale.esperis.player_data.stat_data;
 
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerEquipmentStatComponent;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 
 import java.util.List;
 
@@ -47,7 +50,7 @@ public class StatManager {
                 //+무기 방어력 추가
                 );
         double maxHp= (//20+레벨당5+str당 1+ dur당5+ 장비체력
-                20+(5*level)+totalStr+(5*(totalDur))+eqMaxHealth
+                30+(5*level)+totalStr+(5*(totalDur))+eqMaxHealth
                 //+무기 체력 추가
                 );
         double spd= (
@@ -64,7 +67,7 @@ public class StatManager {
                 )/100.0;//명중률 계수 회피율 계수와 정량적인 뺄셈 진행-> randint로 공격 데미지 여부 결정, 소수점 2자리 반올림
         double avd= Math.round(
                 (totalLuk/(totalLuk+500) )*100
-                )/100.0;//소수점 2자리 반올림
+                )/100.0;//소수점 2자리 반올림rh
         //최종 스펙 저장하는 component만들어서 저장하기!!!
 
             finalStatComponent.setFinalStat(StatType.STR, totalStr);
@@ -74,11 +77,16 @@ public class StatManager {
             finalStatComponent.setFinalStat(StatType.ATK, atk);
             finalStatComponent.setFinalStat(StatType.DEF, def);
             finalStatComponent.setFinalStat(StatType.MAX_HEALTH, maxHp);
+            //TODO 아래 디버깅용 지우기
+            String test=String.format("%f", finalStatComponent.getFinalStat(StatType.MAX_HEALTH));
+            player.sendMessage(Text.literal(test));
             finalStatComponent.setFinalStat(StatType.SPD, spd);
             finalStatComponent.setFinalStat(StatType.CRIT, crit);
             finalStatComponent.setFinalStat(StatType.CRIT_DAMAGE, critDamage);
             finalStatComponent.setFinalStat(StatType.ACC, acc);
             finalStatComponent.setFinalStat(StatType.AVD, avd);
+            //실제 적용 부분
+            ApplyMaxHealth.applyMaxHealthByFinalStat(player);
 
         }
     public static void register(){
@@ -87,9 +95,11 @@ public class StatManager {
             for(ServerWorld world : worlds){
                 List<ServerPlayerEntity> players= world.getPlayers();
                 for(ServerPlayerEntity player : players){
-                    if(world.getTime() % 1200 == 0){
-                        //1분마다 모든 플레이어 스탯 계산해서 저장/적용
+                    if(world.getTime() % 2400 == 0){
+                        //2분마다 모든 플레이어 스탯 계산해서 저장/적용
                         statUpdate(player);
+
+                        player.sendMessage(Text.literal("동기화 완료"));
                     }
                 }
 

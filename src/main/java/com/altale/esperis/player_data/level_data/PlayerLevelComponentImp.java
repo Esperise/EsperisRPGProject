@@ -65,6 +65,7 @@ public class PlayerLevelComponentImp implements PlayerLevelComponent, AutoSynced
             setLevel(this.level+1);
             setCurrentExp(this.currentExp-this.maxExp);
             setMaxExp((int) (this.maxExp * 1.15));
+
     }
 
     @Override

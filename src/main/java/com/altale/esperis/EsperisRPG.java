@@ -1,13 +1,13 @@
 package com.altale.esperis;
 import com.altale.esperis.commands.ModCommands;
+import com.altale.esperis.player_data.level_data.PlayerCustomExpSystem;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponentImp;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponentImp;
-import com.altale.esperis.player_data.stat_data.PlayerEquipmentStatComponent;
-import com.altale.esperis.player_data.stat_data.PlayerEquipmentStatComponentImp;
-import com.altale.esperis.player_data.stat_data.PlayerPointStatComponent;
-import com.altale.esperis.player_data.stat_data.PlayerPointStatComponentImp;
+import com.altale.esperis.player_data.stat_data.ApplyMaxHealth;
+import com.altale.esperis.player_data.stat_data.StatComponents.*;
+import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.serverSide.TickHandler;
 import com.altale.esperis.skillTest1.DashLandingHandler;
 import com.altale.esperis.skillTest1.SwordDashHandler;
@@ -21,15 +21,6 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 
 import java.util.Random;
 
@@ -47,6 +38,9 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         CoolTimeTickManager.register();
         ModCommands.register();
         AbsorptionBuff.register();
+        StatManager.register();
+        ApplyMaxHealth.register();
+        PlayerCustomExpSystem.register();
 
 
 
@@ -71,13 +65,13 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
 
         );
         entityComponentFactoryRegistry.registerForPlayers(
-                PlayerPointStatComponent.KEY,
-                PlayerPointStatComponentImp::new,
+                PlayerEquipmentStatComponent.KEY,
+                PlayerEquipmentStatComponentImp::new,
                 RespawnCopyStrategy.ALWAYS_COPY
         );
         entityComponentFactoryRegistry.registerForPlayers(
-                PlayerEquipmentStatComponent.KEY,
-                PlayerEquipmentStatComponentImp::new,
+                PlayerFinalStatComponent.KEY,
+                PlayerFinalStatComponentImp::new,
                 RespawnCopyStrategy.ALWAYS_COPY
         );
     }

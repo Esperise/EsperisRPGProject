@@ -25,7 +25,11 @@
   },
   "custom": {
     "cardinal-components": [
-      "esperis:player_money_component"
+      "esperis:player_money_component",
+      "esperis:player_level_component",
+      "esperis:player_equipment_stat_component",
+      "esperis:player_final_stat_component",
+      "esperis:player_point_stat_component"
     ]
   },
   "mixins": [

@@ -61,7 +61,7 @@ public class HealthBarOverlay {
                     hpDiffTimeMap.clear();
                 }
                 // 바 길이 설정
-                int barWidth = 80;
+                int barWidth = 81;
                 int barHeight = 12;
                 int filledWidth = (int) ceil((cur / healthWithAbsorption) * barWidth);
                 int absorptionBar = (int)((absorption / healthWithAbsorption) * barWidth);
@@ -88,19 +88,19 @@ public class HealthBarOverlay {
                 // 위치 (왼쪽 아래)
 
                 // 배경
-                drawContext.fill(x-2, y-1, x + barWidth+2, y + barHeight+1, 0x55FFFFFF);
+                drawContext.fillGradient(x-1, y-1, x + barWidth+2, y + barHeight+1,0xFFBBBBBB, 0xFF444444);
 
                 // 체력 바
                 MatrixStack matrices = drawContext.getMatrices();
 
-                drawContext.fill( x+1 , y , x + barWidth , y + barHeight , 0xFF000000);//빈 체력
+                drawContext.fillGradient( x+1 , y , x + barWidth , y + barHeight ,0xFF555555, 0xFF000000);//빈 체력
 
                 if(hpDiff>0){
                     drawContext.fill(x + filledWidth+absorptionBar,y, x+filledWidth+absorptionBar+hpDiffBar, y+barHeight, 0xFF444444);
                 }
 
-                drawContext.fill( x, y, x + filledWidth+1, y +barHeight, 0xFFFF3333); //빨간 체력
-                drawContext.fill( x+filledWidth, y, x + filledWidth+absorptionBar, y +barHeight, 0xFFFFFFFF);//하얀 체력
+                drawContext.fillGradient( x, y, x + filledWidth+1, y +barHeight, 0xFFFF3333, 0xFF990000); //빨간 체력
+                drawContext.fillGradient( x+filledWidth, y, x + filledWidth+absorptionBar, y +barHeight, 0xFFFFFFFF,0xFF555555);//하얀 체력
                 // 3. 텍스트 렌더링 (흰색 + 검정 outline)
             TextRenderer renderer = client.textRenderer;
             OrderedText text = Text.literal(healthText).asOrderedText();
