@@ -103,7 +103,7 @@ public class HealthBarOverlay {
                 drawContext.fillGradient( x+filledWidth, y, x + filledWidth+absorptionBar, y +barHeight, 0xFFFFFFFF,0xFFAAAAAA);//하얀 체력
                 // 3. 텍스트 렌더링 (흰색 + 검정 outline)
             TextRenderer renderer = client.textRenderer;
-            OrderedText text = Text.literal(healthText).asOrderedText();
+            OrderedText text = Text.literal(healthText).asOrderedText();//
 
 
 
