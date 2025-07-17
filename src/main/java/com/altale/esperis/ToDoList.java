@@ -1,6 +1,4 @@
-package com.altale.esperis;
 
-public class ToDoList {
     //TODO CustomItem (돈, 장비, 드랍아이템, 주문서 등)+ 경험치 쿠폰 만들기-> 사용시 아이템 스택 -1-> 경험치 지급
     //TODO 돈 시스템-> 아이템 지급 구현
     //TODO 커스텀 데미지 계산 구현(mixin으로 가로채야할듯)
@@ -8,11 +6,11 @@ public class ToDoList {
     //TODO 최종 스탯 인벤창 왼쪽에 공간에 보이게 만들기
     //TODO 장비 시스템 (장비 스탯 부여, 주문서 등)+ 방어구 변경시 statUpdate호출 되게 하기+손에 들고있는거 변경시에도 호출되게 하기
     //TODO 주문서 시스템: 아이템 칸 3개 ABC A: custom장비 아이템만 넣기 가능 B: 주문서만 가능 -> C: 강화 실패시 A그대로 나옴, 성공시 스탯 적용해서 나옴
-
+    //TODO 레벨업 필요 경험치 생각해보기 (몹 공장 생각)- 2분에 1365경험치 줌
 
 
 
 
     //완료
     //TODO 경험치 orb 획득시 -> custom 경험치, 레벨 오르는거 구현-> client사이드에서 hud로 보이게 하기 + 미사용 sp 5증가하는거 까지 완료.
-}
+

@@ -147,11 +147,11 @@ public class LookingEntityHealthHUD {
                     hpDiffText=81;
                 }
                 ctx.fill(barLocateX-1,barLocateY-1,barLocateX+barWidth+1,barLocateY+barHeight+1,0x55FFFFFF);//테두리
-                ctx.fill(barLocateX,barLocateY,barLocateX+barWidth,barLocateY+barHeight,0xFF000000);//안에 빈 체력(검정)
+                ctx.fillGradient(barLocateX,barLocateY,barLocateX+barWidth,barLocateY+barHeight,0xFF555555, 0xFF000000);//안에 빈 체력(검정)
 
-                ctx.fill(barLocateX,barLocateY,barLocateX+hpBar+1,barLocateY+barHeight,0xFFFF3333);//현재 체력(빨강)
+                ctx.fillGradient(barLocateX,barLocateY,barLocateX+hpBar+1,barLocateY+barHeight,0xFFFF4444, 0xFFAA0000);//현재 체력(빨강)
 
-                ctx.fill(barLocateX+hpBar+1 ,barLocateY,barLocateX+1+hpBar+absorptionBar,barLocateY+barHeight,0xFFFFFFFF);//보호막(하양)
+                ctx.fillGradient(barLocateX+hpBar+1 ,barLocateY,barLocateX+1+hpBar+absorptionBar,barLocateY+barHeight,0xFFFFFFFF,0xFFAAAAAA);//보호막(하양)
                 if(hpDiff>0){
                     ctx.fill(barLocateX+hpBar+1+absorptionBar ,barLocateY,barLocateX+1+hpBar+absorptionBar+hpDiffBar,barLocateY+barHeight,0xFF666666);//잃은 체력
 //                    System.out.println("hpDiff: "+hpDiff);

@@ -9,7 +9,7 @@ public class PlayerLevelComponentImp implements PlayerLevelComponent, AutoSynced
     private final PlayerEntity player;
     int level=1;
     int currentExp=0;
-    int maxExp=700;
+    int maxExp=50;
 
     public PlayerLevelComponentImp(PlayerEntity player) {
         this.player = player;
@@ -64,7 +64,7 @@ public class PlayerLevelComponentImp implements PlayerLevelComponent, AutoSynced
     public void levelUp(){
             setLevel(this.level+1);
             setCurrentExp(this.currentExp-this.maxExp);
-            setMaxExp((int) (this.maxExp * 1.15));
+        setMaxExp((int) (this.maxExp * Math.max(1.1,(1.32-(getLevel()/100.0)))));
 
     }
 

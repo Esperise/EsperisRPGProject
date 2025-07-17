@@ -42,7 +42,7 @@ public class StatManager {
         double totalDur= pointDur + eqDur;
         double atk= (
                 0.5*(totalStr) + 0.1*(totalDex) + 0.25*(totalLuk)
-                + level+ eqAtk
+                + (2* level)+ eqAtk
                 //무기로 얻는 스탯 넣기
                 );
         double def= (
@@ -50,7 +50,7 @@ public class StatManager {
                 //+무기 방어력 추가
                 );
         double maxHp= (//20+레벨당5+str당 1+ dur당5+ 장비체력
-                30+(5*level)+totalStr+(5*(totalDur))+eqMaxHealth
+                30+(7*level)+totalStr+(5*(totalDur))+eqMaxHealth
                 //+무기 체력 추가
                 );
         double spd= (

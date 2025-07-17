@@ -16,7 +16,7 @@ public class PlayerCustomExpSystem {
 
             levelComponent.addExp(amount);
 
-            if(levelComponent.canLevelUp()){
+            while(levelComponent.canLevelUp()){
                 PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(player);
                 pointStatComponent.addSP(StatPointType.UnusedSP, 5);
                 pointStatComponent.addSP(StatPointType.TotalSP, 5);
