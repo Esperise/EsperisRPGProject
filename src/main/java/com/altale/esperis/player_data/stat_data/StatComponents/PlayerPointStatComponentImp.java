@@ -19,6 +19,14 @@ public class PlayerPointStatComponentImp implements PlayerPointStatComponent,Aut
         for (StatType statType: StatType.values()){
             statMap.put(statType,0.0);
         }
+        for(StatPointType statPointType: StatPointType.values()){
+            if(statPointType == StatPointType.UnusedSP){
+                StatPointMap.put(statPointType,5);
+            }
+            else{
+                StatPointMap.put(statPointType,0);
+            }
+        }
     }
 
     @Override

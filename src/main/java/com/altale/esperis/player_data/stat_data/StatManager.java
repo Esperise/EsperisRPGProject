@@ -42,7 +42,7 @@ public class StatManager {
         double totalDur= pointDur + eqDur;
         double atk= (
                 0.5*(totalStr) + 0.1*(totalDex) + 0.25*(totalLuk)
-                + (2* level)+ eqAtk
+                + ( level)+ eqAtk
                 //무기로 얻는 스탯 넣기
                 );
         double def= (
@@ -50,15 +50,15 @@ public class StatManager {
                 //+무기 방어력 추가
                 );
         double maxHp= (//20+레벨당5+str당 1+ dur당5+ 장비체력
-                30+(7*level)+totalStr+(5*(totalDur))+eqMaxHealth
+                20+(6*level)+totalStr+(5*(totalDur))+eqMaxHealth
                 //+무기 체력 추가
                 );
         double spd= (
                 1+(totalDex * 0.015)+eqSpd
                 );//1.015의 이동속도 계수를 가짐
         double crit=(
-                5+ totalLuk * 0.01 + eqCrit
-                );//기본 크확 5%
+                0.05+ totalLuk * 0.01 + eqCrit
+                );//기본 크확 5% 나중에 100곱하기, 레벨당 1퍼 증가
         double critDamage =(
                 1.75+(totalLuk * 0.005) +eqCritDamage
                 );// 기본 크뎀 배율 175% luk당 0.5%

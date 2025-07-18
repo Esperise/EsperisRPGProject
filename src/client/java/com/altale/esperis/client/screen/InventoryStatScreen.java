@@ -1,7 +1,9 @@
 package com.altale.esperis.client.screen;
 
+import com.altale.esperis.client.screen.Button.SpButtonFactory;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import com.altale.esperis.player_data.stat_data.StatPointType;
+import com.altale.esperis.player_data.stat_data.StatType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
@@ -13,11 +15,18 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.client.MinecraftClient;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class InventoryStatScreen extends Screen {
-    private final int guiWidth = 200, guiHeight = 100;
+    private static final Map<StatType, Integer> spending = new EnumMap<>(StatType.class);
+    MinecraftClient client= MinecraftClient.getInstance();
+    PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(Objects.requireNonNull(client.player));
+    private int unusedSP=pointStatComponent.getSP(StatPointType.UnusedSP);
+    private int willBeUsedSP= 0;
+    private final int guiWidth = 300, guiHeight = 200;
     private ButtonWidget closeButton;
 
     public InventoryStatScreen() {
@@ -45,16 +54,44 @@ public class InventoryStatScreen extends Screen {
         // 반투명 배경 (기본 GUI 창 스타일)
         this.renderBackground(ctx);
 
-        // 박스 테두리나 배경을 그리고 싶으면 직접 그려도 되고...
         int x = (this.width  - guiWidth)  / 2;
         int y = (this.height - guiHeight) / 2;
-        ctx.fill(x,y,x + guiWidth, y + guiHeight, 0xFF000000);      // 검은 반투명
-        ctx.fill(x + 1, y + 1,x + guiWidth - 1, y + guiHeight - 1, 0xFF555555);// 회색 안쪽
+        ctx.fill(x,y,x + guiWidth, y + guiHeight, 0x99000000);      // 검은 반투명
+        ctx.fillGradient(x + 1, y + 1,x + guiWidth - 1, y + guiHeight - 1, 0xAA777777, 0xAA444444);// 회색 안쪽
+        int btnX= x+30;
+        int btnY= y+30;
+        int buttonYDelta = 20;
+        for(StatType statType : StatType.getNormalStatType()) {//STR->DEX->LUK->DUR 순서
+                ButtonWidget spDecrease= SpButtonFactory.createSpButton(
+                        statType,btnX,btnY,20,20,
+                        ()->spending.getOrDefault(statType,0),
+                        ()->unusedSP,
+                        (type,newVal)->{//type은 위의 statType과 값이 같음
+                            int oldVal = spending.getOrDefault(type,0);
+                            spending.put(type,newVal);
+                            unusedSP -= (newVal-oldVal);
+                            this.init();
+                        }, "◀"
+                );
+                ButtonWidget Increase= SpButtonFactory.createSpButton(
+                        statType,btnX+46,btnY,20,20,
+                        ()->spending.getOrDefault(statType,0),
+                        ()->unusedSP,
+                        (type,newVal)->{//type은 위의 statType과 값이 같음
+                            int oldVal = spending.getOrDefault(type,0);
+                            spending.put(type,newVal);
+                            unusedSP -= (newVal-oldVal);
 
-        // 타이틀 텍스트
-//        ctx.drawCenteredText(this.textRenderer, this.title, this.width / 2, y + 8, 0xFFFFFF);
-        MinecraftClient client= MinecraftClient.getInstance();
-        PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(Objects.requireNonNull(client.player));
+                            this.init();
+                        }, "▶"
+                );
+                btnY += buttonYDelta;
+
+        }
+
+
+
+
         int unusedSP= pointStatComponent.getSP(StatPointType.UnusedSP);
         TextRenderer renderer = Objects.requireNonNull(client).textRenderer;
             MatrixStack matrices = ctx.getMatrices();

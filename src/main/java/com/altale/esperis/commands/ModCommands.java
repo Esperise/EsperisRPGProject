@@ -2,7 +2,10 @@ package com.altale.esperis.commands;
 
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import com.altale.esperis.player_data.stat_data.StatManager;
+import com.altale.esperis.player_data.stat_data.StatPointType;
+import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.skills.dexStatSkill.DexJump;
 import com.altale.esperis.skills.lukStatSkill.DoubleStep;
 import com.altale.esperis.skills.lukStatSkill.ShadowTeleport;
@@ -138,9 +141,35 @@ public class ModCommands {
                         .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerLevelComponent component = PlayerLevelComponent.KEY.get(Objects.requireNonNull(player));
+                                    PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(player);
                                     component.setLevel(1);
                                     component.setCurrentExp(0);
                                     component.setMaxExp(50);
+                                    pointStatComponent.setSP(StatPointType.UnusedSP,0);
+                                    pointStatComponent.setSP(StatPointType.TotalSP,0);
+                                    pointStatComponent.setSP(StatPointType.UnusedSP,0);
+                                    StatManager.statUpdate(player);
+                                    String text= String.format("초기화 완료");
+                                    ctx.getSource().sendFeedback(() -> Text.literal(text), false);
+                                    return 1;
+                                })
+
+        );
+        dispatcher.register(
+                literal("clearAll")//FIXME 디버깅용임
+                        .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    PlayerLevelComponent component = PlayerLevelComponent.KEY.get(Objects.requireNonNull(player));
+                                    PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(player);
+                                    component.setLevel(1);
+                                    component.setCurrentExp(0);
+                                    component.setMaxExp(50);
+                                    pointStatComponent.setSP(StatPointType.UnusedSP,5);
+                                    pointStatComponent.setSP(StatPointType.TotalSP,0);
+                                    pointStatComponent.setSP(StatPointType.UsedSP,0);
+                                    for(StatType statType : StatType.getNormalStatType()){
+                                        pointStatComponent.setPointStat(statType,0);
+                            }
                                     StatManager.statUpdate(player);
                                     String text= String.format("초기화 완료");
                                     ctx.getSource().sendFeedback(() -> Text.literal(text), false);

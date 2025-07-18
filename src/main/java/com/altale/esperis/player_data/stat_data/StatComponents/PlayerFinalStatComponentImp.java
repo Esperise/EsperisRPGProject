@@ -5,6 +5,7 @@ import com.altale.esperis.player_data.stat_data.StatType;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.stat.Stat;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -35,6 +36,14 @@ public class PlayerFinalStatComponentImp implements PlayerFinalStatComponent, Au
     @Override
     public double getFinalStat(StatType statType) {
         return FinalStatMap.get(statType);
+    }
+    @Override
+    public Map<StatType, Double> getAllFinalStat() {
+        Map<StatType, Double> allStatsMap = new EnumMap<>(StatType.class);
+        for(StatType statType: StatType.values()){
+            allStatsMap.put(statType, FinalStatMap.getOrDefault(statType,0.0));
+        }
+        return allStatsMap;
     }
 
     @Override

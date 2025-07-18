@@ -19,14 +19,13 @@ public class InventoryReceipeAdditionalButton {
                 // 화면 크기에서 중앙 배치 좌표 계산
                 int x = (client.getWindow().getScaledWidth()  - guiWidth)  / 2;
                 int y = (client.getWindow().getScaledHeight() - guiHeight) / 2;
-
+                //"▶"
                 // 버튼 생성 (builder 사용)
                 ButtonWidget recipeButton = ButtonWidget
-                        .builder(Text.literal("▶"), btn -> {
-                            client.player.sendMessage(Text.literal("레시피 버튼 클릭!"), false);
+                        .builder(Text.literal("SP 사용"), btn -> {
                             client.setScreen(new InventoryStatScreen());
                         })
-                        .dimensions(x + guiWidth - 10, y + 46, 20, 20)
+                        .dimensions(x + guiWidth - 45, y + 59, 40, 20)
                         .build();
                 recipeButton.visible = true;
 
@@ -37,7 +36,7 @@ public class InventoryReceipeAdditionalButton {
                 ScreenEvents.afterRender(screen).register((scr, ctx, mouseX, mouseY, tickDelta) -> {
                     boolean open = inv.getRecipeBookWidget().isOpen();
 
-                    if (!open) {
+                    if (open) {
                         recipeButton.visible = false;
                         // 필요시 텍스트도 같이 그릴 수 있음
 //                        ctx.drawText(
