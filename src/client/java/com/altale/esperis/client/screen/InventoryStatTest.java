@@ -40,18 +40,6 @@ public class InventoryStatTest {
                 int lv= lvComp.getLevel();
                 int currExp= lvComp.getCurrentExp();
                 int maxExp= lvComp.getMaxExp();
-//                int str=(int) finalStatComp.getFinalStat(StatType.STR);
-//                int dex=(int) finalStatComp.getFinalStat(StatType.DEX);
-//                int luk=(int) finalStatComp.getFinalStat(StatType.LUK);
-//                int dur=(int) finalStatComp.getFinalStat(StatType.DUR);
-//                int spd=(int) finalStatComp.getFinalStat(StatType.SPD);
-//                int def=(int) finalStatComp.getFinalStat(StatType.DEF);
-//                int maxHealth=(int) finalStatComp.getFinalStat(StatType.MAX_HEALTH);
-//                int critDamage=(int) finalStatComp.getFinalStat(StatType.CRIT_DAMAGE);
-//                int crit=(int) finalStatComp.getFinalStat(StatType.CRIT);
-//                int acc=(int) finalStatComp.getFinalStat(StatType.ACC);
-//                int avd=(int) finalStatComp.getFinalStat(StatType.AVD);
-//                int atk=(int) finalStatComp.getFinalStat(StatType.ATK);
                 // 투명 검정 배경 패널
                 ctx.fill(x, y, x2, y + guiH, 0x77AAAAAA);
                 MatrixStack matrices = ctx.getMatrices();
@@ -103,14 +91,6 @@ public class InventoryStatTest {
                     }
                     statBaseY+= lineHeight;
                 }
-//                renderer.drawWithOutline(
-//                        Text.literal(String.format("%d / %d",currExp,maxExp)).asOrderedText(),
-//                        x+1, y+10,0xFFFFFF, // 글자색
-//                        0x000000, // 테두리색
-//                        matrices.peek().getPositionMatrix(),
-//                        ctx.getVertexConsumers(),
-//                        15728880
-//                );
             });
         });
     }

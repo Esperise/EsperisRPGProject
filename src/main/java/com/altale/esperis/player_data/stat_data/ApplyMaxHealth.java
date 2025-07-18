@@ -22,9 +22,11 @@ public class ApplyMaxHealth {
                 applyMaxHealthByFinalStat(player);
             });
             if(player.getMaxHealth()<= 1){
+                StatManager.statUpdate(player);
                 applyMaxHealthByFinalStat(player);
             }
             else{
+                StatManager.statUpdate(player);
                 applyMaxHealthByFinalStat(player);
             }
 
@@ -32,6 +34,7 @@ public class ApplyMaxHealth {
         });
         ServerPlayerEvents.COPY_FROM.register((oldP, newP,alive) -> {
             if(newP.getMaxHealth() <=0 ) {
+
                 applyMaxHealthByFinalStat(newP);
                 newP.setHealth(newP.getMaxHealth());
 

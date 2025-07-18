@@ -9,6 +9,8 @@ import com.altale.esperis.player_data.stat_data.ApplyMaxHealth;
 import com.altale.esperis.player_data.stat_data.StatComponents.*;
 import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.serverSide.TickHandler;
+import com.altale.esperis.serverSide.packet.StatAddRequestReceiver;
+import com.altale.esperis.serverSide.packet.StatUpdateRequestReceiver;
 import com.altale.esperis.skillTest1.DashLandingHandler;
 import com.altale.esperis.skillTest1.SwordDashHandler;
 import com.altale.esperis.skills.buff.AbsorptionBuff;
@@ -41,6 +43,8 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         StatManager.register();
         ApplyMaxHealth.register();
         PlayerCustomExpSystem.register();
+        StatUpdateRequestReceiver.register();
+        StatAddRequestReceiver.register();
 
 
 

@@ -1,6 +1,9 @@
 package com.altale.esperis.client.screen;
 
+import com.altale.esperis.client.packet.StatAddRequestSender;
+import com.altale.esperis.client.packet.StatUpdateRequestSender;
 import com.altale.esperis.client.screen.Button.SpButtonFactory;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import com.altale.esperis.player_data.stat_data.StatPointType;
 import com.altale.esperis.player_data.stat_data.StatType;
@@ -24,10 +27,12 @@ public class InventoryStatScreen extends Screen {
     private static final Map<StatType, Integer> spending = new EnumMap<>(StatType.class);
     MinecraftClient client= MinecraftClient.getInstance();
     PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(Objects.requireNonNull(client.player));
+    PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(Objects.requireNonNull(client.player));
     private int unusedSP=pointStatComponent.getSP(StatPointType.UnusedSP);
     private int willBeUsedSP= 0;
     private final int guiWidth = 300, guiHeight = 200;
     private ButtonWidget closeButton;
+    private ButtonWidget confirmButton;
 
     public InventoryStatScreen() {
         super(Text.literal("My Custom Screen"));  // 창 상단 타이틀
@@ -42,11 +47,67 @@ public class InventoryStatScreen extends Screen {
         // 닫기 버튼
         this.closeButton = ButtonWidget.builder(Text.literal("닫기"), btn -> {
                     // 버튼 클릭 시 이전 화면으로 돌아가기
+                    spending.clear();
+                    willBeUsedSP= 0;
                     MinecraftClient.getInstance().setScreen(null);
                 })
                 .dimensions(x + guiWidth - 50, y + guiHeight - 20, 40, 20)
                 .build();
+        this.confirmButton =ButtonWidget.builder(Text.literal("결정"), btn -> {
+                    // 버튼 클릭 시 이전 화면으로 돌아가기
+                    for(StatType statType: StatType.getNormalStatType()){
+                        int value = spending.getOrDefault(statType, 0);
+                        Objects.requireNonNull(client.player).sendMessage(Text.literal(String.format("%s: %d",statType.name(), value)), false);
+                        if (value <=0){
+                            continue;
+                        }
+                        StatAddRequestSender.sendAddStatRequest(statType, value);
+                    }
+                    spending.clear();
+                    willBeUsedSP= 0;
+                    MinecraftClient.getInstance().setScreen(null);
+                })
+                .dimensions(x + guiWidth - 110, y + guiHeight - 20, 40, 20)
+                .build();
         this.addDrawableChild(closeButton);
+        this.addDrawableChild(confirmButton);
+        int btnX= (this.width  - guiWidth)  / 2+50;
+        int btnY= (this.height - guiHeight) / 2+30;
+        int buttonYDelta = 30;
+        for(StatType statType : StatType.getNormalStatType()) {//STR->DEX->LUK->DUR 순서
+                this.addDrawableChild(
+                        SpButtonFactory.createSpButton(
+                        statType,btnX,btnY,20,20,
+                        ()->spending.getOrDefault(statType,0),
+                        ()->unusedSP,
+                        (type,newVal)->{//type은 위의 statType과 값이 같음
+                            int oldVal = spending.getOrDefault(type,0);
+                            spending.put(type,newVal);
+                            unusedSP -= (newVal-oldVal);
+                            willBeUsedSP += (newVal-oldVal);
+                            this.init();}, "◀")
+                        );
+                this.addDrawableChild(
+                        SpButtonFactory.createSpButton(
+                        statType,btnX+56,btnY,20,20,
+                        ()->spending.getOrDefault(statType,0),
+                        ()->unusedSP,
+                        (type,newVal)->{//type은 위의 statType과 값이 같음
+                            int oldVal = spending.getOrDefault(type,0);
+                            spending.put(type,newVal);
+                            unusedSP -= (newVal-oldVal);
+                            willBeUsedSP += (newVal-oldVal);
+                            this.init();
+                        }, "▶")
+                );
+                btnY += buttonYDelta;
+            }
+    }
+    @Override
+    public void removed(){
+        super.removed();
+        spending.clear();
+        willBeUsedSP= 0;
     }
 
     @Override
@@ -58,36 +119,7 @@ public class InventoryStatScreen extends Screen {
         int y = (this.height - guiHeight) / 2;
         ctx.fill(x,y,x + guiWidth, y + guiHeight, 0x99000000);      // 검은 반투명
         ctx.fillGradient(x + 1, y + 1,x + guiWidth - 1, y + guiHeight - 1, 0xAA777777, 0xAA444444);// 회색 안쪽
-        int btnX= x+30;
-        int btnY= y+30;
-        int buttonYDelta = 20;
-        for(StatType statType : StatType.getNormalStatType()) {//STR->DEX->LUK->DUR 순서
-                ButtonWidget spDecrease= SpButtonFactory.createSpButton(
-                        statType,btnX,btnY,20,20,
-                        ()->spending.getOrDefault(statType,0),
-                        ()->unusedSP,
-                        (type,newVal)->{//type은 위의 statType과 값이 같음
-                            int oldVal = spending.getOrDefault(type,0);
-                            spending.put(type,newVal);
-                            unusedSP -= (newVal-oldVal);
-                            this.init();
-                        }, "◀"
-                );
-                ButtonWidget Increase= SpButtonFactory.createSpButton(
-                        statType,btnX+46,btnY,20,20,
-                        ()->spending.getOrDefault(statType,0),
-                        ()->unusedSP,
-                        (type,newVal)->{//type은 위의 statType과 값이 같음
-                            int oldVal = spending.getOrDefault(type,0);
-                            spending.put(type,newVal);
-                            unusedSP -= (newVal-oldVal);
 
-                            this.init();
-                        }, "▶"
-                );
-                btnY += buttonYDelta;
-
-        }
 
 
 
@@ -104,7 +136,39 @@ public class InventoryStatScreen extends Screen {
                     matrices.peek().getPositionMatrix(),
                     ctx.getVertexConsumers(),
                     15728880
+            );textRenderer.drawWithOutline(
+                    Text.literal(String.format("사용 예정 sp: %d",willBeUsedSP)).asOrderedText(),
+                    x+105, y+5,
+                    0xFFFFFF, // 글자색
+                    0x000000, // 테두리색
+                    matrices.peek().getPositionMatrix(),
+                    ctx.getVertexConsumers(),
+                    15728880
             );
+            int textY= y+37;
+            int yDelta= 30;
+            for(StatType statType : StatType.getNormalStatType()) {
+                OrderedText label = Text.literal(statType.name()+" :").asOrderedText();
+                textRenderer.drawWithOutline(
+                    label, x+9, textY,
+                    0xFFFFFF, // 글자색
+                    0x000000, // 테두리색
+                    matrices.peek().getPositionMatrix(),
+                    ctx.getVertexConsumers(),
+                    15728880
+            );
+
+                textRenderer.drawWithOutline(
+                    Text.literal(String.format("+%02d",spending.getOrDefault(statType,0))).asOrderedText(), x+80, textY,
+                    0xFFFFFF, // 글자색
+                    0x000000, // 테두리색
+                    matrices.peek().getPositionMatrix(),
+                    ctx.getVertexConsumers(),
+                    15728880
+            );
+                textY+= yDelta;
+
+            }
         // 버튼 등 자식 위젯 렌더
         super.render(ctx, mouseX, mouseY, delta);
     }

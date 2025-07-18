@@ -10,6 +10,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import java.util.UUID;
 
 public class StatManager {
     public static void statUpdate(ServerPlayerEntity player){
@@ -22,6 +23,10 @@ public class StatManager {
 
         //방어구등으로 얻는 스탯, 공격력등 가져오기
         double pointStr= pointStatComponent.getPointStat(StatType.STR);
+//        if(pointStr==0.0) {
+//            player.sendMessage(Text.literal("Str:0"),false);
+//            pointStr=10.0;
+//        }
         double pointDex= pointStatComponent.getPointStat(StatType.DEX);
         double pointLuk= pointStatComponent.getPointStat(StatType.LUK);
         double pointDur= pointStatComponent.getPointStat(StatType.DUR);
@@ -40,6 +45,7 @@ public class StatManager {
         double totalDex= pointDex + eqDex;
         double totalLuk= pointLuk + eqLuk;
         double totalDur= pointDur + eqDur;
+
         double atk= (
                 0.5*(totalStr) + 0.1*(totalDex) + 0.25*(totalLuk)
                 + ( level)+ eqAtk
