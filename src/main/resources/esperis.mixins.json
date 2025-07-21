@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ExpMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "JumpCritInvalidationMixin"
   ],
   "injectors": {
     "defaultRequire": 1
