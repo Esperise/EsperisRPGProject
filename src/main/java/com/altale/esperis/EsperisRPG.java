@@ -1,4 +1,5 @@
 package com.altale.esperis;
+import com.altale.esperis.combat.CalculateDamage;
 import com.altale.esperis.commands.ModCommands;
 import com.altale.esperis.player_data.level_data.PlayerCustomExpSystem;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
@@ -51,6 +52,8 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         PlayerCustomExpSystem.register();
         StatUpdateRequestReceiver.register();
         StatAddRequestReceiver.register();
+
+        CalculateDamage.register();
 
 
 

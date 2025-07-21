@@ -108,8 +108,8 @@ public class StatManager {
                         statUpdate(player);
                         player.sendMessage(Text.literal("동기화 완료"));
                     }
-                    if(world.getTime() % 100 ==0){
-                        player.heal(player.getMaxHealth()/200);
+                    if(world.getTime() % 80 ==0){
+                        player.heal(player.getMaxHealth()/150); // 4초마다 (0.75% 최대체력 + 1) -> 1초당 0.1875%+0.25 회복-> 10분에 풀피
                     }
                 }
 

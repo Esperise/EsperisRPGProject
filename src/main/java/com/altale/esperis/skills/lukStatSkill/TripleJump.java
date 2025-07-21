@@ -1,5 +1,7 @@
 package com.altale.esperis.skills.lukStatSkill;
 
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
+import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.skills.buff.AbsorptionBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.visualEffect.DrawCircle;
@@ -61,7 +63,9 @@ public class TripleJump {
 //        Vec3d eye = player.getCameraPosVec(1.0F);
 //        Vec3d dir = player.getRotationVec(1.0F).normalize();
 //        Vec3d lateral = dir.crossProduct(new Vec3d(-1, 0, -1)).normalize();
-        double power= 1.4;
+        PlayerFinalStatComponent playerFinalStatComponent= PlayerFinalStatComponent.KEY.get(player);
+        double spd= playerFinalStatComponent.getFinalStat(StatType.SPD);
+        double power= 1.4 * (spd/2) ;
         Vec3d velocity = new Vec3d(look.x * power, Math.max(0.45, look.y), look.z * power);
         player.addVelocity(velocity.x, velocity.y, velocity.z);
         player.velocityModified = true;
