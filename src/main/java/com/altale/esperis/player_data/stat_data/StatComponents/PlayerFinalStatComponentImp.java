@@ -16,7 +16,11 @@ public class PlayerFinalStatComponentImp implements PlayerFinalStatComponent, Au
     public PlayerFinalStatComponentImp(PlayerEntity player) {
         this.player = player;
         for(StatType statType: StatType.values()){
-            FinalStatMap.put(statType, 0.0);
+            if(statType == StatType.FinalDamagePercent){
+                FinalStatMap.put(statType, 1.0);
+            } else{
+                FinalStatMap.put(statType, 0.0);
+            }
         }
     }
 

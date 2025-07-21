@@ -12,6 +12,8 @@ public enum StatType {
     SPD("속도"),
     CRIT("치명타확률"),//크확
     CRIT_DAMAGE("치명타데미지"),//크뎀
+    FinalDamagePercent("최종데미지"),
+    DefPenetrate("방어력 관통"),
     ACC("명중률"),//명중률
     AVD("회피율");//회피율
     private final String displayName;

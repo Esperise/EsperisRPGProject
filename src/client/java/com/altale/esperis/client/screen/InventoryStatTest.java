@@ -25,10 +25,10 @@ public class InventoryStatTest {
             if (!(screen instanceof InventoryScreen inv)) return;
 
             // vanilla GUI 크기
-            final int guiW = 176, guiH = 166;
+            final int guiW = 176, guiH = (client.getWindow().getScaledHeight() * 7 / 9)+3;
             int x = (client.getWindow().getScaledWidth()   / 100);
-            int y = (client.getWindow().getScaledHeight() / 6);
-            int x2= (client.getWindow().getScaledWidth() *32   / 100);
+            int y = (client.getWindow().getScaledHeight() / 9);
+            int x2= (client.getWindow().getScaledWidth() *30   / 100);
 
             // 렌더 콜백 등록
             ScreenEvents.afterRender(screen).register((scr, ctx, mouseX, mouseY, tickDelta) -> {
@@ -46,7 +46,7 @@ public class InventoryStatTest {
                 TextRenderer renderer = client.textRenderer;
                 renderer.drawWithOutline(
                         Text.literal(String.format("레벨: %d",lv)).asOrderedText(),
-                        x+35, y+1,
+                        x+5, y+3,
                         0xFFFFFF, // 글자색
                         0x000000, // 테두리색
                         matrices.peek().getPositionMatrix(),
@@ -55,19 +55,20 @@ public class InventoryStatTest {
                 );
                 //경험치
                 renderer.drawWithOutline(
-                        Text.literal(String.format(" %d / %d ",currExp,maxExp)).asOrderedText(),
-                        x+30, y+13,0xFFFFFF, // 글자색
+                        Text.literal(String.format(" (%d / %d) ",currExp,maxExp)).asOrderedText(),
+                        x+42, y+3,0xFFFFFF, // 글자색
                         0x000000, // 테두리색
                         matrices.peek().getPositionMatrix(),
                         ctx.getVertexConsumers(),
                         15728880
                 );
-                int statBaseX= x+10;
-                int statBaseY= y+23;
+                int statBaseX= x+13;
+                int statBaseY= y+22;
                 int lineHeight= 12;
                 for(StatType statType: StatType.values()){
                     String label= statType.getDisplayName();
-                    if(statType == StatType.ACC || statType == StatType.AVD || statType==StatType.CRIT || statType==StatType.CRIT_DAMAGE){
+                    if(statType == StatType.ACC || statType == StatType.AVD || statType==StatType.CRIT || statType==StatType.CRIT_DAMAGE
+                            || statType == StatType.FinalDamagePercent || statType==StatType.DefPenetrate){
                         double value= finalStatComp.getFinalStat(statType) *100 ;
                         renderer.drawWithOutline(
                         Text.literal(String.format("%s : %.1f%%",label,value)).asOrderedText(),
@@ -77,8 +78,17 @@ public class InventoryStatTest {
                         ctx.getVertexConsumers(),
                         15728880
                 );
-                    }
-                    else{
+                    } else if (statType== StatType.SPD ) {
+                        double value= (finalStatComp.getFinalStat(statType)-1) *100 ;
+                        renderer.drawWithOutline(
+                                Text.literal(String.format("%s : %.2f%%",label,value)).asOrderedText(),
+                                statBaseX,statBaseY,0xFFFFFF, // 글자색
+                                0x000000, // 테두리색
+                                matrices.peek().getPositionMatrix(),
+                                ctx.getVertexConsumers(),
+                                15728880
+                        );
+                    } else{
                         double value=  finalStatComp.getFinalStat(statType);
                         renderer.drawWithOutline(
                                 Text.literal(String.format("%s : %.2f",label,value)).asOrderedText(),

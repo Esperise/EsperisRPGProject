@@ -22,6 +22,8 @@ public class PlayerCustomExpSystem {
                 pointStatComponent.addSP(StatPointType.TotalSP, 5);
                 levelComponent.levelUp();
                 StatManager.statUpdate((ServerPlayerEntity) player);
+                float currentHealth= player.getHealth();
+                player.setHealth( (player.getMaxHealth() / 2) + currentHealth );
 
                 //레벨업 소리 이펙트
                 Vec3d pos= player.getPos();

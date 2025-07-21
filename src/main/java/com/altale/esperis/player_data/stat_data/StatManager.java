@@ -47,8 +47,8 @@ public class StatManager {
         double totalDur= pointDur + eqDur;
 
         double atk= (
-                0.5*(totalStr) + 0.1*(totalDex) + 0.25*(totalLuk)
-                + ( level)+ eqAtk
+                0.1*(totalStr) + 0.025*(totalDex) + 0.05*(totalLuk)
+                + ( 0.25* level)+ eqAtk
                 //무기로 얻는 스탯 넣기
                 );
         double def= (
@@ -56,24 +56,24 @@ public class StatManager {
                 //+무기 방어력 추가
                 );
         double maxHp= (//20+레벨당5+str당 1+ dur당5+ 장비체력
-                20+(6*level)+totalStr+(5*(totalDur))+eqMaxHealth
+                20+(7*level)+(totalStr)+(5*(totalDur))+eqMaxHealth
                 //+무기 체력 추가
                 );
         double spd= (
-                1+(totalDex * 0.015)+eqSpd
-                );//1.015의 이동속도 계수를 가짐
+                1+(totalDex * 0.0025)+(totalLuk*0.000777)+eqSpd
+                );//1.025의 이동속도 계수를 가짐
         double crit=(
-                0.05+ totalLuk * 0.01 + eqCrit
+                0.05+ totalLuk * 0.002 + eqCrit
                 );//기본 크확 5% 나중에 100곱하기, 레벨당 1퍼 증가
         double critDamage =(
-                1.75+(totalLuk * 0.005) +eqCritDamage
+                1.75+(totalLuk * 0.004) +eqCritDamage
                 );// 기본 크뎀 배율 175% luk당 0.5%
         double acc= Math.round(
-                (totalDex/(totalDex+totalLuk + 1000))*100
-                )/100.0;//명중률 계수 회피율 계수와 정량적인 뺄셈 진행-> randint로 공격 데미지 여부 결정, 소수점 2자리 반올림
+                ((totalDex+(totalLuk/4.0)) / ( totalDex+(totalLuk/4.0) + 1000)) *1000
+                )/1000.0;//명중률 계수 회피율 계수와 정량적인 뺄셈 진행-> randint로 공격 데미지 여부 결정, 소수점 2자리 반올림
         double avd= Math.round(
-                (totalLuk/(totalLuk+500) )*100
-                )/100.0;//소수점 2자리 반올림rh
+                (totalLuk+(totalDex/4)) /((totalLuk+500)+(totalDex/4)) *1000
+                )/1000.0;//소수점 3자리 반올림rh
         //최종 스펙 저장하는 component만들어서 저장하기!!!
 
             finalStatComponent.setFinalStat(StatType.STR, totalStr);
@@ -92,7 +92,9 @@ public class StatManager {
             finalStatComponent.setFinalStat(StatType.ACC, acc);
             finalStatComponent.setFinalStat(StatType.AVD, avd);
             //실제 적용 부분
-            ApplyMaxHealth.applyMaxHealthByFinalStat(player);
+//            ApplyMaxHealth.applyMaxHealthByFinalStat(player);
+//            ApplyMovementSpd.applyBaseSpeed(player);
+            ApplyStat2Ability.applyPlayerBaseAbility(player);
 
         }
     public static void register(){
@@ -101,11 +103,13 @@ public class StatManager {
             for(ServerWorld world : worlds){
                 List<ServerPlayerEntity> players= world.getPlayers();
                 for(ServerPlayerEntity player : players){
-                    if(world.getTime() % 2400 == 0){
-                        //2분마다 모든 플레이어 스탯 계산해서 저장/적용
+                    if(world.getTime() % 2000 == 0){
+                        //5분마다 모든 플레이어 스탯 계산해서 저장/적용
                         statUpdate(player);
-
                         player.sendMessage(Text.literal("동기화 완료"));
+                    }
+                    if(world.getTime() % 100 ==0){
+                        player.heal(player.getMaxHealth()/200);
                     }
                 }
 

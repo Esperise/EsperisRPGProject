@@ -2,6 +2,7 @@ package com.altale.esperis.commands;
 
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.player_data.stat_data.StatPointType;
@@ -161,6 +162,7 @@ public class ModCommands {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerLevelComponent component = PlayerLevelComponent.KEY.get(Objects.requireNonNull(player));
                                     PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(player);
+                                    PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
                                     component.setLevel(1);
                                     component.setCurrentExp(0);
                                     component.setMaxExp(50);
@@ -170,6 +172,14 @@ public class ModCommands {
                                     for(StatType statType : StatType.getNormalStatType()){
                                         pointStatComponent.setPointStat(statType,0);
                             }
+                                    finalStatComponent.setFinalStat(StatType.ATK, 1.0);
+                                    finalStatComponent.setFinalStat(StatType.DEF,1.0);
+                                    finalStatComponent.setFinalStat(StatType.ACC,0.0);
+                                    finalStatComponent.setFinalStat(StatType.AVD,0.0);
+                                    finalStatComponent.setFinalStat(StatType.CRIT,0.05);
+                                    finalStatComponent.setFinalStat(StatType.CRIT_DAMAGE,1.75);
+                                    finalStatComponent.setFinalStat(StatType.SPD,1);
+
                                     StatManager.statUpdate(player);
                                     String text= String.format("초기화 완료");
                                     ctx.getSource().sendFeedback(() -> Text.literal(text), false);

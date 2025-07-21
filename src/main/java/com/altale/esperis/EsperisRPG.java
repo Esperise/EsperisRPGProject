@@ -5,8 +5,8 @@ import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponentImp;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponentImp;
-import com.altale.esperis.player_data.stat_data.ApplyMaxHealth;
-import com.altale.esperis.player_data.stat_data.ApplyMovementSpd;
+
+import com.altale.esperis.player_data.stat_data.ApplyStat2Ability;
 import com.altale.esperis.player_data.stat_data.StatComponents.*;
 import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.serverSide.TickHandler;
@@ -44,8 +44,8 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         StatManager.register();
 
         //stat 실 적용
-        ApplyMaxHealth.register();
-        ApplyMovementSpd.register();
+
+            ApplyStat2Ability.register();
         //
 
         PlayerCustomExpSystem.register();

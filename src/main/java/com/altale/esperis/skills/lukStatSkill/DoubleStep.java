@@ -1,5 +1,7 @@
 package com.altale.esperis.skills.lukStatSkill;
 
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
+import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.GetEntityLookingAt;
 import com.altale.esperis.skills.buff.AbsorptionBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
@@ -16,6 +18,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -84,7 +87,7 @@ public class DoubleStep {
                     doStepEffect((ServerPlayerEntity) player, serverWorld);
 
                     // 10틱(0.5초) 뒤에 다시 실행되도록 스케줄
-                    for(long trig=now; trig<=now+8; trig+=2){
+                    for(long trig=now; trig<=now+16; trig+=4){
                         delayedTasks
                                 .computeIfAbsent(serverWorld, w -> new HashMap<>())
                                 .computeIfAbsent(player.getUuid(), u -> new HashMap<>())
@@ -125,7 +128,7 @@ public class DoubleStep {
 
     // 이펙트 + 데미지 + 출혈 DOT 주는 로직을 메서드로 분리
     private static void doStepEffect(ServerPlayerEntity player, ServerWorld world) {
-        AbsorptionBuff.giveAbsorptionBuff(world,player, "double_step", 10 , 100);
+        AbsorptionBuff.giveAbsorptionBuff(world,player, "double_step", player.getMaxHealth()/10 , 100);
 
         Vec3d eye = player.getCameraPosVec(1.0F);
         Vec3d dir = player.getRotationVec(1.0F).normalize();
@@ -202,11 +205,18 @@ public class DoubleStep {
             DamageSource src = world.getDamageSources().playerAttack(player);
             living.timeUntilRegen = 0;
             living.hurtTime = 0;
-            living.damage(src, 2.0f);
+            PlayerFinalStatComponent playerStatComponent = PlayerFinalStatComponent.KEY.get(player);
+            double atk= playerStatComponent.getFinalStat(StatType.ATK);
+            double luk= playerStatComponent.getFinalStat(StatType.LUK);
+            float stepDamage= (float) (1.0+ (atk*0.35)+(luk * 0.15));
+            float dotDamage= (float) (2.0 + (luk* 0.45) + atk*0.45 );
+            player.sendMessage(Text.literal(String.format("스킬데미지: 1.0+ (%.2f) + (%.2f) = %.2f",atk*0.35, luk*0.15,stepDamage)),false);
+            player.sendMessage(Text.literal(String.format("도트데미지: 2.0+ (%.2f) + (%.2f) = %.2f", luk*0.55,atk*0.45, dotDamage)), false);
+            living.damage(src, stepDamage);
             living.setVelocity(Vec3d.ZERO);
             living.velocityModified = true;
             // 출혈 DOT
-            DotDamageVer2.giveDotDamage(living, player, 150, 15, 20.0F+barrierAdditionalDamage, DotTypeVer2.Bleed, true,0.1f, "doubleStep");
+            DotDamageVer2.giveDotDamage(living, player, 150, 15, dotDamage+barrierAdditionalDamage, DotTypeVer2.Bleed, true,0.1f, "doubleStep");
             CoolTimeManager. specificCoolTimeReduction(player, "triple_jump",20);
         }
         else{
