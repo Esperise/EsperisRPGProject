@@ -7,8 +7,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ApplyStat2Ability {
     public static void register() {
@@ -46,13 +48,30 @@ public class ApplyStat2Ability {
 
         });
         ServerPlayerEvents.AFTER_RESPAWN.register((oldP, newP, alive) -> {
+            PlayerLevelComponent lvComponent = PlayerLevelComponent.KEY.get(newP);
+            PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(newP);
+            double luk=playerFinalStatComponent.getFinalStat(StatType.LUK);
+            int currExp = lvComponent.getCurrentExp();
+            int maxExp = lvComponent.getMaxExp();
+            ThreadLocalRandom random = ThreadLocalRandom.current();
+
+            if(random.nextDouble()<0.01+(luk/(luk+200))){
+                newP.sendMessage(Text.literal("운이 좋아 경험치를 잃지 않았습니다"), true);
+            }else{
+                double lostExpCoeffi = Math.round( (Math.max(0.0, random.nextDouble()/4 ) *100) )/100.0;
+                currExp = Math.max(0, currExp-(int)(maxExp*lostExpCoeffi));
+                lvComponent.setCurrentExp(currExp);
+            }
+
             if(newP.getMaxHealth() <=0 ) {
 //                applyMaxHealthByFinalStat(newP);
+
                 ApplyStat2Ability.applyPlayerBaseAbility(newP);
                 newP.setHealth(newP.getMaxHealth());
 
             }else {
 //                    applyMaxHealthByFinalStat(newP);
+
                 ApplyStat2Ability.applyPlayerBaseAbility(newP);
                 newP.setHealth(newP.getMaxHealth());
             }

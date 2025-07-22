@@ -23,20 +23,19 @@ public class CalculateDamage {
         CalculateDamageCallBack.EVENT.register(
                 ((damageSource, target, damageAmount) ->{
                     System.out.println("원본 데미지: "+damageAmount);
-
                     Entity attackerEntity = damageSource.getAttacker();
                     if(attackerEntity instanceof LivingEntity attacker){
-                        double size= Math.pow(target.getWidth(),2)*target.getHeight();
+
 
                         double attackerFinalDamageCoeffi = 0.00;
                         double attackerDefPenetrateCoeffi= 0.00;
-                        double attackerCrit=0.05;
-                        double attackerCritDmgCoeffi= 1.750;
-                        double attackerAcc = 0.025;
-                        double targetDef= 25.00;
-                        double targetAvd=Math.max(0.0, (0.3-size/3));
-                        int attackerLevel= (int) (Math.min(75,attacker.getMaxHealth()/2) + 5);
-                        int targetLevel= (int) (Math.min(75,target.getMaxHealth()/2) + 5);
+                        double attackerCrit=0.1;
+                        double attackerCritDmgCoeffi= 2;
+
+                        double targetDef= Math.min(100,Math.max(15.0, 15+Math.round(target.getMaxHealth()*100/(target.getMaxHealth()+50))));
+
+                        int attackerLevel= (int) (Math.min(80,attacker.getMaxHealth() / 2 + 10));
+                        int targetLevel= (int) (Math.min(80,target.getMaxHealth() / 2  + 10));
                         boolean attackerIsPlayer = false;
                         boolean targetIsPlayer = false;
                         if(attacker instanceof PlayerEntity attackerPlayer){
@@ -47,46 +46,20 @@ public class CalculateDamage {
                             attackerCrit= attackerComponent.getFinalStat(StatType.CRIT);
                             attackerCritDmgCoeffi= attackerComponent.getFinalStat(StatType.CRIT_DAMAGE);
                             attackerLevel= attackerLvComponent.getLevel();
-                            attackerAcc=attackerComponent.getFinalStat(StatType.ACC);
+
                         }
                         if(target instanceof PlayerEntity targetPlayer){
                             targetIsPlayer = true;
                             PlayerFinalStatComponent targetComponent = PlayerFinalStatComponent.KEY.get(targetPlayer);
                             PlayerLevelComponent targetLvComponent = PlayerLevelComponent.KEY.get(targetPlayer);
                             targetDef= targetComponent.getFinalStat(StatType.DEF);
-                            targetAvd=targetComponent.getFinalStat(StatType.AVD);
                             targetLevel= targetLvComponent.getLevel();
                         }
-
                         ThreadLocalRandom random = ThreadLocalRandom.current();
-                        if(random.nextDouble() <=  Math.max(0.0, targetAvd - attackerAcc)){
-
-                            target.getWorld().playSound(
-                                    null,
-                                    target.getX(), target.getY(), target.getZ(),
-                                    SoundEvents.BLOCK_FIRE_EXTINGUISH,
-                                    SoundCategory.PLAYERS,
-                                    3.6F,0.4F
-                            );
-                            ((ServerWorld) target.getWorld()).spawnParticles(
-                                    ParticleTypes.END_ROD,
-                                    target.getX(), target.getY(), target.getZ(),
-                                    25, 0.3,2.4,0.3,0
-                            );
-                            if(targetIsPlayer){
-                                ((PlayerEntity) target).sendMessage(Text.literal("공격 회피: "+damageAmount),true);
-                            }
-                            if(attackerIsPlayer){
-                                ((PlayerEntity) attacker).sendMessage(Text.literal("공격 빗나감"),true);
-                            }
-                            return 0.0F;
-                        }
                         double levelDiff=  targetLevel- attackerLevel;
-
                         double levelCoeff= 1-( 0.01*levelDiff );
-
                         double targetFinalDef= targetDef*(1-attackerDefPenetrateCoeffi);
-                        double damage = Math.round(damageAmount * ( 1- (targetFinalDef/(targetFinalDef + 100)) ) *(levelCoeff) * (1+ attackerFinalDamageCoeffi)*1000)/1000.0;
+                        double damage =  Math.round(damageAmount * ( 1- (targetFinalDef/(targetFinalDef + 100)) ) *(levelCoeff) * (1+ attackerFinalDamageCoeffi)*1000)/1000.0;
                         System.out.println("levelDiff: "+levelDiff);
                         System.out.println("targetFinalDef: "+targetFinalDef);
                         System.out.println("damage: "+damage);

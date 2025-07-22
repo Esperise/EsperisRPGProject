@@ -4,6 +4,7 @@ package com.altale.esperis.client.HUD;
 
 
 import com.altale.esperis.client.cache.AbsorptionCache;
+import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -34,7 +35,7 @@ public class LookingEntityHealthHUD {
             PlayerEntity player = client.player;
             if (player == null || client.world == null) return;
 
-            double maxDistance = 25.0;
+            double maxDistance = 30.0;
             Vec3d cameraPos = player.getCameraPosVec(tickDelta);
             Vec3d lookVec = player.getRotationVec(tickDelta);
             Vec3d end = cameraPos.add(lookVec.multiply(maxDistance));
@@ -130,8 +131,9 @@ public class LookingEntityHealthHUD {
                 int hpBar= (int)((cur/(hpWithAbsorption+hpDiff))*barWidth);
                 int absorptionBar = (int)((absorption/(hpWithAbsorption+hpDiff))*barWidth);
 //                int barLocateX= client.getWindow().getScaledWidth()/2- barWidth/2;
-                int barLocateX= 7;
+                int barLocateX= 26;
                 int barLocateY=  barHeight/2;
+                int lvbarLocateX= 7;
                 int hpDiffText=0;
                 String healthText=""; float textX = 0; float textY = 0;
                 if(absorptionBar>0){
@@ -146,6 +148,11 @@ public class LookingEntityHealthHUD {
                     textY = barLocateY+1;
                     hpDiffText=81;
                 }
+                ctx.fillGradient(lvbarLocateX-1,barLocateY-1,barLocateX,barLocateY+10,0xFFBBBBBB, 0xFF444444);//level 테두리
+                ctx.fillGradient(lvbarLocateX,barLocateY,barLocateX-1,barLocateY+9,0xFF666666, 0xFF000000);//level
+
+
+
                 ctx.fill(barLocateX-1,barLocateY-1,barLocateX+barWidth+1,barLocateY+barHeight+1,0x55FFFFFF);//테두리
                 ctx.fillGradient(barLocateX,barLocateY,barLocateX+barWidth,barLocateY+barHeight,0xFF555555, 0xFF000000);//안에 빈 체력(검정)
 
@@ -160,6 +167,27 @@ public class LookingEntityHealthHUD {
                 OrderedText text = Text.literal(healthText).asOrderedText();
 
                 MatrixStack matrices = ctx.getMatrices();
+                int level= (int) (Math.min(75,max/2) + 5);
+                if(closestEntity instanceof PlayerEntity playerEntity){
+                    PlayerLevelComponent levelComp = PlayerLevelComponent.KEY.get(playerEntity);
+                    level = levelComp.getLevel();
+                }
+                String levelText = String.format("%d", level );
+                OrderedText lvText = Text.literal(levelText).asOrderedText();
+                int lvTextLocateX= lvbarLocateX+3;
+                if(level < 10){
+                    lvTextLocateX+=3;
+                }
+                renderer.drawWithOutline(//levelText
+                        lvText,
+                        lvTextLocateX,
+                        textY,
+                        0xFFFFFF,
+                        0x000000,
+                        matrices.peek().getPositionMatrix(),
+                        ctx.getVertexConsumers(),
+                        15728880
+                );
                 renderer.drawWithOutline(
                         text,
                         textX,

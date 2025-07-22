@@ -4,9 +4,12 @@
   "package": "com.altale.esperis.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AvdMixin",
     "CalculateDamageMixin",
     "ExpMixin",
     "HungerManagerMixin",
+    "InvalidateModifyApplyDamage",
+    "InvalidateShieldMixin",
     "JumpCritInvalidationMixin",
     "LivingEntityMixin"
   ],

@@ -48,32 +48,32 @@ public class StatManager {
 
         double atk= (
                 0.1*(totalStr) + 0.025*(totalDex) + 0.05*(totalLuk)
-                + ( 0.25* level)+ eqAtk
+                + ( 0.2 * level)+ eqAtk
                 //무기로 얻는 스탯 넣기
                 );
         double def= (
-                level+totalDur+eqDef
+                level + (0.8 * totalDur)
                 //+무기 방어력 추가
                 );
         double maxHp= (//20+레벨당5+str당 1+ dur당5+ 장비체력
-                20+(7*level)+(totalStr)+(5*(totalDur))+eqMaxHealth
+                20+(4*level)+(0.5*totalStr)+(1.5*(totalDur))+eqMaxHealth
                 //+무기 체력 추가
                 );
         double spd= (
                 1+(totalDex * 0.0025)+(totalLuk*0.000777)+eqSpd
                 );//1.025의 이동속도 계수를 가짐
-        double crit=(
-                0.05+ totalLuk * 0.002 + eqCrit
+        double crit=Math.min(1.0,
+                0.05+ totalLuk * 0.003 + eqCrit
                 );//기본 크확 5% 나중에 100곱하기, 레벨당 1퍼 증가
         double critDamage =(
-                1.75+(totalLuk * 0.004) +eqCritDamage
-                );// 기본 크뎀 배율 175% luk당 0.5%
+                1.75+(totalLuk * 0.001) +eqCritDamage
+                );// 기본 크뎀 배율 175% luk당 0.1%
         double acc= Math.round(
                 ((totalDex+(totalLuk/4.0)) / ( totalDex+(totalLuk/4.0) + 1000)) *1000
                 )/1000.0;//명중률 계수 회피율 계수와 정량적인 뺄셈 진행-> randint로 공격 데미지 여부 결정, 소수점 2자리 반올림
         double avd= Math.round(
                 (totalLuk+(totalDex/4)) /((totalLuk+500)+(totalDex/4)) *1000
-                )/1000.0;//소수점 3자리 반올림rh
+                )/1000.0;//소수점 3자리 반올림
         //최종 스펙 저장하는 component만들어서 저장하기!!!
 
             finalStatComponent.setFinalStat(StatType.STR, totalStr);

@@ -1,5 +1,6 @@
 package com.altale.esperis.commands;
 
+import com.altale.esperis.items.ModItems;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
@@ -15,11 +16,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.Objects;
 
@@ -120,7 +124,13 @@ public class ModCommands {
                                     && player.getInventory().getEmptySlot()!=-1){
                                         int[] a= component.withdraw(ctx.getArgument("amount", Integer.class));
                                         //아이템 구현-> 해당 명령어 치면 아이템 지급
+                                        ItemStack moneyStack =new ItemStack(ModItems.MONEY);
+                                        moneyStack.getOrCreateNbt().putInt("amount", a[1]);
                                         String text= String.format("%d esp 출금 완료, 현재 잔고: %d esp",a[1],a[0]);
+                                        moneyStack.setCustomName(
+                                                Text.literal(a[1]+" esp").formatted(Formatting.AQUA)
+                                        );
+                                        player.giveItemStack(moneyStack);
                                         ctx.getSource().sendFeedback(() -> Text.literal(text), false);
                                         return 1;
                                     } else if(!component.canWithdraw(ctx.getArgument("amount", Integer.class))){
