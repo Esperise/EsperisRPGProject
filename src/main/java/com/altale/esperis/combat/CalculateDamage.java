@@ -55,6 +55,9 @@ public class CalculateDamage {
                             targetDef= targetComponent.getFinalStat(StatType.DEF);
                             targetLevel= targetLvComponent.getLevel();
                         }
+                        if(!attackerIsPlayer){
+                            damageAmount += Math.min(3.0f, damageAmount *2);
+                        }
                         ThreadLocalRandom random = ThreadLocalRandom.current();
                         double levelDiff=  targetLevel- attackerLevel;
                         double levelCoeff= 1-( 0.01*levelDiff );

@@ -22,7 +22,7 @@ public class ApplyStat2Ability {
                     StatManager.statUpdate(player);
                     ApplyStat2Ability.applyPlayerBaseAbility(player);
                 }
-                ApplyStat2Ability.applyPlayerBaseAbility(player);
+//                ApplyStat2Ability.applyPlayerBaseAbility(player);
             });
             if(player.getMaxHealth()<= 1){
                 StatManager.statUpdate(player);

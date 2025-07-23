@@ -35,7 +35,7 @@ public class LookingEntityHealthHUD {
             PlayerEntity player = client.player;
             if (player == null || client.world == null) return;
 
-            double maxDistance = 30.0;
+            double maxDistance = 17.0;
             Vec3d cameraPos = player.getCameraPosVec(tickDelta);
             Vec3d lookVec = player.getRotationVec(tickDelta);
             Vec3d end = cameraPos.add(lookVec.multiply(maxDistance));
@@ -167,7 +167,7 @@ public class LookingEntityHealthHUD {
                 OrderedText text = Text.literal(healthText).asOrderedText();
 
                 MatrixStack matrices = ctx.getMatrices();
-                int level= (int) (Math.min(75,max/2) + 5);
+                int level= (int) (Math.min(80,max/2) + 10);
                 if(closestEntity instanceof PlayerEntity playerEntity){
                     PlayerLevelComponent levelComp = PlayerLevelComponent.KEY.get(playerEntity);
                     level = levelComp.getLevel();

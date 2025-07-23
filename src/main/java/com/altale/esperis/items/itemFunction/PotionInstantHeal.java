@@ -39,7 +39,7 @@ public class PotionInstantHeal extends Item {
             if(!world.isClient()){
                 PlayerLevelComponent levelComponent= PlayerLevelComponent.KEY.get(user);
                 int level = levelComponent.getLevel();
-                float healAmount= user.getMaxHealth()*0.05F + 10;
+                float healAmount= user.getMaxHealth()*0.07F + 12;
                 user.heal(healAmount);
                 world.playSound(
                         null,

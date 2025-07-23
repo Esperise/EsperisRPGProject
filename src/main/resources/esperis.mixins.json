@@ -10,8 +10,11 @@
     "HungerManagerMixin",
     "InvalidateModifyApplyDamage",
     "InvalidateShieldMixin",
+    "ItemAttackDamageModifierIdAccessorMixin",
     "JumpCritInvalidationMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "NormalBowAttackSpeedMixin",
+    "VanillaToolDamageMixin"
   ],
   "injectors": {
     "defaultRequire": 1

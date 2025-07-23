@@ -27,7 +27,7 @@ public class InstHealPotionTooltip {
                             float maxHp = player.getMaxHealth();
                             PlayerLevelComponent levelComponent = PlayerLevelComponent.KEY.get(player);
                             int level = levelComponent.getLevel();
-                            lines.add(Text.literal(Math.round(10 + maxHp * 0.05 ) + " = ( 10 + ♥ 5%)  즉시 회복").formatted(Formatting.GREEN));
+                            lines.add(Text.literal(Math.round(12 + maxHp * 0.07 ) + " = ( 12 + ♥ 7%)  즉시 회복").formatted(Formatting.GREEN));
 //                            lines.add(Text.literal(Math.round(10 + maxHp * 0.05 ) + " = ( 10 + ♥ 5%)  즉시 회복").fillStyle());
                             lines.add(Text.literal("사용 쿨타임 : 8초"));
                         }

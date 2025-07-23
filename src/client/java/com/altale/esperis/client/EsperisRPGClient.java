@@ -3,6 +3,7 @@ import com.altale.esperis.client.cache.AbsorptionCacheCleaner;
 import com.altale.esperis.client.HUD.*;
 import com.altale.esperis.client.cache.CoolTimeTextCache;
 import com.altale.esperis.client.item.tooltip.InstHealPotionTooltip;
+import com.altale.esperis.client.item.tooltip.SpecialBow1Tooltip;
 import com.altale.esperis.client.packet.AbsorptionSyncReceiver;
 import com.altale.esperis.client.packet.CoolTimePacketReceiver;
 import com.altale.esperis.client.screen.InventoryStatScreen;
@@ -29,6 +30,7 @@ public class EsperisRPGClient implements ClientModInitializer {
         InventoryStatTest.register();
 
         InstHealPotionTooltip.registerTooltip();
+        SpecialBow1Tooltip.registerTooltip();
 
 
         //반드시 맨 아래 두기!

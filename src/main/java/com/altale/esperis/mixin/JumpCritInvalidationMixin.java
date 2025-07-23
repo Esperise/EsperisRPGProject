@@ -16,7 +16,7 @@ public abstract class JumpCritInvalidationMixin {
             constant= @Constant(floatValue = 1.5F)
     )
 
-    private float invalidateCritDamage(  float originalDamage) {
+    private float invalidateCritDamage(float originalDamage) {
         System.out.println(originalDamage);
         return 1.05F;
 
