@@ -34,7 +34,7 @@ public class SpecialBowSkill {
                 SoundCategory.PLAYERS,
                 1.0f,
                 0.4f
-        );
+        );//
         if( target == null ){ //타겟팅 대상 없음
             //FIXME x, z 좌표 대각 벡터일때 판정 이상한거 고치기
             System.out.println("None targeted");
