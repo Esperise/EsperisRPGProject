@@ -2,7 +2,7 @@ package com.altale.esperis.skills.lukStatSkill;
 
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
-import com.altale.esperis.serverSide.GetEntityLookingAt;
+import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
 import com.altale.esperis.skills.buff.AbsorptionBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.DotDamageVer2;

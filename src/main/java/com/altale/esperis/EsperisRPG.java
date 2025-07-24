@@ -3,6 +3,7 @@ import com.altale.esperis.combat.AvdDamage;
 import com.altale.esperis.combat.CalculateDamage;
 import com.altale.esperis.commands.ModCommands;
 import com.altale.esperis.items.ModItems;
+import com.altale.esperis.player_data.level_data.KillOtherEntityEXP;
 import com.altale.esperis.player_data.level_data.PlayerCustomExpSystem;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponentImp;
@@ -12,7 +13,7 @@ import com.altale.esperis.player_data.money_data.PlayerMoneyComponentImp;
 import com.altale.esperis.player_data.stat_data.ApplyStat2Ability;
 import com.altale.esperis.player_data.stat_data.StatComponents.*;
 import com.altale.esperis.player_data.stat_data.StatManager;
-import com.altale.esperis.serverSide.TickHandler;
+import com.altale.esperis.serverSide.Utilities.TickHandler;
 import com.altale.esperis.serverSide.packet.StatAddRequestReceiver;
 import com.altale.esperis.serverSide.packet.StatUpdateRequestReceiver;
 import com.altale.esperis.skillTest1.DashLandingHandler;
@@ -61,6 +62,8 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         //ITEM
         ModItems.registerAll();
 
+        //exp
+        KillOtherEntityEXP.register();
 
 
 

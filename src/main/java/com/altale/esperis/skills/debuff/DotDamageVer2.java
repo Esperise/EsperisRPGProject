@@ -1,5 +1,5 @@
 package com.altale.esperis.skills.debuff;
-import com.altale.esperis.serverSide.HealthHanlder;
+import com.altale.esperis.serverSide.Utilities.HealthHanlder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;

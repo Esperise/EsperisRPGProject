@@ -1,4 +1,4 @@
-package com.altale.esperis.serverSide;
+package com.altale.esperis.serverSide.Utilities;
 
 
 import net.minecraft.entity.LivingEntity;

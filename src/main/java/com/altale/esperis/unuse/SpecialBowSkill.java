@@ -1,14 +1,14 @@
-package com.altale.esperis.skills;
+package com.altale.esperis.unuse;
 
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
-import com.altale.esperis.serverSide.GetEntityLookingAt;
-import com.altale.esperis.serverSide.GetEntityLookingAtDistance;
-import com.altale.esperis.skills.debuff.DotDamageVer2;
-import com.altale.esperis.skills.debuff.DotTypeVer2;
+import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
+import com.altale.esperis.serverSide.Utilities.GetEntityLookingAtDistance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Items;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -24,7 +24,12 @@ public class SpecialBowSkill {
         double atk= playerFinalStatComponent.getFinalStat(StatType.ATK);
         double dex= playerFinalStatComponent.getFinalStat(StatType.DEX);
         double shotDamage= 2+ (atk * 0.25) + (dex * 0.15);
-        Entity target = GetEntityLookingAt.getEntityLookingAt(player, 30.0f, 0);
+        PlayerInventory inventory = player.getInventory();
+        boolean hasArrow=inventory.contains(Items.ARROW.getDefaultStack());
+        if(hasArrow){
+            shotDamage += 4;
+        }
+        Entity target = GetEntityLookingAt.getEntityLookingAt(player, 40.0f, 0);
         player.getWorld().playSound(
                 null,
                 player.getX(),
@@ -63,56 +68,57 @@ public class SpecialBowSkill {
                     Vec3d pos = playerCameraPos.add(playerLookVec.multiply(i));
                     world.spawnParticles(new DustParticleEffect(new Vector3f(0.0f, 0.0f, 0.0f),0.1f), pos.x, pos.y, pos.z, 5, 0, 0, 0, 0);
                 }
-            }else{
-                System.out.println(world.getOtherEntities(player, box).isEmpty());
-
-                DamageSource src = world.getDamageSources().playerAttack(player);
-                for(Entity e : world.getOtherEntities(player, box)) {
-                    if(!(e instanceof LivingEntity)) continue;
-                    if(player.getBoundingBox().intersects(e.getBoundingBox())){
-                        e.damage(src, (float) atk);
-                        player.getWorld().playSound(
-                                null,
-                                player.getX(),
-                                player.getY(),
-                                player.getZ(),
-                                SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP,
-                                SoundCategory.PLAYERS,
-                                1.0f,
-                                1.0f
-                        );
-                    }
-                    entityCount++;
-                    if(entityCount == 1){
-                        LivingEntity targetEntity = (LivingEntity) e;
-                        double distance = GetEntityLookingAtDistance.getEntityLookingAtDistance(player, targetEntity);
-                        for(double i=0; i<=(float) distance ;i+=0.01){
-                            Vec3d pos = playerCameraPos.add(playerLookVec.multiply(i));
-                            world.spawnParticles(new DustParticleEffect(new Vector3f(0.0f, 0.0f, 0.0f),0.1f), pos.x, pos.y, pos.z, 5, 0, 0, 0, 0);
-                        }
-                        player.getWorld().playSound(
-                                null,
-                                player.getX(),
-                                player.getY(),
-                                player.getZ(),
-                                SoundEvents.ITEM_TRIDENT_HIT,
-                                SoundCategory.PLAYERS,
-                                1.0f,
-                                0.4f
-                        );
-                        targetEntity.timeUntilRegen = 0;
-                        targetEntity.hurtTime = 0;
-                        if(distance > 17.0f){
-                            double overDistanceCoefficient = (double)  Math.round(100* 0.04 *(distance - 17.0f))/100.0;
-                            shotDamage *= overDistanceCoefficient;
-                        }
-                        System.out.println(targetEntity);
-                        targetEntity.damage(src, (float) shotDamage);
-
-                        break;
-                    }
-                }
             }
+//            else{
+//                System.out.println(world.getOtherEntities(player, box).isEmpty());
+//
+//                DamageSource src = world.getDamageSources().playerAttack(player);
+//                for(Entity e : world.getOtherEntities(player, box)) {
+//                    if(!(e instanceof LivingEntity)) continue;
+//                    if(player.getBoundingBox().intersects(e.getBoundingBox())){
+//                        e.damage(src, (float) atk);
+//                        player.getWorld().playSound(
+//                                null,
+//                                player.getX(),
+//                                player.getY(),
+//                                player.getZ(),
+//                                SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP,
+//                                SoundCategory.PLAYERS,
+//                                1.0f,
+//                                1.0f
+//                        );
+//                    }
+//                    entityCount++;
+//                    if(entityCount == 1){
+//                        LivingEntity targetEntity = (LivingEntity) e;
+//                        double distance = GetEntityLookingAtDistance.getEntityLookingAtDistance(player, targetEntity);
+//                        for(double i=0; i<=(float) distance ;i+=0.01){
+//                            Vec3d pos = playerCameraPos.add(playerLookVec.multiply(i));
+//                            world.spawnParticles(new DustParticleEffect(new Vector3f(0.0f, 0.0f, 0.0f),0.1f), pos.x, pos.y, pos.z, 5, 0, 0, 0, 0);
+//                        }
+//                        player.getWorld().playSound(
+//                                null,
+//                                player.getX(),
+//                                player.getY(),
+//                                player.getZ(),
+//                                SoundEvents.ITEM_TRIDENT_HIT,
+//                                SoundCategory.PLAYERS,
+//                                1.0f,
+//                                0.4f
+//                        );
+//                        targetEntity.timeUntilRegen = 0;
+//                        targetEntity.hurtTime = 0;
+//                        if(distance > 17.0f){
+//                            double overDistanceCoefficient = (double)  Math.round(100* 0.04 *(distance - 17.0f))/100.0;
+//                            shotDamage *= overDistanceCoefficient;
+//                        }
+//                        System.out.println(targetEntity);
+//                        targetEntity.damage(src, (float) shotDamage);
+//
+//                        break;
+//                    }
+//                }
+//            }
 
 
         } else {
@@ -139,11 +145,10 @@ public class SpecialBowSkill {
                 DamageSource src = world.getDamageSources().playerAttack(player);
                 targetEntity.timeUntilRegen = 0;
                 targetEntity.hurtTime = 0;
-                if(distance > 17.0f){
-                    double overDistanceCoefficient = (double)  Math.round(100* 0.04 *(distance - 17.0f))/100.0;
+                if(distance > 20.0f){
+                    double overDistanceCoefficient = (double)  Math.round(100* 0.03 *(distance - 20.0f))/100.0;
                     shotDamage *= overDistanceCoefficient;
                 }
-                DotDamageVer2.giveDotDamage(targetEntity, player, 150, 10, (float)(dex*0.15), DotTypeVer2.Bleed,true,0.1f, "doubleStep2");
                 targetEntity.damage(src, (float) shotDamage);
 
             }

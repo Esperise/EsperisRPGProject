@@ -1,4 +1,4 @@
-package com.altale.esperis.serverSide;
+package com.altale.esperis.serverSide.Utilities;
 
 import com.altale.esperis.serverSide.packet.AbsorptionSyncS2CPacket;
 import com.altale.esperis.serverSide.packet.CoolTimeS2CPacket;

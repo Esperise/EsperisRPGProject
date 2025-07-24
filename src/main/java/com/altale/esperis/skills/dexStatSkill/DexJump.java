@@ -1,16 +1,14 @@
 package com.altale.esperis.skills.dexStatSkill;
 
-import com.altale.esperis.serverSide.GetEntityLookingAt;
+import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
 import com.altale.esperis.skills.visualEffect.DrawCircle;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Vector3f;
 
 public class DexJump {
     public static void dexJump(ServerPlayerEntity player, ServerWorld world) {

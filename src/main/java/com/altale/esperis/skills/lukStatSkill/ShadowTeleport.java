@@ -1,23 +1,20 @@
 package com.altale.esperis.skills.lukStatSkill;
 
-import com.altale.esperis.serverSide.GetEntityLookingAt;
+import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
 
 import com.altale.esperis.skills.buff.AbsorptionBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
-import com.altale.esperis.skills.debuff.DotTypeVer2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Vector3f;
 
 public class ShadowTeleport {
     public static void doShadowTeleportPlayer(ServerPlayerEntity player, ServerWorld serverWorld) {
