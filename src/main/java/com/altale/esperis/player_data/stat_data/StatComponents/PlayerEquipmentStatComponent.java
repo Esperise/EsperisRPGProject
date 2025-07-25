@@ -12,5 +12,6 @@ public interface PlayerEquipmentStatComponent extends Component {
     );
     void setEquipmentStat(StatType statType, double amount);
     double getEquipmentStat(StatType statType);
+    void addEquipmentStat(StatType statType, double amount);
 
 }

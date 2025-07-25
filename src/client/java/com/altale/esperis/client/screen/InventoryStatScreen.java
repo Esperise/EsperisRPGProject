@@ -54,7 +54,7 @@ public class InventoryStatScreen extends Screen {
                 .dimensions(x + guiWidth - 50, y + guiHeight - 20, 40, 20)
                 .build();
         this.confirmButton =ButtonWidget.builder(Text.literal("결정"), btn -> {
-                    // 버튼 클릭 시 이전 화면으로 돌아가기
+                    // 결정 버튼 클릭 시 스탯 추가 요청을 서버로 보내고 값을 0으로 만든 후 이전 화면으로 돌아가기
                     for(StatType statType: StatType.getNormalStatType()){
                         int value = spending.getOrDefault(statType, 0);
                         Objects.requireNonNull(client.player).sendMessage(Text.literal(String.format("%s: %d",statType.name(), value)), false);

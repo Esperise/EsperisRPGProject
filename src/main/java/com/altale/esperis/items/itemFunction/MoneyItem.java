@@ -11,6 +11,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.util.Objects;
+
 public class MoneyItem extends Item {
     public MoneyItem() {
         super(new FabricItemSettings().maxCount(64));
@@ -24,7 +26,7 @@ public class MoneyItem extends Item {
             NbtCompound nbt = stack.getNbt();
             if(!world.isClient()){
                 stack.decrement(1);
-                if(nbt.contains("amount",3)){
+                if(Objects.requireNonNull(nbt).contains("amount",3)){
                     amount = nbt.getInt("amount");
                     playerMoneyComponent.deposit(amount);
                     user.sendMessage(Text.literal(String.format("%d esp 입금, 현재: %d",amount,playerMoneyComponent.getBalance())), false);

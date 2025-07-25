@@ -15,9 +15,7 @@ public class StatAddRequestReceiver {
         ServerPlayNetworking.registerGlobalReceiver(ID2, (server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
             StatType statType =  buf.readEnumConstant(StatType.class);
-            System.out.println("statType 받음:" + statType.name());
             int value = buf.readInt();
-            System.out.println("value:" + value);
             server.execute(() -> {
                 ServerPlayerEntity playerTarget = server.getPlayerManager().getPlayer(uuid);
                 if (playerTarget != null) {

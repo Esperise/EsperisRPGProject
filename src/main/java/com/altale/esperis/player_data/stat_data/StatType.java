@@ -24,8 +24,17 @@ public enum StatType {
         return displayName;
     }
     private static final StatType[] NORMAL_STATS = { STR, DEX, LUK, DUR };
+    private static final StatType[] SPECIAL_STATS={CRIT,CRIT_DAMAGE,ACC,AVD,DefPenetrate,FinalDamagePercent};
+    private static final StatType[] BASIC_STATS = {ATK, DEF, MAX_HEALTH};
+    private static final StatType[] ARMOR_STATS = {DEF, MAX_HEALTH , STR, DEX, LUK, DUR};
+    private static final StatType[] WEAPON_STATS = {ATK, STR, DEX, LUK, DUR};
+
     public static StatType[] getNormalStatType(){
         return NORMAL_STATS.clone();
     }
+    public static StatType[] getSpecialStatType(){return SPECIAL_STATS.clone();}
+    public static StatType[] getBasicStatType(){return BASIC_STATS.clone();}
+    public static StatType[] getArmorStatType(){return ARMOR_STATS.clone();}
+    public static StatType[] getWeaponStats(){return WEAPON_STATS.clone();}
 }
 

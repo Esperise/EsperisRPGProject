@@ -17,8 +17,6 @@ public class StatAddRequestSender {
         buf.writeUuid(clientPlayer.getUuid());
         buf.writeEnumConstant(statType);
         buf.writeInt(value);
-        System.out.println("UUID: " + clientPlayer.getUuid());
-        System.out.println("전송: "+statType.name()+" "+ value);
         ClientPlayNetworking.send(ID2, buf);
     }
 }

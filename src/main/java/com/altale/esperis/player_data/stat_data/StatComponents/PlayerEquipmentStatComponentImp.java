@@ -29,6 +29,13 @@ public class PlayerEquipmentStatComponentImp implements PlayerEquipmentStatCompo
     }
 
     @Override
+    public void addEquipmentStat(StatType statType, double amount) {
+        double equipmentStat = getEquipmentStat(statType);
+        equipmentStat += amount;
+        setEquipmentStat(statType, equipmentStat);
+    }
+
+    @Override
     public void readFromNbt(NbtCompound nbtCompound) {
         if(nbtCompound.contains("EquipmentStats")) {
             NbtCompound equipmentStatsTag = nbtCompound.getCompound("EquipmentStats");

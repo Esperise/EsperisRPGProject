@@ -13,7 +13,6 @@ import java.util.UUID;
 
 public class StatUpdateRequestSender {
     public static final Identifier ID = new Identifier("esperis","stat_update_request");
-    public static final Identifier ID2 = new Identifier("esperis","stat_add_request");
     public static void sendStatUpdateRequest(){
         ClientPlayerEntity clientPlayer = MinecraftClient.getInstance().player;
         if(clientPlayer == null){ return;}
