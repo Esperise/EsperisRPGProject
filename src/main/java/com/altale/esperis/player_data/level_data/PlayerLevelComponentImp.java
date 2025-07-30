@@ -1,9 +1,16 @@
 package com.altale.esperis.player_data.level_data;
 
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
+import com.altale.esperis.player_data.stat_data.StatManager;
+import com.altale.esperis.player_data.stat_data.StatPointType;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.Vec3d;
 
 public class PlayerLevelComponentImp implements PlayerLevelComponent, AutoSyncedComponent {
     private final PlayerEntity player;
@@ -40,6 +47,22 @@ public class PlayerLevelComponentImp implements PlayerLevelComponent, AutoSynced
     @Override
     public void addExp(int exp) {
         this.currentExp+= exp;
+        while(canLevelUp()){
+            PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(player);
+            pointStatComponent.addSP(StatPointType.UnusedSP, 5);
+            pointStatComponent.addSP(StatPointType.TotalSP, 5);
+            levelUp();
+            StatManager.statUpdate((ServerPlayerEntity) player);
+            float currentHealth= player.getHealth();
+            player.setHealth( (player.getMaxHealth() / 2) + currentHealth );
+
+            //레벨업 소리 이펙트
+            Vec3d pos= player.getPos();
+            player.getWorld().playSound(
+                    null,pos.x,pos.y,pos.z,
+                    SoundEvents.ENTITY_FIREWORK_ROCKET_TWINKLE, SoundCategory.PLAYERS,5.0f,1.0f
+            );
+        }
         PlayerLevelComponent.KEY.sync(this.player);
     }
 

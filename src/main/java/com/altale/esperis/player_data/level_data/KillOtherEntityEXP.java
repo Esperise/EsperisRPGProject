@@ -1,8 +1,12 @@
 package com.altale.esperis.player_data.level_data;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
+
 
 
 public class KillOtherEntityEXP {
@@ -16,8 +20,12 @@ public class KillOtherEntityEXP {
                 PlayerLevelComponent playerLevelComponent = PlayerLevelComponent.KEY.get(player);
                 float killedEntityMaxHealth = killedEntity.getMaxHealth();
                 if(killedEntity instanceof Monster monster){
-                    String id = killedEntity.getUuid().toString();
-                    switch (id){
+                    EntityType<?> type = killedEntity.getType();
+                    // 2) Identifier ("minecraft:creeper" 등) 추출
+                    Identifier id = Registries.ENTITY_TYPE.getId(type);
+                    // 또는 id.getPath()만 비교할 수도 있습니다.
+
+                    switch (id.toString()) {
                         case "minecraft:creeper"
                                 -> playerLevelComponent.addExp(10);
                         case "minecraft:pillager", "minecraft:skeleton"
@@ -41,7 +49,7 @@ public class KillOtherEntityEXP {
                         case "minecraft:wither", "minecraft:elder_guardian"
                                 -> playerLevelComponent.addExp(2000);
                         case "minecraft:warden"
-                                -> playerLevelComponent.addExp(10000);
+                                -> playerLevelComponent.addExp(12000);
 
                         default -> playerLevelComponent.addExp((int) killedEntityMaxHealth/4);
                     }

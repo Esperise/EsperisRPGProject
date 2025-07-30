@@ -1,5 +1,7 @@
 package com.altale.esperis.items.itemFunction;
 
+import com.altale.esperis.EsperisRPG;
+import com.altale.esperis.player_data.equipmentStat.EquipmentInfoManager;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
@@ -20,6 +22,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Box;
@@ -27,32 +30,36 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import java.util.logging.Logger;
+
 public class SpecialBowItem extends Item {
-    private final int specialBowCoolTime;
+//    private final int specialBowCoolTime;
     private final float maxDistance;
     private final double atkCoeffi;
     private final double dexCoeffi;
     private final double baseDamage;
+    private final double baseAttackSpeed;
 
-    public SpecialBowItem(int cooltime, float maxDistance, double atkCoeffi, double dexCoeffi, float baseDamage) {
+    public SpecialBowItem(double baseAttackSpeed, float maxDistance, double atkCoeffi, double dexCoeffi, float baseDamage) {
         super(new FabricItemSettings().maxCount(1));
-        this.specialBowCoolTime = cooltime;
+//        this.specialBowCoolTime = cooltime;
+        this.baseAttackSpeed= baseAttackSpeed;
         this.maxDistance =maxDistance;
         this.atkCoeffi = atkCoeffi;
         this.dexCoeffi = dexCoeffi;
         this.baseDamage = baseDamage;
     }
     public SpecialBowItem(){
-        this(80, 40F,0.25,0.15,2);
+        this(0.25, 40F,0.3,0.1,3);
     }
-    public  int getSpecialBowCoolTime() {
-        return specialBowCoolTime;
+    public  double getSpecialBowAttackSpeed() {
+        return baseAttackSpeed;
     }
 
-    public int getCooltime(PlayerEntity user){
+    public int getAttackSpeed(PlayerEntity user){
         PlayerFinalStatComponent statComponent = PlayerFinalStatComponent.KEY.get(user);
-        double spd = statComponent.getFinalStat(StatType.SPD);
-        return (int) Math.max((double) specialBowCoolTime /5 , specialBowCoolTime *(2-spd));
+        double as = statComponent.getFinalStat(StatType.ATTACK_SPEED);
+        return (int) Math.round(1/ Math.max(0.01,baseAttackSpeed*as))*20;
     }
     public double getMaxDistance(){
         return maxDistance;
@@ -162,9 +169,20 @@ public class SpecialBowItem extends Item {
                 ItemStack itemStack = user.getProjectileType(Items.BOW.getDefaultStack());
                 itemStack.decrement(1);
             }
-            cooldownManager.set(this, getCooltime(user) );
+            cooldownManager.set(this, getAttackSpeed(user) );
         }
         return super.use(world, user, hand);
+    }
+    @Override
+    public Text getName(ItemStack stack){
+        if(EquipmentInfoManager.hasEquipmentInfo(stack)){
+
+            return Text.literal("돌풍");
+        }else{
+            String custom = "돌풍 ✨";
+
+            return Text.literal(custom);
+        }
     }
 
     public void useSpecialBow(ServerPlayerEntity player, ServerWorld world) {

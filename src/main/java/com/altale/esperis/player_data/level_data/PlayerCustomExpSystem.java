@@ -16,22 +16,22 @@ public class PlayerCustomExpSystem {
 
             levelComponent.addExp(amount);
 
-            while(levelComponent.canLevelUp()){
-                PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(player);
-                pointStatComponent.addSP(StatPointType.UnusedSP, 5);
-                pointStatComponent.addSP(StatPointType.TotalSP, 5);
-                levelComponent.levelUp();
-                StatManager.statUpdate((ServerPlayerEntity) player);
-                float currentHealth= player.getHealth();
-                player.setHealth( (player.getMaxHealth() / 2) + currentHealth );
-
-                //레벨업 소리 이펙트
-                Vec3d pos= player.getPos();
-                player.getWorld().playSound(
-                        null,pos.x,pos.y,pos.z,
-                        SoundEvents.ENTITY_FIREWORK_ROCKET_TWINKLE, SoundCategory.PLAYERS,5.0f,1.0f
-                );
-            }
+//            while(levelComponent.canLevelUp()){
+//                PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(player);
+//                pointStatComponent.addSP(StatPointType.UnusedSP, 5);
+//                pointStatComponent.addSP(StatPointType.TotalSP, 5);
+//                levelComponent.levelUp();
+//                StatManager.statUpdate((ServerPlayerEntity) player);
+//                float currentHealth= player.getHealth();
+//                player.setHealth( (player.getMaxHealth() / 2) + currentHealth );
+//
+//                //레벨업 소리 이펙트
+//                Vec3d pos= player.getPos();
+//                player.getWorld().playSound(
+//                        null,pos.x,pos.y,pos.z,
+//                        SoundEvents.ENTITY_FIREWORK_ROCKET_TWINKLE, SoundCategory.PLAYERS,5.0f,1.0f
+//                );
+//            }
         });
     }
 }

@@ -53,6 +53,7 @@ public class CalculateDamage {
                             PlayerFinalStatComponent targetComponent = PlayerFinalStatComponent.KEY.get(targetPlayer);
                             PlayerLevelComponent targetLvComponent = PlayerLevelComponent.KEY.get(targetPlayer);
                             targetDef= targetComponent.getFinalStat(StatType.DEF);
+                            System.out.println(targetDef);
                             targetLevel= targetLvComponent.getLevel();
                         }
                         if(!attackerIsPlayer){
@@ -62,6 +63,7 @@ public class CalculateDamage {
                         double levelDiff=  targetLevel- attackerLevel;
                         double levelCoeff= 1-( 0.01*levelDiff );
                         double targetFinalDef= targetDef*(1-attackerDefPenetrateCoeffi);
+                        System.out.println(( 1- (targetFinalDef/(targetFinalDef + 100)) ));
                         double damage =  Math.round(damageAmount * ( 1- (targetFinalDef/(targetFinalDef + 100)) ) *(levelCoeff) * (1+ attackerFinalDamageCoeffi)*1000)/1000.0;
                         System.out.println("levelDiff: "+levelDiff);
                         System.out.println("targetFinalDef: "+targetFinalDef);

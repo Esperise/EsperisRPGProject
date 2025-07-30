@@ -1,8 +1,12 @@
 package com.altale.esperis.player_data.stat_data.StatComponents;
 
+import com.altale.esperis.player_data.equipmentStat.EquipmentInfoManager;
 import com.altale.esperis.player_data.stat_data.StatType;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 
 import java.util.EnumMap;
@@ -33,6 +37,30 @@ public class PlayerEquipmentStatComponentImp implements PlayerEquipmentStatCompo
         double equipmentStat = getEquipmentStat(statType);
         equipmentStat += amount;
         setEquipmentStat(statType, equipmentStat);
+    }
+    @Override
+    public void changeEquipment(PlayerEntity player, EquipmentSlot slot , ItemStack previous , ItemStack current){
+        Map<StatType, Double> previousStatsMap = EquipmentInfoManager.sumEquipmentStats(previous);
+        for (Map.Entry<StatType, Double> entry : previousStatsMap.entrySet()) {
+            addEquipmentStat(entry.getKey(), -entry.getValue()); // 빼기
+        }
+
+        // 2. 새로운 장비 스탯 추가
+        Map<StatType, Double> currentStatsMap = EquipmentInfoManager.sumEquipmentStats(current);
+        for (Map.Entry<StatType, Double> entry : currentStatsMap.entrySet()) {
+            addEquipmentStat(entry.getKey(), entry.getValue()); // 더하기
+        }
+    }
+    @Override
+    public  void initializeEquipmentStat(PlayerEntity player){
+        EquipmentStatsMap.clear();
+        for(ItemStack stack : player.getItemsEquipped()) {
+            Map<StatType, Double> map = EquipmentInfoManager.sumEquipmentStats(stack);
+            for(Map.Entry<StatType, Double> entry : map.entrySet()) {
+                addEquipmentStat(entry.getKey(), entry.getValue());
+                System.out.println(stack);
+            }
+        }
     }
 
     @Override

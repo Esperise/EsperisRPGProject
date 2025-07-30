@@ -3,6 +3,7 @@ import com.altale.esperis.combat.AvdDamage;
 import com.altale.esperis.combat.CalculateDamage;
 import com.altale.esperis.commands.ModCommands;
 import com.altale.esperis.items.ModItems;
+import com.altale.esperis.player_data.equipmentStat.DetectPlayerEquipmentChange;
 import com.altale.esperis.player_data.level_data.KillOtherEntityEXP;
 import com.altale.esperis.player_data.level_data.PlayerCustomExpSystem;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
@@ -14,6 +15,8 @@ import com.altale.esperis.player_data.stat_data.ApplyStat2Ability;
 import com.altale.esperis.player_data.stat_data.StatComponents.*;
 import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.serverSide.Utilities.TickHandler;
+import com.altale.esperis.serverSide.packet.EquipmentAdditionalStatRerollRequestSender;
+import com.altale.esperis.serverSide.packet.ShowRerollGuiRequestReceiver;
 import com.altale.esperis.serverSide.packet.StatAddRequestReceiver;
 import com.altale.esperis.serverSide.packet.StatUpdateRequestReceiver;
 import com.altale.esperis.skillTest1.DashLandingHandler;
@@ -28,11 +31,15 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 
 import java.util.Random;
 
 public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
     private static final Random random = new Random();
+    public static final String MODID = "mymod";
+    public static final Logger LOGGER = (Logger) LogManager.getLogger(MODID);
     @Override
     public void onInitialize() {
         SwordDashHandler.register();
@@ -65,6 +72,10 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         //exp
         KillOtherEntityEXP.register();
 
+        //
+        ShowRerollGuiRequestReceiver.register();
+        EquipmentAdditionalStatRerollRequestSender.register();
+        DetectPlayerEquipmentChange.register();
 
 
         System.out.println("[EsperisRPG] 모드 초기화 완료!");

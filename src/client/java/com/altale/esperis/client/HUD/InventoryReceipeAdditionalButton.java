@@ -1,5 +1,6 @@
 package com.altale.esperis.client.HUD;
 
+import com.altale.esperis.client.screen.EquipmentEnhancementScreen;
 import com.altale.esperis.client.screen.InventoryStatScreen;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
@@ -28,9 +29,14 @@ public class InventoryReceipeAdditionalButton {
                         .dimensions(x + guiWidth - 45, y + 59, 40, 20)
                         .build();
                 recipeButton.visible = true;
+                ButtonWidget goToEquipmentEnhancementScreenButton= ButtonWidget.builder(Text.literal("추가 스탯 재설정"), btn ->{
+                    client.setScreen(new EquipmentEnhancementScreen());//FIXME 누르면 장비 강화 스크린 -> 버튼 2개( a:장비 추가 스탯 재설정, b:장비 스크롤 부여)
+                }).dimensions(x + guiWidth - 5, y + 59, 83, 20).build();
+                goToEquipmentEnhancementScreenButton.visible = true;
 
                 // protected addDrawableChild 대신 Screens.getButtons 로 추가
                 Screens.getButtons(screen).add(recipeButton);
+                Screens.getButtons(screen).add(goToEquipmentEnhancementScreenButton);
 
                 // 렌더 후마다 레시피 창 열림 상태 체크
                 ScreenEvents.afterRender(screen).register((scr, ctx, mouseX, mouseY, tickDelta) -> {

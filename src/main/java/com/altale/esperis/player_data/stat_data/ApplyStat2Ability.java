@@ -1,7 +1,9 @@
 package com.altale.esperis.player_data.stat_data;
 
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerEquipmentStatComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -36,16 +38,33 @@ public class ApplyStat2Ability {
 
         });
         ServerPlayerEvents.COPY_FROM.register((oldP, newP,alive) -> {
-            if(newP.getMaxHealth() <=0 ) {
+//            if(newP.getMaxHealth() <=0 ) {
+//
+//                ApplyStat2Ability.applyPlayerBaseAbility(newP);
+//                newP.setHealth(newP.getMaxHealth());
+//
+//            }else {
+//                ApplyStat2Ability.applyPlayerBaseAbility(newP);
+//                newP.setHealth(newP.getMaxHealth());
+//            }
 
-                ApplyStat2Ability.applyPlayerBaseAbility(newP);
-                newP.setHealth(newP.getMaxHealth());
+//            PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(newP);
+//            playerEquipmentStatComponent.changeEquipment(newP, );
 
-            }else {
-                ApplyStat2Ability.applyPlayerBaseAbility(newP);
-                newP.setHealth(newP.getMaxHealth());
-            }
+        });
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
+            PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(player);
 
+//            for(StatType statType : StatType.values()) {
+//                double temp = playerEquipmentStatComponent.getEquipmentStat(statType);
+//                System.out.println(temp);
+//                playerEquipmentStatComponent.setEquipmentStat(statType, temp);
+//                System.out.println("statType: " + playerEquipmentStatComponent.getEquipmentStat(statType));
+//
+//            }
+            playerEquipmentStatComponent.initializeEquipmentStat(player);
+
+            ApplyStat2Ability.applyPlayerBaseAbility(player);
         });
         ServerPlayerEvents.AFTER_RESPAWN.register((oldP, newP, alive) -> {
             PlayerLevelComponent lvComponent = PlayerLevelComponent.KEY.get(newP);
@@ -55,7 +74,7 @@ public class ApplyStat2Ability {
             int maxExp = lvComponent.getMaxExp();
             ThreadLocalRandom random = ThreadLocalRandom.current();
 
-            if(random.nextDouble()<0.01+(luk/(luk+200))){
+            if(random.nextDouble()<0.03+(luk/(luk+1000))){
                 newP.sendMessage(Text.literal("운이 좋아 경험치를 잃지 않았습니다"), true);
             }else{
                 double lostExpCoeffi = Math.round( (Math.max(0.0, random.nextDouble()/4 ) *100) )/100.0;
@@ -88,9 +107,10 @@ public class ApplyStat2Ability {
             float spd= (float) statComponent.getFinalStat(StatType.SPD);
             float atk= (float) statComponent.getFinalStat(StatType.ATK);
             float maxHealth= (float) statComponent.getFinalStat(StatType.MAX_HEALTH);
+            float as= (float) statComponent.getFinalStat(StatType.ATTACK_SPEED);
 
             Objects.requireNonNull(movementSpdAttr).setBaseValue(0.1*(spd));
-            Objects.requireNonNull(attackSpdAttr).setBaseValue(((4.0-2.4)*spd+2.4));
+            Objects.requireNonNull(attackSpdAttr).setBaseValue(((4.0-2.4)*as+2.4));
             Objects.requireNonNull(attackDamageAttr).setBaseValue(atk+1);
             Objects.requireNonNull(maxHealthAttr).setBaseValue(maxHealth);
             player.setHealth(Math.min(player.getHealth(), maxHealth));

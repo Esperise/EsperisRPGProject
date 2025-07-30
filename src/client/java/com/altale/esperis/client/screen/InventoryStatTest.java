@@ -25,7 +25,8 @@ public class InventoryStatTest {
             if (!(screen instanceof InventoryScreen inv)) return;
 
             // vanilla GUI 크기
-            final int guiW = 176, guiH = (client.getWindow().getScaledHeight() * 7 / 9)+3;
+            final int guiW = 176;
+            int guiH = (client.getWindow().getScaledHeight() * 7 / 9)+3;
             int x = (client.getWindow().getScaledWidth()   / 100);
             int y = (client.getWindow().getScaledHeight() / 9);
             int x2= (client.getWindow().getScaledWidth() *30   / 100);
@@ -40,8 +41,8 @@ public class InventoryStatTest {
                 int lv= lvComp.getLevel();
                 int currExp= lvComp.getCurrentExp();
                 int maxExp= lvComp.getMaxExp();
-                // 투명 검정 배경 패널
-                ctx.fill(x, y, x2, y + guiH, 0x77AAAAAA);
+                // 반투명 배경 패널
+                ctx.fill(x, y, x2, y + guiH, 0x77CACACA);
                 MatrixStack matrices = ctx.getMatrices();
                 TextRenderer renderer = client.textRenderer;
                 renderer.drawWithOutline(
@@ -64,7 +65,8 @@ public class InventoryStatTest {
                 );
                 int statBaseX= x+13;
                 int statBaseY= y+22;
-                int lineHeight= 12;
+//                int lineHeight= 12;//delta
+                int lineHeight  = (guiH - y ) / (StatType.values().length);
                 for(StatType statType: StatType.values()){
                     String label= statType.getDisplayName();
                     if(statType == StatType.ACC || statType == StatType.AVD || statType==StatType.CRIT || statType==StatType.CRIT_DAMAGE
@@ -78,10 +80,10 @@ public class InventoryStatTest {
                         ctx.getVertexConsumers(),
                         15728880
                 );
-                    } else if (statType== StatType.SPD ) {
+                    } else if (statType== StatType.SPD || statType==StatType.ATTACK_SPEED) {
                         double value= (finalStatComp.getFinalStat(statType)-1) *100 ;
                         renderer.drawWithOutline(
-                                Text.literal(String.format("%s : %.2f%%",label,value)).asOrderedText(),
+                                Text.literal(String.format("%s : +%.2f%%",label,value)).asOrderedText(),
                                 statBaseX,statBaseY,0xFFFFFF, // 글자색
                                 0x000000, // 테두리색
                                 matrices.peek().getPositionMatrix(),
