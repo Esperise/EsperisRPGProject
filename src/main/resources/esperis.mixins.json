@@ -13,6 +13,7 @@
     "ItemAttackDamageModifierIdAccessorMixin",
     "JumpCritInvalidationMixin",
     "LivingEntityMixin",
+    "MobEntityMixin",
     "NormalBowAttackSpeedMixin",
     "VanillaToolDamageMixin"
   ],

@@ -98,28 +98,28 @@ public class ChangeEquipmentStat {
         int luk =(int) playerStatComponent.getFinalStat(StatType.LUK);
         ThreadLocalRandom random = ThreadLocalRandom.current();
         int baseStat= 4 + rarity + (int) Math.round(level/5.0);
-        int randInt=random.nextInt(100+luk);
-        if(randInt > 400) {
-            baseStat+= 8;
-        } else if (randInt > 350) {
+        int randInt=random.nextInt(100000+(luk*10));
+        if(randInt > 100500) {//0%(luk=0)
+            baseStat+= 10;
+        } else if (randInt > 99900) {//0.1%
+            baseStat += 8;
+        }else if (randInt > 99700) {//0.3%
             baseStat += 7;
-        }else if (randInt > 300) {
-            baseStat += 6;
-        }else if (randInt > 215) {
+        }else if (randInt > 99000) {//1
             baseStat += 5;
-        }else if (randInt > 165) {
+        }else if (randInt > 95000) {//5
             baseStat += 4;
-        }else if (randInt > 99) {
+        }else if (randInt > 85000) {//15
             baseStat += 3;
-        }else if (randInt > 95) {
+        }else if (randInt > 70000) {//30
             baseStat += 2;
-        }else if (randInt > 80) {
+        }else if (randInt > 50000) {//20
             baseStat += 1;
-        } else if (randInt > 65) {
+        } else if (randInt > 40000) {
 
-        }else if(randInt > 35){
+        }else if(randInt > 30000 ){
             baseStat -= 1;
-        }else if(randInt > 10){
+        }else if(randInt > 10000){
             baseStat -= 2;
         } else{
             baseStat -= 3;
@@ -128,18 +128,29 @@ public class ChangeEquipmentStat {
         return baseStat;
     }
     private static Map<StatType, Double> computeRandomStatMap(int level, int rarity, PlayerEntity player){
-        ThreadLocalRandom random = ThreadLocalRandom.current();
+
+        Random random = new Random();
         int baseStat = calculateBase(level, rarity, player);
         Map<StatType, Double> eqStatsMap = new EnumMap<>(StatType.class);
-        while(baseStat>=6 && random.nextInt(20)<baseStat){
+
+        while(baseStat>=6 && random.nextInt(20)<=baseStat){
             baseStat -=3;
             StatType[] specialStats= StatType.getSpecialStatType();//spd, crit, critDmg, finalDmg, acc,avd,defPen
             StatType pick = specialStats[random.nextInt(specialStats.length)];
             eqStatsMap.merge(pick, Math.max(0.5, random.nextDouble(1.5)), Double::sum);//computIf, Absent 없이 한줄로 가능함
         }
+        int firstIndex= random.nextInt(StatType.getNoneSpecialStats().length-1);
+        System.out.println("firstIndex: "+firstIndex);
+        int lastIndex= random.nextInt(StatType.getNoneSpecialStats().length - firstIndex) + firstIndex;
+        while(lastIndex == firstIndex){
+            lastIndex= random.nextInt(StatType.getNoneSpecialStats().length - firstIndex+1) + firstIndex;
+        }
+        System.out.println("lastIndex: "+lastIndex);
+
         StatType[] normal = StatType.getNoneSpecialStats();//atk, def, maxHealth, str, dex, luk, dur
         for (int i = 0; i < baseStat; i++) {
-            StatType pick = normal[random.nextInt(normal.length)];
+            StatType pick = normal[Math.min(6,random.nextInt(lastIndex-firstIndex+1)+firstIndex)];
+            System.out.println("pick: "+pick);
             eqStatsMap.merge(pick, 1.0, Double::sum);
         }
 
@@ -148,16 +159,16 @@ public class ChangeEquipmentStat {
     }
     private static double getStatMultiplier(StatType stat) {
         return switch(stat) {
-            case STR, DEX, LUK, DUR        -> 1.0;
-            case MAX_HEALTH                 -> 3.0;
+            case STR, DEX, LUK, DUR ,ATK      -> 1.0;
+            case MAX_HEALTH                 -> 2.0;
             case DEF                        -> 1.5;
-            case ATK                        -> 0.3;
-            case ATTACK_SPEED -> 0.05;
+
+            case ATTACK_SPEED -> 0.08;
             case SPD, CRIT  -> 0.03;
             case ACC, AVD                   -> 0.012;
-            case CRIT_DAMAGE                -> 0.07;
+            case CRIT_DAMAGE                -> 0.05;
             case DefPenetrate               -> 0.04;
-            case FinalDamagePercent         -> 0.015;
+            case FinalDamagePercent         -> 0.035;
         };
     }
 }

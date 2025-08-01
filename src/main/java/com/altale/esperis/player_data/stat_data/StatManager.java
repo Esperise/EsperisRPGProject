@@ -73,7 +73,7 @@ public class StatManager {
                 0.05+ totalLuk * 0.002 + eqCrit
                 );//기본 크확 5% 나중에 100곱하기, luk당 0.25%
         double critDamage =(
-                2+(totalLuk * 0.002) +eqCritDamage
+                1.75+(totalLuk * 0.002) +eqCritDamage
                 );// 기본 크뎀 배율 175% luk당 0.25%
         double acc= Math.round(
                 ((totalDex+(totalLuk/4.0)) / ( totalDex+(totalLuk/4.0) + 1000)) *1000

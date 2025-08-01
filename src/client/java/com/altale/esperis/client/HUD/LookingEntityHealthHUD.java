@@ -167,7 +167,7 @@ public class LookingEntityHealthHUD {
                 OrderedText text = Text.literal(healthText).asOrderedText();
 
                 MatrixStack matrices = ctx.getMatrices();
-                int level= (int) (Math.min(80,max/2) + 10);
+                int level= (int) (Math.min(100,max/2 + 10));
                 if(closestEntity instanceof PlayerEntity playerEntity){
                     PlayerLevelComponent levelComp = PlayerLevelComponent.KEY.get(playerEntity);
                     level = levelComp.getLevel();

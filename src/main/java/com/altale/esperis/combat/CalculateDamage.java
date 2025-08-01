@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -22,6 +23,9 @@ public class CalculateDamage {
     public static void register(){
         CalculateDamageCallBack.EVENT.register(
                 ((damageSource, target, damageAmount) ->{
+                    if (!damageSource.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
+                        target.damageArmor(damageSource, damageAmount);
+                    }
                     System.out.println("원본 데미지: "+damageAmount);
                     Entity attackerEntity = damageSource.getAttacker();
                     if(attackerEntity instanceof LivingEntity attacker){
@@ -32,10 +36,10 @@ public class CalculateDamage {
                         double attackerCrit=0.1;
                         double attackerCritDmgCoeffi= 2;
 
-                        double targetDef= Math.min(100,Math.max(15.0, 15+Math.round(target.getMaxHealth()*100/(target.getMaxHealth()+50))));
+                        double targetDef= Math.min(300,Math.max(15.0, 15+Math.round(target.getMaxHealth()*100/(target.getMaxHealth()+50))));
 
-                        int attackerLevel= (int) (Math.min(80,attacker.getMaxHealth() / 2 + 10));
-                        int targetLevel= (int) (Math.min(80,target.getMaxHealth() / 2  + 10));
+                        int attackerLevel= (int) (Math.min(100,attacker.getMaxHealth() / 2 + 10));
+                        int targetLevel= (int) (Math.min(100,target.getMaxHealth() / 2  + 10));
                         boolean attackerIsPlayer = false;
                         boolean targetIsPlayer = false;
                         if(attacker instanceof PlayerEntity attackerPlayer){
@@ -61,7 +65,7 @@ public class CalculateDamage {
                         }
                         ThreadLocalRandom random = ThreadLocalRandom.current();
                         double levelDiff=  targetLevel- attackerLevel;
-                        double levelCoeff= 1-( 0.01*levelDiff );
+                        double levelCoeff= 1-( 0.005*levelDiff );
                         double targetFinalDef= targetDef*(1-attackerDefPenetrateCoeffi);
                         System.out.println(( 1- (targetFinalDef/(targetFinalDef + 100)) ));
                         double damage =  Math.round(damageAmount * ( 1- (targetFinalDef/(targetFinalDef + 100)) ) *(levelCoeff) * (1+ attackerFinalDamageCoeffi)*1000)/1000.0;

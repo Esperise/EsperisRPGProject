@@ -27,6 +27,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
@@ -136,6 +137,7 @@ public class RerollAdditionalStatScreen extends HandledScreen<AdditionalStatMake
                 if(statValue == 0.0){
                     continue;
                 }
+
                 if(statType == StatType.ACC || statType == StatType.AVD || statType==StatType.CRIT || statType==StatType.CRIT_DAMAGE
                         || statType==StatType.DefPenetrate){
                     statText = String.format("%s  :  %.2f%%",statType.getDisplayName(),statValue*100 );
