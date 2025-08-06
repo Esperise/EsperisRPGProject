@@ -20,6 +20,7 @@ public class StatUpdateRequestReceiver {
                 ServerPlayerEntity playerTarget = server.getPlayerManager().getPlayer(uuid);
                 if (playerTarget != null) {
                     StatManager.statUpdate(playerTarget);
+                    
                 }
             });
         });

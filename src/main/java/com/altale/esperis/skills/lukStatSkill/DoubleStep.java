@@ -29,23 +29,23 @@ import java.util.*;
 public class DoubleStep {
     // World별, 실행할 시간 → 실행 로직(Runnable) 맵
     private static final Map<ServerWorld, Map<UUID, Map<Long, Runnable>>> delayedTasks = new HashMap<>();
-    public static void doubleStepCommand(ServerPlayerEntity player, ServerWorld world1) {
+    public static void doubleStep(ServerPlayerEntity player, ServerWorld world1) {
         // 효과는 기존 doStepEffect() 내용
         ServerWorld serverWorld = (ServerWorld) world1;
         long now = world1.getTime();
 
-        if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player,"double_step")){
-            CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "double_step");
+        if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player,"더블스텝")){
+            CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "더블스텝");
         }
         else{
-            CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "double_step", 50);
+            CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "더블스텝", 60);
 
             // 즉시 효과 실행
             doStepEffect((ServerPlayerEntity) player, serverWorld);
             int skillLevel=1;
 
             // 10틱(0.5초) 뒤에 다시 실행되도록 스케줄
-            for(long trig=now; trig<=now+(2*skillLevel); trig+=2){
+            for(long trig=now; trig<=now+(10*skillLevel); trig+=10){
                 delayedTasks
                         .computeIfAbsent(serverWorld, w -> new HashMap<>())
                         .computeIfAbsent(player.getUuid(), u -> new HashMap<>())
@@ -72,37 +72,37 @@ public class DoubleStep {
     }
     public static void register() {
         // 1) UseItem 이벤트에서 즉시 효과 + 10틱 뒤 스케줄 등록
-        UseItemCallback.EVENT.register((player, world, hand) -> {
-            if (!world.isClient && player.getStackInHand(hand).getItem() == Items.GOLDEN_SWORD) {
-                ServerWorld serverWorld = (ServerWorld) world;
-                long now = world.getTime();
-
-                if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player,"double_step_rc")){
-                    CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "double_step_rc");
-                }
-                else{
-                    CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "double_step_rc", 100);
-
-                    // 즉시 효과 실행
-                    doStepEffect((ServerPlayerEntity) player, serverWorld);
-
-                    // 10틱(0.5초) 뒤에 다시 실행되도록 스케줄
-                    for(long trig=now; trig<=now+16; trig+=4){
-                        delayedTasks
-                                .computeIfAbsent(serverWorld, w -> new HashMap<>())
-                                .computeIfAbsent(player.getUuid(), u -> new HashMap<>())
-                                .put(trig, () -> doStepEffect((ServerPlayerEntity) player, serverWorld));
-                    }
-                }
-
-
-
-
-
-                return TypedActionResult.success(player.getStackInHand(hand));
-            }
-            return TypedActionResult.pass(player.getStackInHand(hand));
-        });
+//        UseItemCallback.EVENT.register((player, world, hand) -> {
+//            if (!world.isClient && player.getStackInHand(hand).getItem() == Items.GOLDEN_SWORD) {
+//                ServerWorld serverWorld = (ServerWorld) world;
+//                long now = world.getTime();
+//
+//                if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player,"double_step_rc")){
+//                    CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "double_step_rc");
+//                }
+//                else{
+//                    CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "double_step_rc", 100);
+//
+//                    // 즉시 효과 실행
+//                    doStepEffect((ServerPlayerEntity) player, serverWorld);
+//
+//                    // 10틱(0.5초) 뒤에 다시 실행되도록 스케줄
+//                    for(long trig=now; trig<=now+16; trig+=4){
+//                        delayedTasks
+//                                .computeIfAbsent(serverWorld, w -> new HashMap<>())
+//                                .computeIfAbsent(player.getUuid(), u -> new HashMap<>())
+//                                .put(trig, () -> doStepEffect((ServerPlayerEntity) player, serverWorld));
+//                    }
+//                }
+//
+//
+//
+//
+//
+//                return TypedActionResult.success(player.getStackInHand(hand));
+//            }
+//            return TypedActionResult.pass(player.getStackInHand(hand));
+//        });
 
         // 2) 틱마다 스케줄된 작업 체크해서 실행
         ServerTickEvents.END_SERVER_TICK.register(server -> {
@@ -128,7 +128,6 @@ public class DoubleStep {
 
     // 이펙트 + 데미지 + 출혈 DOT 주는 로직을 메서드로 분리
     private static void doStepEffect(ServerPlayerEntity player, ServerWorld world) {
-        AbsorptionBuff.giveAbsorptionBuff(world,player, "double_step", player.getMaxHealth()/10 , 100);
 
         Vec3d eye = player.getCameraPosVec(1.0F);
         Vec3d dir = player.getRotationVec(1.0F).normalize();
@@ -208,16 +207,13 @@ public class DoubleStep {
             PlayerFinalStatComponent playerStatComponent = PlayerFinalStatComponent.KEY.get(player);
             double atk= playerStatComponent.getFinalStat(StatType.ATK);
             double luk= playerStatComponent.getFinalStat(StatType.LUK);
-            float stepDamage= (float) (1.0+ (atk*0.35)+(luk * 0.15));
-            float dotDamage= (float) (2.0 + (luk* 0.45) + atk*0.45 );
-            player.sendMessage(Text.literal(String.format("스킬데미지: 1.0+ (%.2f) + (%.2f) = %.2f",atk*0.35, luk*0.15,stepDamage)),false);
-            player.sendMessage(Text.literal(String.format("도트데미지: 2.0+ (%.2f) + (%.2f) = %.2f", luk*0.55,atk*0.45, dotDamage)), false);
+            float stepDamage= (float) (1.0+ (atk*0.3));
+            float dotDamage= (float) (2.0 +  atk*0.3 + (luk* 0.15));
             living.damage(src, stepDamage);
             living.setVelocity(Vec3d.ZERO);
             living.velocityModified = true;
             // 출혈 DOT
-            DotDamageVer2.giveDotDamage(living, player, 150, 15, dotDamage+barrierAdditionalDamage, DotTypeVer2.Bleed, true,0.1f, "doubleStep");
-            CoolTimeManager. specificCoolTimeReduction(player, "triple_jump",20);
+            DotDamageVer2.giveDotDamage(living, player, 50, 10, dotDamage, DotTypeVer2.Bleed, true,0.1f, "doubleStep");
         }
         else{
             Box box2 = player.getBoundingBox().stretch(dir.multiply(2.5F)).expand(randint, 0.5, randint);
@@ -254,7 +250,6 @@ public class DoubleStep {
 
                 }
             }
-//            CoolTimeManager.specificCoolTimeReduction(player, "double_step", 40);
 
         }
 

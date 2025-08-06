@@ -1,5 +1,6 @@
 package com.altale.esperis.player_data.equipmentStat;
 
+import com.altale.esperis.items.itemFunction.Artifact.Tomori;
 import com.altale.esperis.items.itemFunction.SpecialBowItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -17,6 +18,7 @@ public class EquipmentOnlySlot extends Slot {
         if(item instanceof ToolItem) return true;
         if(item instanceof SwordItem) return true;
         if(item instanceof SpecialBowItem) return true;
+        if(item instanceof Tomori) return true;
         return false;
     }
     @Override

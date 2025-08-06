@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "InGameHUDMixin",
-    "NormalBowAnimation"
+    "LightMapTextureManagerMixin",
+    "NormalBowAnimation",
+    "PlayerSightMixin"
   ],
   "injectors": {
     "defaultRequire": 1

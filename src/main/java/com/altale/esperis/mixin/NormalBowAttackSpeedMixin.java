@@ -12,7 +12,7 @@ public abstract class NormalBowAttackSpeedMixin {
             constant = @Constant(floatValue = 20.0F)
     )
     private static float nerfPullProgress(float original) {
-        return original*3;
+        return original*5;
     }
 }
 

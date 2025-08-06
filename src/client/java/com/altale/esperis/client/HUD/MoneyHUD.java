@@ -16,10 +16,11 @@ public class MoneyHUD {
             if (!(screen instanceof InventoryScreen inv)) return;
 
             // vanilla GUI 크기
-            final int guiW = 176, guiH = 166;
-            int x = (client.getWindow().getScaledWidth()   / 100);
-            int y = (client.getWindow().getScaledHeight() / 6);
-            int x2= (client.getWindow().getScaledWidth() *32   / 100);
+            final int guiWidth  = 176;
+            final int guiHeight = 166;
+            // 화면 크기에서 중앙 배치 좌표 계산
+            int x = (client.getWindow().getScaledWidth()  - guiWidth)  / 2;
+            int y = (client.getWindow().getScaledHeight() - guiHeight) / 2;
 
             // 렌더 콜백 등록
             ScreenEvents.afterRender(screen).register((scr, ctx, mouseX, mouseY, tickDelta) -> {
@@ -31,8 +32,8 @@ public class MoneyHUD {
                 if (client.player != null){
                     PlayerMoneyComponent moneyComponent =PlayerMoneyComponent.KEY.get(client.player);
                     int money= moneyComponent.getBalance ();
-                    int moneyX= client.getWindow().getScaledWidth()/2 + 17;
-                    int moneyY =client.getWindow().getScaledHeight()*5/6 + 2;
+                    int moneyX= x+103;
+                    int moneyY =y+171;
                     ctx.fill(moneyX-7, moneyY-5, moneyX +71, moneyY+12, 0xAA000000);
                     ctx.fill(moneyX-6, moneyY-4, moneyX +70, moneyY+11, 0xDD777777);
                     ctx.fill(moneyX-5, moneyY-3, moneyX +69, moneyY+10, 0xFFFFFFFF);//하단 우측 흰

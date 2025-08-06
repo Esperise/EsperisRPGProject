@@ -1,5 +1,7 @@
 package com.altale.esperis.skills.lukStatSkill;
 
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
+import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
 
 import com.altale.esperis.skills.buff.AbsorptionBuff;
@@ -18,10 +20,12 @@ import net.minecraft.util.math.Vec3d;
 
 public class ShadowTeleport {
     public static void doShadowTeleportPlayer(ServerPlayerEntity player, ServerWorld serverWorld) {
-        if(CoolTimeManager.isOnCoolTime(player, "shadowTeleport")) {
-            CoolTimeManager.showRemainCoolTime(player, "shadowTeleport");
+        if(CoolTimeManager.isOnCoolTime(player, "그림자이동")) {
+            CoolTimeManager.showRemainCoolTime(player, "그림자이동");
         }else{
-            CoolTimeManager.setCoolTime(player,"shadowTeleport",500);
+            PlayerFinalStatComponent playerFinalStatComponent= PlayerFinalStatComponent.KEY.get(player);
+            double atk= playerFinalStatComponent.getFinalStat(StatType.ATK);
+            CoolTimeManager.setCoolTime(player,"그림자이동",500);
             Entity target =GetEntityLookingAt.getEntityLookingAt(player, 17.0f,0.3);
             if(target instanceof LivingEntity){
                 Vec3d playerLookVec= player.getRotationVec(1.0f);
@@ -53,15 +57,18 @@ public class ShadowTeleport {
                         , target.getPitch());
                 if(DotDamageVer2.isDotDamage((LivingEntity) target)){
                     DotDamageVer2.instantDotDamage((LivingEntity) target,player,0.2);
-                    CoolTimeManager.specificCoolTimePercentReduction(player, "shadowTeleport",20);
+                    CoolTimeManager.specificCoolTimePercentReduction(player, "그림자이동",20);
+                    player.heal(5 + (float) (atk * 1.2));
                 }
                 else{
-                    AbsorptionBuff.giveAbsorptionBuff(serverWorld, player,"shadowTeleport",15,30);
+                    AbsorptionBuff.giveAbsorptionBuff(serverWorld, player,"그림자이동",15+ player.getMaxHealth()/10,40);
                 }
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY,  40,2));
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY,  60,2));
+                
             }
             else{
-                CoolTimeManager.specificCoolTimePercentReduction(player, "shadowTeleport",20);
+                CoolTimeManager.specificCoolTimePercentReduction(player, "그림자이동",50);
+                AbsorptionBuff.giveAbsorptionBuff(serverWorld, player,"그림자이동",5+ player.getMaxHealth()/10,20);
             }
         }
     }

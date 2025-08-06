@@ -67,6 +67,12 @@ public class RerollAdditionalStatScreen extends HandledScreen<AdditionalStatMake
         }).dimensions(x + 30, y + backgroundHeight - 151, 80, 20).build());
 
     }
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta){
+        this.renderBackground(context);
+        super.render(context, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
+    }
 
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {

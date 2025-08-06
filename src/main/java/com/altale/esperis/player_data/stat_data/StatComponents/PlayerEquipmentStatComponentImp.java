@@ -40,16 +40,20 @@ public class PlayerEquipmentStatComponentImp implements PlayerEquipmentStatCompo
     }
     @Override
     public void changeEquipment(PlayerEntity player, EquipmentSlot slot , ItemStack previous , ItemStack current){
-        Map<StatType, Double> previousStatsMap = EquipmentInfoManager.sumEquipmentStats(previous);
-        for (Map.Entry<StatType, Double> entry : previousStatsMap.entrySet()) {
-            addEquipmentStat(entry.getKey(), -entry.getValue()); // 빼기
+        if(!previous.isEmpty()){
+            Map<StatType, Double> previousStatsMap = EquipmentInfoManager.sumEquipmentStats(previous);
+            for (Map.Entry<StatType, Double> entry : previousStatsMap.entrySet()) {
+                addEquipmentStat(entry.getKey(), -entry.getValue()); // 빼기
+            }
+        }
+        if(!current.isEmpty()){
+            // 2. 새로운 장비 스탯 추가
+            Map<StatType, Double> currentStatsMap = EquipmentInfoManager.sumEquipmentStats(current);
+            for (Map.Entry<StatType, Double> entry : currentStatsMap.entrySet()) {
+                addEquipmentStat(entry.getKey(), entry.getValue()); // 더하기
+            }
         }
 
-        // 2. 새로운 장비 스탯 추가
-        Map<StatType, Double> currentStatsMap = EquipmentInfoManager.sumEquipmentStats(current);
-        for (Map.Entry<StatType, Double> entry : currentStatsMap.entrySet()) {
-            addEquipmentStat(entry.getKey(), entry.getValue()); // 더하기
-        }
     }
     @Override
     public  void initializeEquipmentStat(PlayerEntity player){

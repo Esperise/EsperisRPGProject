@@ -29,6 +29,7 @@ public abstract class MobEntityMixin {
             ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir
     ) {
         MobEntity self = (MobEntity)(Object)this;
+        Random random = new Random();
 
         // 체력 속성 가져오기
         EntityAttributeInstance healthAttr = self.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
@@ -41,12 +42,12 @@ public abstract class MobEntityMixin {
                 baseHealth+= self.getRandom().nextInt(15)+10;
                 if(attackAttr != null){
                     double baseAttack= attackAttr.getBaseValue();
-                    baseAttack += self.getRandom().nextInt(7)+3;
+                    baseAttack += random.nextInt(7)+3;
                     attackAttr.setBaseValue(baseAttack);
                 }
                 if(speedAttr != null){
                     double baseSpeed= speedAttr.getBaseValue();
-                    baseSpeed *= 1+( self.getRandom().nextDouble()/2);
+                    baseSpeed *= 1+( random.nextDouble()*3/4);
                     speedAttr.setBaseValue(baseSpeed);
                 }
 

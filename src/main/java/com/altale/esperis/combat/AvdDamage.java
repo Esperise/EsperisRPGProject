@@ -5,6 +5,8 @@ import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatCo
 import com.altale.esperis.player_data.stat_data.StatType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -20,7 +22,11 @@ public class AvdDamage {
                 ((source, target, amount) -> {
 
                     Entity attackerEntity = source.getAttacker();
+
                     if(attackerEntity instanceof LivingEntity attacker){
+                        if(attacker.hasStatusEffect((StatusEffects.BLINDNESS))){
+                            return 0.0F;
+                        }
                         double size= Math.pow(target.getWidth(),2)*target.getHeight();
                         double attackerAcc = 0.025;
                         double targetAvd=Math.max(0.0, (0.3-size/5));

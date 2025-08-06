@@ -1,5 +1,6 @@
 package com.altale.esperis.items;
 
+import com.altale.esperis.items.itemFunction.Artifact.Tomori;
 import com.altale.esperis.items.itemFunction.MoneyItem;
 import com.altale.esperis.items.itemFunction.PotionInstantHeal;
 import com.altale.esperis.items.itemFunction.SpecialBowItem;
@@ -19,12 +20,13 @@ public class ModItems {
     public static final Item INSTANT_HEAL_POTION = register("instant_heal_potion", new PotionInstantHeal());
     public static final Item MONEY = register("money", new MoneyItem());
     public static final Item SPECIAL_BOW_1= register("special_bow_1", new SpecialBowItem());
+    public static final Item TOMORI = register("tomori", new Tomori());
     public static Item register(String name, Item item){
         ITEM_MAP.put(name, item);
         return item;
     }
     public static void registerAll(){
         ITEM_MAP.forEach((name, item) -> Registry.register(Registries.ITEM, new Identifier(MODID, name), item));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> ITEM_MAP.values().forEach(entries::add));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> ITEM_MAP.values().forEach(item -> entries.add(item.getDefaultStack())));
     }
 }

@@ -5,6 +5,7 @@ import com.altale.esperis.player_data.stat_data.StatType;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.stat.Stat;
 
 import javax.swing.text.SimpleAttributeSet;
 import java.util.EnumMap;
@@ -40,6 +41,16 @@ public class PlayerPointStatComponentImp implements PlayerPointStatComponent,Aut
         return statMap.getOrDefault(statType, 0.0);
     }
 
+    @Override
+    public Map<StatType, Double> getAllPointStat(){
+        Map<StatType,Double> map = new EnumMap<>(StatType.class);
+        for(StatType statType: StatType.getNormalStatType()){
+            map.put(statType,statMap.getOrDefault(statType, 0.0));
+        }
+        return map;
+    }
+
+
     //statPoint(스탯 포인트 관련 method)
     @Override
     public void setSP(StatPointType spType, int amount) {
@@ -71,6 +82,8 @@ public class PlayerPointStatComponentImp implements PlayerPointStatComponent,Aut
     public void giveLevelUpSP(){
         addSP(StatPointType.UnusedSP, 5);
     }
+
+
 
 
     @Override

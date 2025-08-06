@@ -160,14 +160,14 @@ public class ChangeEquipmentStat {
     private static double getStatMultiplier(StatType stat) {
         return switch(stat) {
             case STR, DEX, LUK, DUR ,ATK      -> 1.0;
-            case MAX_HEALTH                 -> 2.0;
-            case DEF                        -> 1.5;
+            case MAX_HEALTH                 -> 3.0;
+            case DEF                        -> 2.0;
 
-            case ATTACK_SPEED -> 0.08;
-            case SPD, CRIT  -> 0.03;
-            case ACC, AVD                   -> 0.012;
+            case ATTACK_SPEED -> 0.09;
+            case SPD, CRIT  -> 0.04;
+            case ACC, AVD                   -> 0.022;
             case CRIT_DAMAGE                -> 0.05;
-            case DefPenetrate               -> 0.04;
+            case DefPenetrate               -> 0.055;
             case FinalDamagePercent         -> 0.035;
         };
     }

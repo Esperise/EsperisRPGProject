@@ -15,7 +15,9 @@
     "LivingEntityMixin",
     "MobEntityMixin",
     "NormalBowAttackSpeedMixin",
-    "VanillaToolDamageMixin"
+    "VanillaToolDamageMixin",
+    "entity.Creeper.CreeperMixin",
+    "entity.Creeper.CreeperMixin2"
   ],
   "injectors": {
     "defaultRequire": 1

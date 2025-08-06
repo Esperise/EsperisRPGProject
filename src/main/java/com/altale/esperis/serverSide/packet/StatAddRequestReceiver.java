@@ -1,5 +1,7 @@
 package com.altale.esperis.serverSide.packet;
 
+import com.altale.esperis.player_data.skill_data.PlayerSkillComponent;
+import com.altale.esperis.player_data.skill_data.SkillManager;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.player_data.stat_data.StatType;
@@ -20,8 +22,11 @@ public class StatAddRequestReceiver {
                 ServerPlayerEntity playerTarget = server.getPlayerManager().getPlayer(uuid);
                 if (playerTarget != null) {
                     PlayerPointStatComponent playerPointStatComponent = PlayerPointStatComponent.KEY.get(playerTarget);
+                    PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(playerTarget);
                     playerPointStatComponent.useSP(statType, value);//미사용 sp감소 , addSp
                     StatManager.statUpdate(playerTarget);
+                    playerSkillComponent.setUnlockedSkill();
+
                 }
             });
         });

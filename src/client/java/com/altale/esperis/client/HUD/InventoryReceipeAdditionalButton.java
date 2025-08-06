@@ -11,7 +11,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 public class InventoryReceipeAdditionalButton {
         public static void register() {
-            ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
                 if (!(screen instanceof InventoryScreen inv)) return;
 
                 // GUI 크기 상수 (vanilla 인벤토리)
@@ -29,9 +29,9 @@ public class InventoryReceipeAdditionalButton {
                         .dimensions(x + guiWidth - 45, y + 59, 40, 20)
                         .build();
                 recipeButton.visible = true;
-                ButtonWidget goToEquipmentEnhancementScreenButton= ButtonWidget.builder(Text.literal("추가 스탯 재설정"), btn ->{
+                ButtonWidget goToEquipmentEnhancementScreenButton= ButtonWidget.builder(Text.literal("장비 강화"), btn ->{
                     client.setScreen(new EquipmentEnhancementScreen());//FIXME 누르면 장비 강화 스크린 -> 버튼 2개( a:장비 추가 스탯 재설정, b:장비 스크롤 부여)
-                }).dimensions(x + guiWidth - 5, y + 59, 83, 20).build();
+                }).dimensions(x, y + 166, 63, 20).build();
                 goToEquipmentEnhancementScreenButton.visible = true;
 
                 // protected addDrawableChild 대신 Screens.getButtons 로 추가

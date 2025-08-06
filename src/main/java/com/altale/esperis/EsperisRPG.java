@@ -11,6 +11,9 @@ import com.altale.esperis.player_data.level_data.PlayerLevelComponentImp;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponentImp;
 
+import com.altale.esperis.player_data.skill_data.PlayerSkillComponent;
+import com.altale.esperis.player_data.skill_data.PlayerSkillComponentImp;
+import com.altale.esperis.player_data.skill_data.skillKeybind.SkillKeyBindingPacketReceiver;
 import com.altale.esperis.player_data.stat_data.ApplyStat2Ability;
 import com.altale.esperis.player_data.stat_data.StatComponents.*;
 import com.altale.esperis.player_data.stat_data.StatManager;
@@ -72,6 +75,9 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         //exp
         KillOtherEntityEXP.register();
 
+        //skill
+        SkillKeyBindingPacketReceiver.register();
+
         //
         ShowRerollGuiRequestReceiver.register();
         EquipmentAdditionalStatRerollRequestSender.register();
@@ -106,6 +112,11 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         entityComponentFactoryRegistry.registerForPlayers(
                 PlayerFinalStatComponent.KEY,
                 PlayerFinalStatComponentImp::new,
+                RespawnCopyStrategy.ALWAYS_COPY
+        );
+        entityComponentFactoryRegistry.registerForPlayers(
+                PlayerSkillComponent.KEY,
+                PlayerSkillComponentImp::new,
                 RespawnCopyStrategy.ALWAYS_COPY
         );
     }

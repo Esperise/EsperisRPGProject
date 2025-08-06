@@ -3,6 +3,8 @@ package com.altale.esperis.commands;
 import com.altale.esperis.items.ModItems;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
+import com.altale.esperis.player_data.skill_data.PlayerSkillComponent;
+import com.altale.esperis.player_data.skill_data.SkillsId;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import com.altale.esperis.player_data.stat_data.StatManager;
@@ -35,9 +37,10 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class ModCommands {
     public static void register(){
         CommandRegistrationCallback.EVENT.register(ModCommands::registerCommands);
-        CommandRegistrationCallback.EVENT.register(ModCommands::registerCommandsDoubleStep);
         CommandRegistrationCallback.EVENT.register(ModCommands::registerCommandsJump);
         CommandRegistrationCallback.EVENT.register(ModCommands::registerMoneyData);
+        CommandRegistrationCallback.EVENT.register(ModCommands::setSkillKeyBinding);
+
     }
 
     private static void registerCommands(CommandDispatcher<ServerCommandSource> serverCommandSourceCommandDispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
@@ -49,26 +52,7 @@ public class ModCommands {
                         })
         );
     }
-    private static void registerCommandsDoubleStep(CommandDispatcher<ServerCommandSource> serverCommandSourceCommandDispatcher,CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
-        serverCommandSourceCommandDispatcher.register(
-                literal("skill_activation")
-                        .then(literal("double_step")
-                                .executes(context -> {
-                                    ServerPlayerEntity player = context.getSource().getPlayer();
-                                    ServerWorld world =  context.getSource().getWorld();
-                                    DoubleStep.doubleStepCommand(player, world);
-                                    return 1;
-                                }))
-                        .then(literal("shadow_teleport")
-                                .executes(context -> {
-                                    ServerPlayerEntity player = context.getSource().getPlayer();
-                                    ServerWorld world =  context.getSource().getWorld();
-                                    ShadowTeleport.doShadowTeleportPlayer(player,world);
-                                    return 1;
-                                }))
 
-        );
-    }
     private static void registerCommandsJump(
             CommandDispatcher<ServerCommandSource> dispatcher,
             CommandRegistryAccess access,
@@ -197,6 +181,105 @@ public class ModCommands {
                                 })
 
         );
+    }
+    private static void setSkillKeyBinding(
+            CommandDispatcher<ServerCommandSource> dispatcher,
+            CommandRegistryAccess access,
+            CommandManager.RegistrationEnvironment env){
+        dispatcher.register(
+                literal("키설정")
+                        .then(literal("현재키")
+                                        .executes(ctx -> {
+                                            ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                            PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
+                                            var map= skillComponent.getKeyBindSkills();
+                                            for(var entry: map.entrySet()){
+                                                player.sendMessage(Text.literal(String.format("%s : %s", entry.getKey(), entry.getValue())), false);
+                                            }
+                                            return 1;
+                                        })
+
+                        )
+                        .then(literal("스킬키1")
+                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                        .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
+                                            String skillName = StringArgumentType.getString(ctx, "skillName");
+                                    skillComponent.setKeyBinding("skill_key_1",SkillsId.getSkillIdByName(skillName));
+                                    return 1;
+                                }))
+
+                        )
+                        .then(literal("스킬키2")
+                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                        .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
+                                            String skillName = StringArgumentType.getString(ctx, "skillName");
+                                    skillComponent.setKeyBinding("skill_key_2",SkillsId.getSkillIdByName(skillName));
+                                    return 1;
+                                }))
+
+                        )
+                        .then(literal("스킬키3")
+                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                        .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
+                                            String skillName = StringArgumentType.getString(ctx, "skillName");
+                                    skillComponent.setKeyBinding("skill_key_3",SkillsId.getSkillIdByName(skillName));
+                                    return 1;
+                                }))
+
+                        )
+                        .then(literal("스킬키4")
+                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                        .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
+                                            String skillName = StringArgumentType.getString(ctx, "skillName");
+                                    skillComponent.setKeyBinding("skill_key_4",SkillsId.getSkillIdByName(skillName));
+                                    return 1;
+                                }))
+
+                        )
+                        .then(literal("스킬키5")
+                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                        .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
+                                            String skillName = StringArgumentType.getString(ctx, "skillName");
+                                    skillComponent.setKeyBinding("skill_key_5",SkillsId.getSkillIdByName(skillName));
+                                    return 1;
+                                }))
+
+                        )
+                        .then(literal("스킬키6")
+                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                        .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
+                                            String skillName = StringArgumentType.getString(ctx, "skillName");
+                                    skillComponent.setKeyBinding("skill_key_6",SkillsId.getSkillIdByName(skillName));
+                                    return 1;
+                                }))
+
+                        )
+                        .then(literal("스킬키7")
+                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                        .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                    PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
+                                            String skillName = StringArgumentType.getString(ctx, "skillName");
+                                    skillComponent.setKeyBinding("skill_key_7",SkillsId.getSkillIdByName(skillName));
+                                    return 1;
+                                }))
+
+                        )
+
+        );
+
     }
 
 

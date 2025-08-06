@@ -23,13 +23,19 @@ public class EquipmentEnhancementScreen extends Screen {
     @Override
     protected void init() {
         int x= (this.width -guiWidth)/2, y= (this.height -guiHeight)/2;
+
+
         this.goBackButton = ButtonWidget.builder(Text.literal("닫기"), btn ->{
             MinecraftClient.getInstance().setScreen(null);
-        }).dimensions(x+guiWidth-20, y+guiHeight -20, 40,20).build();
+        }).dimensions(x+guiWidth-40, y+guiHeight -20, 40,20).build();
+
+
         this.goToRerollButton=ButtonWidget.builder(Text.literal("장비 추가 스탯 재설정"), btn ->{
             //패킷보내서 server에서 띄워야함
             ShowRerollGuiRequestSender.sendShowRerollGuiReqeust();
         }).dimensions(x+50, y+30, 90,20).build();
+
+
         this.goToScrollButton=ButtonWidget.builder(Text.literal("스크롤 부여"), btn ->{
             MinecraftClient.getInstance().setScreen(null);//장비 재설정 스크린으로 바꾸기
         }).dimensions(x+50, y+100, 90,20).build();

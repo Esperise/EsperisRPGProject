@@ -25,11 +25,11 @@ public class TripleJump {
     public static void tripleJump(ServerPlayerEntity player, ServerWorld  world) {
         long now = world.getTime();
 
-        if(CoolTimeManager.isOnCoolTime(player,"triple_jump")){
+        if(CoolTimeManager.isOnCoolTime(player,"트리플점프")){
 
         }
         else{
-            CoolTimeManager.setCoolTime(player, "triple_jump",100);
+            CoolTimeManager.setCoolTime(player, "트리플점프",40);
             doJump(player,world);
             for(long trig=now; trig<=now+10; trig+=10){
                 delayedTasksTripleJump
@@ -57,16 +57,13 @@ public class TripleJump {
         });
     }
     private static void doJump(ServerPlayerEntity player, ServerWorld world) {
-        AbsorptionBuff.giveAbsorptionBuff(world,player,"triple_jump",20,100);
-        CoolTimeManager.specificCoolTimeReduction(player, "double_step_rc", 20);
-        Vec3d look= player.getRotationVec(0.75f);
-//        Vec3d eye = player.getCameraPosVec(1.0F);
-//        Vec3d dir = player.getRotationVec(1.0F).normalize();
-//        Vec3d lateral = dir.crossProduct(new Vec3d(-1, 0, -1)).normalize();
+//        AbsorptionBuff.giveAbsorptionBuff(world,player,"triple_jump",20,20);
+//        CoolTimeManager.specificCoolTimeReduction(player, "double_step_rc", 20);
+        Vec3d look= player.getRotationVec(1.0f);
         PlayerFinalStatComponent playerFinalStatComponent= PlayerFinalStatComponent.KEY.get(player);
         double spd= playerFinalStatComponent.getFinalStat(StatType.SPD);
-        double power= 1.4 * (spd/2) ;
-        Vec3d velocity = new Vec3d(look.x * power, Math.max(0.45, look.y), look.z * power);
+        double power= 0.6 * (1+(spd/2)) ;
+        Vec3d velocity = new Vec3d(look.x * power, Math.max(0.25* (1+(spd/2)), look.y), look.z * power);
         player.addVelocity(velocity.x, velocity.y, velocity.z);
         player.velocityModified = true;
 //        Vec3d offsetEye = eye.add(lateral);

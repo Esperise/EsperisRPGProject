@@ -7,6 +7,8 @@ import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistryV3;
 import net.minecraft.util.Identifier;
 
+import java.util.Map;
+
 public interface PlayerPointStatComponent extends Component {
     ComponentKey<PlayerPointStatComponent> KEY = ComponentRegistryV3.INSTANCE.getOrCreate(
             new Identifier("esperis", "player_point_stat_component"), PlayerPointStatComponent.class
@@ -20,6 +22,7 @@ public interface PlayerPointStatComponent extends Component {
 
         //getter
         double getPointStat(StatType statType);
+        Map<StatType, Double> getAllPointStat();
         void setSP(StatPointType spType, int amount);
         void useSP(StatType statType, int amount);
         int getSP(StatPointType statPointType);
