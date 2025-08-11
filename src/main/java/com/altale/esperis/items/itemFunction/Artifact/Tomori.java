@@ -1,8 +1,12 @@
 package com.altale.esperis.items.itemFunction.Artifact;
 
 import com.altale.esperis.player_data.equipmentStat.EquipmentInfoManager;
+import com.altale.esperis.player_data.stat_data.StatComponents.BaseAbilityComponent;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
+import com.altale.esperis.skills.buff.AbilityBuff;
 import com.altale.esperis.skills.buff.AbsorptionBuff;
+import com.altale.esperis.skills.buff.HealBuff;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -38,7 +42,15 @@ public class Tomori extends Item {
         }
         if(!world.isClient){
             AbsorptionBuff.giveAbsorptionBuff((ServerWorld) world, user, "Tomori", 10+user.getMaxHealth()*3/20,100);
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 200, 2));
+//            user.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 200, 2));
+            HealBuff.giveHealBuff(user, 100, 20, user.getMaxHealth()/10, "Tomori");
+            PlayerFinalStatComponent finalStatComponent=PlayerFinalStatComponent.KEY.get(user);
+            double def = finalStatComponent.getFinalStat(StatType.DEF);
+            double health = finalStatComponent.getFinalStat(StatType.MAX_HEALTH);
+            AbilityBuff.giveBuff(user, "Tomori", StatType.ATK,500, 0, (def/10)+ (health*4/100) );
+            AbilityBuff.giveBuff(user,"Tomori", StatType.SPD, 500, 50,0);
+            AbilityBuff.giveBuff(user,"Tomori", StatType.DEF, 500, -80,0);
+            AbilityBuff.giveBuff(user,"Tomori", StatType.MAX_HEALTH, 500, -50,0);
             cooldownManager.set(this, 500 );
         }
         return super.use(world, user, hand);

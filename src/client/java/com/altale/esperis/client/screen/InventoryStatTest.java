@@ -2,8 +2,10 @@ package com.altale.esperis.client.screen;
 
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerEquipmentStatComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponentImp;
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
@@ -38,6 +40,8 @@ public class InventoryStatTest {
                 PlayerEntity player = client.player;
                 PlayerLevelComponent lvComp= PlayerLevelComponent.KEY.get(Objects.requireNonNull(player));
                 PlayerFinalStatComponent finalStatComp= PlayerFinalStatComponent.KEY.get(Objects.requireNonNull(player));
+                PlayerEquipmentStatComponent eqStatComp = PlayerEquipmentStatComponent.KEY.get(Objects.requireNonNull(player));
+                PlayerPointStatComponent spStatComp = PlayerPointStatComponent.KEY.get(Objects.requireNonNull(player));
                 int lv= lvComp.getLevel();
                 int currExp= lvComp.getCurrentExp();
                 int maxExp= lvComp.getMaxExp();
@@ -82,18 +86,37 @@ public class InventoryStatTest {
                 );
                     } else if (statType== StatType.SPD || statType==StatType.ATTACK_SPEED) {
                         double value= (finalStatComp.getFinalStat(statType)-1) *100 ;
+                        String sign;
+                        if(value>  0){
+                            sign="+";
+                        }else{
+                            sign="";
+                        }
                         renderer.drawWithOutline(
-                                Text.literal(String.format("%s : +%.2f%%",label,value)).asOrderedText(),
+                                Text.literal(String.format("%s : %s%.2f%%",label,sign,value)).asOrderedText(),
                                 statBaseX,statBaseY,0xFFFFFF, // 글자색
                                 0x000000, // 테두리색
                                 matrices.peek().getPositionMatrix(),
                                 ctx.getVertexConsumers(),
                                 15728880
                         );
-                    } else{
+                    } else if(statType == StatType.STR ||statType == StatType.DEX ||statType == StatType.LUK ||statType == StatType.DUR){
+                        double value=  finalStatComp.getFinalStat(statType);
+                        double spStat= spStatComp.getPointStat(statType);
+                        double eqStat= eqStatComp.getEquipmentStat(statType);
+
+                        renderer.drawWithOutline(
+                                Text.literal(String.format("%s : %.0f= %.0f (+%.0f)  ",label,value, spStat, eqStat)).asOrderedText(),
+                                statBaseX,statBaseY,0xFFFFFF, // 글자색
+                                0x000000, // 테두리색
+                                matrices.peek().getPositionMatrix(),
+                                ctx.getVertexConsumers(),
+                                15728880
+                        );
+                    }else{
                         double value=  finalStatComp.getFinalStat(statType);
                         renderer.drawWithOutline(
-                                Text.literal(String.format("%s : %.2f",label,value)).asOrderedText(),
+                                Text.literal(String.format("%s : %.2f ",label, value)).asOrderedText(),
                                 statBaseX,statBaseY,0xFFFFFF, // 글자색
                                 0x000000, // 테두리색
                                 matrices.peek().getPositionMatrix(),

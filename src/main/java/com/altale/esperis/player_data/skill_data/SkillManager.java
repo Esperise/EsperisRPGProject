@@ -1,15 +1,18 @@
 package com.altale.esperis.player_data.skill_data;
 
 import com.altale.esperis.player_data.stat_data.StatType;
-import com.altale.esperis.skills.dexStatSkill.DexJump;
-import com.altale.esperis.skills.lukStatSkill.DoubleStep;
-import com.altale.esperis.skills.lukStatSkill.ShadowTeleport;
-import com.altale.esperis.skills.lukStatSkill.TripleJump;
+import com.altale.esperis.skills.statSkills.dexStatSkill.DexJump;
+import com.altale.esperis.skills.statSkills.lukStatSkill.DoubleStep;
+import com.altale.esperis.skills.statSkills.lukStatSkill.FatalBlitz;
+import com.altale.esperis.skills.statSkills.lukStatSkill.ShadowTeleport;
+import com.altale.esperis.skills.statSkills.lukStatSkill.TripleJump;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 
 public class SkillManager {
+    //SkillsId 등록,
+
+
     public static void excuteSkill(ServerPlayerEntity player , SkillsId skillId){
 
         String skillName= skillId.getSkillName();
@@ -43,7 +46,7 @@ public class SkillManager {
             case "트리플점프" -> TripleJump.tripleJump(player, world);
             case "더블스텝" -> DoubleStep.doubleStep(player, world);
             case "그림자이동" -> ShadowTeleport.doShadowTeleportPlayer(player, world);
-
+            case "페이탈블리츠" -> FatalBlitz.doFatalBlitz(player, world);
         }
     }
     public static void durSkill(ServerPlayerEntity player ,SkillsId skillId){

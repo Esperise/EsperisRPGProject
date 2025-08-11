@@ -13,19 +13,20 @@ public enum SkillsId {
 
 
 
-
+    DEX_1("민첩_더블점프", StatType.DEX, 5),
 
 
 
 
     LUK_1("트리플점프", StatType.LUK, 5),
     LUK_20("더블스텝",StatType.LUK, 20),
-    LUK_60("그림자이동",StatType.LUK, 60);
+    LUK_60("그림자이동",StatType.LUK, 60),
+    LUK_80("페이탈블리츠",StatType.LUK, 80);
 
 
     public static final SkillsId[] STR_SKILLS = {};
     public static final SkillsId[] DEX_SKILLS = {};
-    public static final SkillsId[] LUK_SKILLS = {LUK_1, LUK_20,LUK_60};
+    public static final SkillsId[] LUK_SKILLS = {LUK_1, LUK_20,LUK_60,LUK_80};
     public static final SkillsId[] DUR_SKILLS = {};
     public static final SkillsId[] PASSIVE_SKILLS={};
     public static final SkillsId[] ACTIVE_SKILLS={};

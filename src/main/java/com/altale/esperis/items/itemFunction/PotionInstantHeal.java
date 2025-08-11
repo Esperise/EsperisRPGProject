@@ -1,6 +1,9 @@
 package com.altale.esperis.items.itemFunction;
 
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
+import com.altale.esperis.player_data.stat_data.StatType;
+import com.altale.esperis.skills.buff.AbilityBuff;
+import com.altale.esperis.skills.buff.HealBuff;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -28,8 +31,11 @@ public class PotionInstantHeal extends Item {
             if(!world.isClient()){
                 PlayerLevelComponent levelComponent= PlayerLevelComponent.KEY.get(user);
                 int level = levelComponent.getLevel();
-                float healAmount= user.getMaxHealth()*0.07F + 12;
-                user.heal(healAmount);
+                float healAmount= user.getMaxHealth()*0.1F + 7;
+//                user.heal(healAmount);
+                HealBuff.giveHealBuff(user, 200, 10, healAmount,"포션효과");
+                AbilityBuff.giveBuff(user, "포션효과", StatType.SPD,100,50,0);
+//                AbilityBuff.giveBuff(user, "포션효과", StatType.MAX_HEALTH, 100, 25,50);
                 world.playSound(
                         null,
                         user.getX(), user.getY(), user.getZ(),
@@ -42,7 +48,7 @@ public class PotionInstantHeal extends Item {
                         user.getX(), user.getY(), user.getZ(), 35, 0.75,1.5,0.75,0
                 );
 
-                user.getItemCooldownManager().set(this, 160 );
+                user.getItemCooldownManager().set(this, 200 );
                 stack.decrement(1);
             }
         return super.use(world, user, hand);

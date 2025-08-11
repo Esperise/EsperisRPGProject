@@ -31,6 +31,10 @@ public class ApplyStat2Ability {
                 ApplyStat2Ability.applyPlayerBaseAbility(player);
             }
             else{
+                PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(player);
+                playerEquipmentStatComponent.initializeEquipmentStat(player);
+
+                ApplyStat2Ability.applyPlayerBaseAbility(player);
                 StatManager.statUpdate(player);
                 ApplyStat2Ability.applyPlayerBaseAbility(player);
             }
@@ -38,6 +42,10 @@ public class ApplyStat2Ability {
 
         });
         ServerPlayerEvents.COPY_FROM.register((oldP, newP,alive) -> {
+            PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(newP);
+            playerEquipmentStatComponent.initializeEquipmentStat(newP);
+
+            ApplyStat2Ability.applyPlayerBaseAbility(newP);
 //            if(newP.getMaxHealth() <=0 ) {
 //
 //                ApplyStat2Ability.applyPlayerBaseAbility(newP);

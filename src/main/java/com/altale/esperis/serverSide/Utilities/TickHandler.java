@@ -36,10 +36,10 @@ public class TickHandler {
                 }
 
             }
-            if(count % 100 ==0 || world.getRegistryKey() == World.NETHER){
+            if(count % 100 ==0 && world.getRegistryKey() == World.NETHER){
                 for (ServerPlayerEntity player :world.getPlayers()){
                     if(player.getY()>= 120){
-                        player.damage(player.getDamageSources().generic(),  player.getMaxHealth()/20);
+                        player.damage(player.getDamageSources().generic(),  player.getMaxHealth()/10);
                         player.sendMessage(Text.literal("빨리 이곳에서 벗어나세요!").styled(style -> style.withColor(Formatting.RED)), true);
                     }
 

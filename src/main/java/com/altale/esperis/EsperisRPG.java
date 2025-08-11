@@ -24,10 +24,12 @@ import com.altale.esperis.serverSide.packet.StatAddRequestReceiver;
 import com.altale.esperis.serverSide.packet.StatUpdateRequestReceiver;
 import com.altale.esperis.skillTest1.DashLandingHandler;
 import com.altale.esperis.skillTest1.SwordDashHandler;
+import com.altale.esperis.skills.buff.AbilityBuff;
 import com.altale.esperis.skills.buff.AbsorptionBuff;
+import com.altale.esperis.skills.buff.HealBuff;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
-import com.altale.esperis.skills.lukStatSkill.DoubleStep;
+import com.altale.esperis.skills.statSkills.lukStatSkill.DoubleStep;
 import com.altale.esperis.skills.test1;
 import com.altale.esperis.skills.coolTime.CoolTimeTickManager;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
@@ -55,7 +57,9 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         CoolTimeTickManager.register();
         ModCommands.register();
         AbsorptionBuff.register();
+        HealBuff.register();
         StatManager.register();
+        AbilityBuff.register();
 
         //stat 실 적용
 
@@ -117,6 +121,10 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         entityComponentFactoryRegistry.registerForPlayers(
                 PlayerSkillComponent.KEY,
                 PlayerSkillComponentImp::new,
+                RespawnCopyStrategy.ALWAYS_COPY
+        );entityComponentFactoryRegistry.registerForPlayers(
+                BaseAbilityComponent.KEY,
+                BaseAbilityComponentImp::new,
                 RespawnCopyStrategy.ALWAYS_COPY
         );
     }

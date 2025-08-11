@@ -10,15 +10,12 @@ import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatCo
 import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.player_data.stat_data.StatPointType;
 import com.altale.esperis.player_data.stat_data.StatType;
-import com.altale.esperis.skills.dexStatSkill.DexJump;
-import com.altale.esperis.skills.lukStatSkill.DoubleStep;
-import com.altale.esperis.skills.lukStatSkill.ShadowTeleport;
-import com.altale.esperis.skills.lukStatSkill.TripleJump;
+import com.altale.esperis.skills.statSkills.dexStatSkill.DexJump;
+import com.altale.esperis.skills.statSkills.lukStatSkill.TripleJump;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;

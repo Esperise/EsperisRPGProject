@@ -1,5 +1,7 @@
-package com.altale.esperis.skills.dexStatSkill;
+package com.altale.esperis.skills.statSkills.dexStatSkill;
 
+import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
+import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
@@ -17,7 +19,7 @@ public class DexJump {
 
         }
         else{
-            CoolTimeManager.setCoolTime(player, "dexJump", 150);
+            CoolTimeManager.setCoolTime(player, "dexJump", 60);
             doDexJump(player, world);
         }
 
@@ -25,15 +27,17 @@ public class DexJump {
     private static void doDexJump(ServerPlayerEntity player, ServerWorld world) {
         LivingEntity targetEntity = (LivingEntity) GetEntityLookingAt.getEntityLookingAt(player,4.0F,0.3F);
         Vec3d look= player.getRotationVec(1.0f);
+        PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
+        double spd= playerFinalStatComponent.getFinalStat(StatType.SPD);
         if( targetEntity != null){
-            CoolTimeManager.setCoolTime(player, "dexJump", 300);
+            CoolTimeManager.setCoolTime(player, "dexJump", 100);
             targetEntity.setVelocity(Vec3d.ZERO);
             double power = 0.4;
             Vec3d velocity= new Vec3d(look.x * power ,0.30,look.z* power);
             targetEntity.addVelocity(velocity.x, velocity.y, velocity.z);
             targetEntity.velocityModified = true;
             KnockedAirborneVer2.giveKnockedAirborneVer2(targetEntity,player, 3,3);//0.3초 에어본
-            double playerPower = -1.6;
+            double playerPower = -1.6-((1+spd)/2);
             Vec3d playerVelocity = new Vec3d(look.x * playerPower, 0.65, look.z * playerPower);
             player.addVelocity(playerVelocity.x, playerVelocity.y, playerVelocity.z);
             player.velocityModified = true;
@@ -70,9 +74,8 @@ public class DexJump {
 //            }
         }
         else{
-
-            double power= 2.0;
-            Vec3d velocity = new Vec3d(look.x * power, Math.max(0.55, look.y), look.z * power);
+            double power= 2.0+((1+spd)/2);
+            Vec3d velocity = new Vec3d(look.x * power, Math.max(0.25+((1+spd)/2), look.y), look.z * power);
             player.addVelocity(velocity.x, velocity.y, velocity.z);
             player.velocityModified = true;
             if (player.getWorld() instanceof ServerWorld serverWorld){

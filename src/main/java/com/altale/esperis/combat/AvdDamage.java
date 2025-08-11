@@ -29,7 +29,7 @@ public class AvdDamage {
                         }
                         double size= Math.pow(target.getWidth(),2)*target.getHeight();
                         double attackerAcc = 0.025;
-                        double targetAvd=Math.max(0.0, (0.3-size/5));
+                        double targetAvd=Math.max(0.0, (0.2-size/5));
                         boolean attackerIsPlayer= false;
                         boolean targetIsPlayer = false;
                         if(attackerEntity instanceof PlayerEntity attackerPlayer){

@@ -1,4 +1,4 @@
-package com.altale.esperis.skills.lukStatSkill;
+package com.altale.esperis.skills.statSkills.lukStatSkill;
 
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
@@ -45,7 +45,7 @@ public class DoubleStep {
             int skillLevel=1;
 
             // 10틱(0.5초) 뒤에 다시 실행되도록 스케줄
-            for(long trig=now; trig<=now+(10*skillLevel); trig+=10){
+            for(long trig=now; trig<=now+(14*skillLevel); trig+=7){
                 delayedTasks
                         .computeIfAbsent(serverWorld, w -> new HashMap<>())
                         .computeIfAbsent(player.getUuid(), u -> new HashMap<>())
@@ -128,6 +128,11 @@ public class DoubleStep {
 
     // 이펙트 + 데미지 + 출혈 DOT 주는 로직을 메서드로 분리
     private static void doStepEffect(ServerPlayerEntity player, ServerWorld world) {
+        PlayerFinalStatComponent playerStatComponent = PlayerFinalStatComponent.KEY.get(player);
+        double atk= playerStatComponent.getFinalStat(StatType.ATK);
+        double luk= playerStatComponent.getFinalStat(StatType.LUK);
+        float stepDamage= (float) (1.0+ (atk*0.2));
+        float dotDamage= (float) (2.0 +  atk*0.1 + (luk* 0.1));
 
         Vec3d eye = player.getCameraPosVec(1.0F);
         Vec3d dir = player.getRotationVec(1.0F).normalize();
@@ -204,16 +209,12 @@ public class DoubleStep {
             DamageSource src = world.getDamageSources().playerAttack(player);
             living.timeUntilRegen = 0;
             living.hurtTime = 0;
-            PlayerFinalStatComponent playerStatComponent = PlayerFinalStatComponent.KEY.get(player);
-            double atk= playerStatComponent.getFinalStat(StatType.ATK);
-            double luk= playerStatComponent.getFinalStat(StatType.LUK);
-            float stepDamage= (float) (1.0+ (atk*0.3));
-            float dotDamage= (float) (2.0 +  atk*0.3 + (luk* 0.15));
             living.damage(src, stepDamage);
             living.setVelocity(Vec3d.ZERO);
             living.velocityModified = true;
             // 출혈 DOT
             DotDamageVer2.giveDotDamage(living, player, 50, 10, dotDamage, DotTypeVer2.Bleed, true,0.1f, "doubleStep");
+            CoolTimeManager.specificCoolTimeReduction(player, "그림자이동", 20);
         }
         else{
             Box box2 = player.getBoundingBox().stretch(dir.multiply(2.5F)).expand(randint, 0.5, randint);
@@ -245,7 +246,7 @@ public class DoubleStep {
                 living.setVelocity(Vec3d.ZERO);
                 living.velocityModified = true;
                 // 출혈 DOT
-                DotDamageVer2.giveDotDamage(living, player, 20, 4, 15.0F, DotTypeVer2.Bleed, "doubleStep");
+                DotDamageVer2.giveDotDamage(living, player, 50, 10, dotDamage, DotTypeVer2.Bleed, true,0.1f, "doubleStep");
                 if(world.getOtherEntities(player, box).isEmpty()){
 
                 }

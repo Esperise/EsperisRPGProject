@@ -23,39 +23,41 @@ public class KillOtherEntityEXP {
 
                 float killedEntityMaxHealth = killedEntity.getMaxHealth();
                 if(killedEntity instanceof Monster monster){
+                    //TODO 나중에 적 처치시 스킬 초기화/ 체력 회복 할때 여기다가 넣어야함
                     EntityType<?> type = killedEntity.getType();
                     // 2) Identifier ("minecraft:creeper" 등) 추출
                     Identifier id = Registries.ENTITY_TYPE.getId(type);
                     // 또는 id.getPath()만 비교할 수도 있습니다.
                     double multiplyCoeffi= 0.5 + player.getRandom().nextDouble();
                     playerMoneyComponent.deposit((int) (killedEntityMaxHealth * multiplyCoeffi * 50));
+                    int baseExp = (int) killedEntityMaxHealth/2;
                     switch (id.toString()) {
-                        case "minecraft:creeper"
-                                -> playerLevelComponent.addExp(22+ (int) killedEntityMaxHealth/4) ;
                         case "minecraft:pillager", "minecraft:skeleton"
-                                -> playerLevelComponent.addExp(25+ (int) killedEntityMaxHealth/4);
-                        case "minecraft:blaze", "minecraft:drowned", "minecraft:stray", "minecraft:phantom"
-                                -> playerLevelComponent.addExp(35+ (int) killedEntityMaxHealth/4);
+                                -> playerLevelComponent.addExp(25+baseExp );
+                        case "minecraft:drowned", "minecraft:stray", "minecraft:phantom"
+                                -> playerLevelComponent.addExp(35+  baseExp);
                         case "minecraft:piglin_brute"
-                                -> playerLevelComponent.addExp(30+ (int) killedEntityMaxHealth/4);
+                                -> playerLevelComponent.addExp(40+ baseExp);
                         case "minecraft:ghast"
-                                -> playerLevelComponent.addExp(50+ (int) killedEntityMaxHealth/4);
+                                -> playerLevelComponent.addExp(50+ baseExp);
+                        case "minecraft:creeper", "minecraft:blaze"
+                                -> playerLevelComponent.addExp(55+ baseExp) ;
                         case "minecraft:wither_skeleton"
-                                -> playerLevelComponent.addExp(70+ (int) killedEntityMaxHealth/4);
+                                -> playerLevelComponent.addExp(70+ (baseExp));
                         case "minecraft:enderman", "minecraft:vindicator", "minecraft:guardian"
-                                -> playerLevelComponent.addExp(100+ (int) killedEntityMaxHealth/4);
+                                -> playerLevelComponent.addExp(100+ baseExp);
                         case "minecraft:vex"
-                                -> playerLevelComponent.addExp(200+ (int) killedEntityMaxHealth/4);
+                                -> playerLevelComponent.addExp(200+ baseExp);
                         case "minecraft:ravager"
-                                -> playerLevelComponent.addExp(500+ (int) killedEntityMaxHealth/4);
+                                -> playerLevelComponent.addExp(500+ baseExp);
                         case "minecraft:endermite"
                                 -> playerLevelComponent.addExp(1777);
                         case "minecraft:wither", "minecraft:elder_guardian"
-                                -> playerLevelComponent.addExp(2000+ (int) killedEntityMaxHealth);
+                                -> playerLevelComponent.addExp(2000+ baseExp);
                         case "minecraft:warden"
                                 -> playerLevelComponent.addExp(12000);
 
-                        default -> playerLevelComponent.addExp((int) killedEntityMaxHealth/4);
+                        default -> playerLevelComponent.addExp((baseExp));
                     }
                 }
 

@@ -30,7 +30,8 @@
       "esperis:player_equipment_stat_component",
       "esperis:player_final_stat_component",
       "esperis:player_point_stat_component",
-      "esperis:player_skill_component"
+      "esperis:player_skill_component",
+      "esperis:player_base_ability_component"
     ]
   },
   "mixins": [

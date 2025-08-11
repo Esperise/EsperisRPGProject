@@ -1,5 +1,6 @@
 package com.altale.esperis.mixin.entity.Creeper;
 
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +28,14 @@ public class CreeperMixin  {
         if (!creeper.getWorld().isClient) {
             creeper.getWorld().createExplosion(creeper, creeper.getX(), creeper.getY(), creeper.getZ(), 3 , World.ExplosionSourceType.MOB);
             this.currentFuseTime=0;
-            this.fuseTime=15;
+            if(fuseTime == 30){
+                fuseTime = 15;
+            }else if(fuseTime == 10){
+                creeper.onDeath(creeper.getDamageSources().generic());
+                creeper.discard();
+            }
+            fuseTime--;
+
             ci.cancel();
         }
     }

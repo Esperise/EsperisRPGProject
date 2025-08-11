@@ -1,4 +1,4 @@
-package com.altale.esperis.skills.lukStatSkill;
+package com.altale.esperis.skills.statSkills.lukStatSkill;
 
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
