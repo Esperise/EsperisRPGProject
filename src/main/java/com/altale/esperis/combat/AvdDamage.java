@@ -14,14 +14,17 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class AvdDamage {
     public static void register(){
         AvdCallback.EVENT.register(
                 ((source, target, amount) -> {
-
                     Entity attackerEntity = source.getAttacker();
+                    if(source.equals(target.getDamageSources().generic())) return amount;
+                    if(source.getAttacker() ==target) return amount;
+
 
                     if(attackerEntity instanceof LivingEntity attacker){
                         if(attacker.hasStatusEffect((StatusEffects.BLINDNESS))){

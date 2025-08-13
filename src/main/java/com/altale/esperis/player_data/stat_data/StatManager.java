@@ -11,6 +11,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -32,15 +33,16 @@ public class StatManager {
             StatType statType = entry.getKey();
             double value = entry.getValue();
             if(buffMap.isEmpty()){
-                System.out.println(statType + ":  " + value);
                 finalStatComponent.setFinalStat(statType, value);
             }else if(buffMap.containsKey(statType)){
-                System.out.println(statType+" 적용 전 : "+value);
                 double buffConstantValue= buffMap.get(statType).get(0);
                 double buffPercentValue= buffMap.get(statType).get(1);
                 value= (value + buffConstantValue) * (1+ buffPercentValue/100);
+                if(Arrays.asList(StatType.getCapsStats()).contains(statType)){
+                    value= Math.max(0, value);
+                    value= Math.min(1, value);
+                }
                 finalStatComponent.setFinalStat(statType, value);
-                System.out.println(statType+" 적용 후 : "+value);
             }else{
                 finalStatComponent.setFinalStat(statType, value);
             }

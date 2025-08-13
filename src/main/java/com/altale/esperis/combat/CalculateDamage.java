@@ -7,6 +7,7 @@ import com.altale.esperis.player_data.stat_data.StatType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.DamageTypeTags;
@@ -14,7 +15,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -27,6 +30,8 @@ public class CalculateDamage {
                         target.damageArmor(damageSource, damageAmount);
                     }
                     System.out.println("원본 데미지: "+damageAmount);
+                    if(damageSource.equals(target.getDamageSources().generic())) return damageAmount;
+                    if(damageSource.getAttacker() ==target) return damageAmount;
                     Entity attackerEntity = damageSource.getAttacker();
                     if(attackerEntity instanceof LivingEntity attacker){
 
@@ -76,10 +81,10 @@ public class CalculateDamage {
                             damage*=attackerCritDmgCoeffi;
 //
                             if(attackerIsPlayer){
-                                ((PlayerEntity) attacker).sendMessage(Text.literal("치명타 피해 입힘"),true);
+                                ((PlayerEntity) attacker).sendMessage(Text.literal("치명타 피해 입힘").formatted(Formatting.BLUE, Formatting.BOLD),true);
                             }
                             if(targetIsPlayer){
-                                ((PlayerEntity) target).sendMessage(Text.literal("치명타 피해 받음"),true);
+                                ((PlayerEntity) target).sendMessage(Text.literal("치명타 피해 받음").formatted(Formatting.DARK_RED, Formatting.BOLD),true);
                             }
                             target.getWorld().playSound(
                                     null,

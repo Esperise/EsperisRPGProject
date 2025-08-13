@@ -104,6 +104,10 @@ public class BaseAbilityComponentImp implements BaseAbilityComponent, AutoSynced
         return BaseAbilityMap;
 
     }
+    @Override
+    public double getBaseAbility(StatType statType) {
+        return BaseAbilityMap.get(statType);
+    }
 
     @Override
     public void readFromNbt(NbtCompound nbtCompound) {

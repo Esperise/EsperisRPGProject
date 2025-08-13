@@ -16,14 +16,18 @@ public class AbilityBuff {
         int duration;
         double percentBuff;
         double constantBuff;
+        int maxStack;
+        int currentStack;
         BuffData(LivingEntity target, String SkillId, int duration,
-                    double percentBuff, double constantBuff) {
+                    double percentBuff, double constantBuff, int maxStack) {
             this.remainingTicks = duration;
             this.duration = duration;
             this.target = target;
             this.SkillId = SkillId;
             this.percentBuff = percentBuff;
             this.constantBuff = constantBuff;
+            this.maxStack = maxStack;
+            this.currentStack = 0;
         }
     }
 
@@ -46,10 +50,13 @@ public class AbilityBuff {
                 }
                 if(entry.getValue().isEmpty()){
                     //uuid에 버프가 하나도 없을 경우 map에서 지워서 자원 아끼기
+                    System.out.println("uuid에 버프가 하나도 없을 경우 map에서 지워서 자원 아끼기");
                     outerIter.remove();
                     continue;
                 }
-                for (Map.Entry<StatType, List<BuffData>> innerEntry : entry.getValue().entrySet()) {
+                Iterator<Map.Entry<StatType, List<BuffData>>> innerIter = entry.getValue().entrySet().iterator();
+                while (innerIter.hasNext()) {
+                    Map.Entry<StatType, List<BuffData>> innerEntry = innerIter.next();
                     StatType statType = innerEntry.getKey();
                     List<BuffData> buffDataList = innerEntry.getValue();
                     Iterator<BuffData> buffListIter = buffDataList.iterator();
@@ -65,25 +72,46 @@ public class AbilityBuff {
                             System.out.println("buffData remainingTicks: " + buffData.remainingTicks);
                             StatManager.statUpdate(player);
                         }
+                        if(innerEntry.getValue().isEmpty()){
+                            innerIter.remove();
+                        }
                     }
                 }
             }
         });
     }
-    public static void giveBuff(LivingEntity target, String SkillId,StatType statType, int duration, double percentBuff, double constantBuff) {
-        BuffData buffData = new BuffData(target, SkillId, duration, percentBuff, constantBuff);
+    public static void giveBuff(LivingEntity target, String SkillId,StatType statType, int duration, double percentBuff, double constantBuff, int maxStack) {
+        BuffData buffData = new BuffData(target, SkillId, duration, percentBuff, constantBuff,maxStack);
         if(!buffMap.containsKey(target.getUuid())){
             buffMap.computeIfAbsent(target.getUuid(), k -> new EnumMap<>(StatType.class))
                     .computeIfAbsent(statType, k -> new ArrayList<>()).add(buffData);
         }else{
             if(buffMap.get(target.getUuid()).containsKey(statType)){
-                buffMap.get(target.getUuid()).get(statType).add(buffData);
+                List<BuffData> dataList = buffMap.get(target.getUuid()).get(statType);
+                boolean stackTargetFound = false;
+                for(BuffData data : dataList){
+                    if(data.SkillId.equals(SkillId)){
+                        stackTargetFound = true;
+                        data.remainingTicks = duration;
+                        System.out.println( data.SkillId+ "버프 중첩: " +data.currentStack);
+                        System.out.println( data.SkillId+ "시간: " +data.currentStack);
+                        if(data.currentStack < maxStack){
+                            data.currentStack++;
+                            data.percentBuff += percentBuff;
+                            data.constantBuff += constantBuff;
+                        }
+                    }
+                }
+                if(!stackTargetFound){
+                    buffMap.get(target.getUuid()).get(statType).add(buffData);
+                }
             }else{
                 buffMap.get(target.getUuid()).computeIfAbsent(statType, k -> new ArrayList<>()).add(buffData);
             }
         }
 
     }
+
 
     public static Map<StatType, List<Double>> getBuffs(LivingEntity target){
         Map<StatType, List<Double>> buffs = new EnumMap<>(StatType.class);

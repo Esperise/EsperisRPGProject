@@ -6,8 +6,10 @@ import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatCo
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
 import com.altale.esperis.serverSide.Utilities.GetEntityLookingAtDistance;
+import com.altale.esperis.skills.buff.AbilityBuff;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.ItemCooldownManager;
@@ -16,6 +18,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -59,7 +62,15 @@ public class SpecialBowItem extends Item {
     public int getAttackSpeed(PlayerEntity user){
         PlayerFinalStatComponent statComponent = PlayerFinalStatComponent.KEY.get(user);
         double as = statComponent.getFinalStat(StatType.ATTACK_SPEED);
-        return (int) Math.round(1/ Math.max(0.01,baseAttackSpeed*as))*20;
+        return (int) Math.round(1/ Math.max(0.01,baseAttackSpeed*as)*20);
+    }
+    public static void incUsage(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+        nbt.putInt("UsageCount", nbt.getInt("UsageCount") + 1 > 3 ? 0 : nbt.getInt("UsageCount") + 1 );
+    }
+
+    public static int getUsage(ItemStack stack) {
+        return stack.getOrCreateNbt().getInt("UsageCount");
     }
     public double getMaxDistance(){
         return maxDistance;
@@ -127,18 +138,36 @@ public class SpecialBowItem extends Item {
         }else{
             //타겟팅
             if(targeted){
+                ItemStack stack= player.getStackInHand(Hand.MAIN_HAND);
+                int usage = getUsage(stack);
+                incUsage(stack);
                 Vec3d playerLookVec= player.getRotationVec(1.0f).normalize();
                 Vec3d playerCameraPos= player.getCameraPosVec(1.0f);
                 double distance = GetEntityLookingAtDistance.getEntityLookingAtDistance((ServerPlayerEntity) player, target);
                 for(double i=0; i<=(float) distance ;i+=0.1){
                     Vec3d pos = playerCameraPos.add(playerLookVec.multiply(i));
                     Vec3d pos2 = pos.add(playerLookVec.multiply(Math.min(distance,i+1.5)));
-                    world.spawnParticles(new DustParticleEffect(new Vector3f(0.0f, 0.0f, 0.0f),0.1f), pos.x, pos.y, pos.z, 5, 0, 0, 0, 0);
-                    world.spawnParticles(
-                            ParticleTypes.CRIT,
-                            pos2.x, pos2.y, pos2.z,
-                            1, 0.03, 0.03, 0.03, 0
-                    );
+                    if(usage>=3){
+//                        world.spawnParticles(new DustParticleEffect(new Vector3f(0.8f, 0.8f, 1.0f),0.2f), pos.x, pos.y, pos.z, 5, 0, 0, 0, -1);
+                        world.spawnParticles(
+                                ParticleTypes.UNDERWATER,
+                                pos2.x, pos2.y, pos2.z,
+                                30, 0.1, 0.1, 0.1, 0
+                        );
+                        world.spawnParticles(
+                                ParticleTypes.ENCHANTED_HIT,
+                                pos2.x, pos2.y, pos2.z,
+                                3, 0.05, 0.05, 0.05, 0
+                        );
+                    }else{
+                        world.spawnParticles(new DustParticleEffect(new Vector3f(0.0f, 0.0f, 0.0f),0.1f), pos.x, pos.y, pos.z, 5, 0, 0, 0, 0);
+                        world.spawnParticles(
+                                ParticleTypes.CRIT,
+                                pos2.x, pos2.y, pos2.z,
+                                1, 0.03, 0.03, 0.03, 0
+                        );
+                    }
+
                 }
                 player.getWorld().playSound(
                         null,
@@ -187,17 +216,29 @@ public class SpecialBowItem extends Item {
 
     public void useSpecialBow(ServerPlayerEntity player, ServerWorld world) {
         Entity target = GetEntityLookingAt.getEntityLookingAt(player, maxDistance, 0.2);
+        ItemStack stack= player.getStackInHand(Hand.MAIN_HAND);
+
+
         //
         if( target == null  ){ //타겟팅 대상 없음
             specialBowEffects(false,world,player,null);
         } else {
             // 타겟팅 대상에게
             if(target instanceof LivingEntity targetEntity){
-                specialBowEffects(true,world,player,targetEntity);
+//                target.setFrozenTicks(target.getFrozenTicks() + 80);
+
+                AbilityBuff.giveBuff(player,"구인수의 격노", StatType.ATTACK_SPEED, 120, 0,0.1, 50);
+                AbilityBuff.giveBuff(player,"구인수의 격노", StatType.SPD, 120, 0,0.1, 5);
+                System.out.println(getAttackSpeed(player));
                 DamageSource src = world.getDamageSources().playerAttack(player);
                 targetEntity.timeUntilRegen = 0;
                 targetEntity.hurtTime = 0;
                 double shotDamage= specialBowDamage(player);
+                int usage = getUsage(stack);
+                if(usage==3){
+                    shotDamage+= 15;
+                }
+                specialBowEffects(true,world,player,targetEntity);
                 shotDamage= damageReducedByDistance(player, targetEntity, shotDamage, maxDistance);
                 targetEntity.damage(src, (float) shotDamage);
             }

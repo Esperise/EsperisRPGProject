@@ -32,6 +32,7 @@ public enum StatType {
     private static final StatType[] ARMOR_STATS = {DEF, MAX_HEALTH , STR, DEX, LUK, DUR};
     private static final StatType[] WEAPON_STATS = {ATK, STR, DEX, LUK, DUR};
     private static final StatType[] NONE_SPECIAL_STATS = {ATK, DEF, MAX_HEALTH , STR, DEX, LUK, DUR};
+    private static final StatType[] Should_Have_Caps={CRIT, AVD, FinalDamagePercent, ACC, DefPenetrate};
 
 
     public static StatType[] getNormalStatType(){
@@ -44,5 +45,6 @@ public enum StatType {
     public static StatType[] getNoneSpecialStats(){return NONE_SPECIAL_STATS.clone();}
     public static StatType[] getPercentStats(){ return PERCENT_STATS.clone(); }
     public static StatType[] getSpeedsStats(){ return SPEEDS_STATS.clone(); }
+    public static StatType[] getCapsStats(){ return Should_Have_Caps.clone(); }
 }
 

@@ -76,10 +76,9 @@ public class DotDamageVer2 {
                             DotData data = dataList.next();
                             LivingEntity target = data.targetRef.get();
                             LivingEntity source = data.sourceRef.get();
-
                             // 참조 소멸 또는 사망한 경우 제거
                             if (target == null || !target.isAlive() || target.isRemoved() ||
-                                    source == null || !source.isAlive() || source.isRemoved()) {
+                                    source==null ||!source.isAlive() || source.isRemoved()) {
                                 dataList.remove();
                                 continue;
                             }
@@ -95,9 +94,15 @@ public class DotDamageVer2 {
                                 DamageSource ds = (source instanceof PlayerEntity)
                                         ? target.getWorld().getDamageSources().playerAttack((PlayerEntity) source)
                                         : target.getWorld().getDamageSources().mobAttack(source);
+                                if(data.dotTypeVer2.equals(DotTypeVer2.DamageSource_Generic)){
+                                    ds = target.getDamageSources().generic();
+                                }
                                 target.damage(ds, data.damagePerNTick);
-                                target.setVelocity(Vec3d.ZERO);
-                                target.velocityModified = true;
+                                if(data.dotTypeVer2 != DotTypeVer2.DamageSource_Generic) {
+                                    target.setVelocity(Vec3d.ZERO);
+                                    target.velocityModified = true;
+                                }
+
 
                                 // 파티클 & 사운드
                                 if (target.getWorld() instanceof ServerWorld serverWorld) {
@@ -127,18 +132,6 @@ public class DotDamageVer2 {
                                 float maxHp = target.getMaxHealth();
                                 float lost = maxHp - target.getHealth();
                                 float coef = (lost / maxHp) + 1;
-//                                if (target.getWorld() instanceof ServerWorld serverWorld) {
-//                                    Vec3d pos = target.getPos();
-//                                    int blood = (int)(12*((lost/maxHp)*30+1));
-//                                    int dust = (int)(150*((lost/maxHp)*30+1));
-//                                    serverWorld.spawnParticles(ParticleTypes.FALLING_DRIPSTONE_LAVA,
-//                                            pos.x, pos.y, pos.z, blood, 0.7, 0.75, 0.7, 0.1);
-//                                    serverWorld.spawnParticles(new DustParticleEffect(new Vector3f(1.0f,0.0f,0.0f),0.5f),
-//                                            pos.x, pos.y, pos.z, dust, 1.0, 0.7, 1.0, 0.01);
-//                                    target.getWorld().playSound(null, pos.x, pos.y, pos.z,
-//                                            SoundEvents.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
-//                                            SoundCategory.PLAYERS, 1.4f, 1.0f);
-//                                }
                                 dataList.remove();
                             }
                         }
@@ -174,9 +167,11 @@ public class DotDamageVer2 {
             if(!tempList.isEmpty()){
                 for (DotData data : tempList) {
                     if (data.Id.equals(Id)) {
+                        float remainingDamage = (float) (data.remainingTicks * data.tickDelta) / duration;
                         data.remainingTicks = duration;
-                        data.expectedTotalDamage += expectTotalDamage * overlapCoeff;
-                        data.damagePerNTick += damagePerNTicks*overlapCoeff;
+                        data.expectedTotalDamage = remainingDamage +  (expectTotalDamage * overlapCoeff) ;
+                        data.damagePerNTick = data.expectedTotalDamage * data.tickDelta / data.duration;
+//                        data.damagePerNTick += damagePerNTicks*overlapCoeff;
                         found= true;
                         break;
                     }
@@ -287,6 +282,7 @@ public class DotDamageVer2 {
                     Iterator<DotData> dataIter = dataList.iterator();
                     while(dataIter.hasNext()){
                         DotData data= dataIter.next();
+                        if(data.dotTypeVer2.equals(DotTypeVer2.DamageSource_Generic)) continue;
                         float remainDotDamage= data.remainingTicks*data.damagePerNTick /data.tickDelta;
                         totalDotDamage+=remainDotDamage;
                     }

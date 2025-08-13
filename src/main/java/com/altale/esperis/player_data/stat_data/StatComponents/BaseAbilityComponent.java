@@ -14,5 +14,6 @@ public interface BaseAbilityComponent extends Component {
     );
     void setBaseAbility(StatType statType, Double value);
     void saveBaseAbility();
+    public double getBaseAbility(StatType statType);
     Map<StatType, Double> getAbilityMap();
 }

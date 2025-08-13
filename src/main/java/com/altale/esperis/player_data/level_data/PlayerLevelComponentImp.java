@@ -4,6 +4,7 @@ import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.player_data.stat_data.StatPointType;
+import com.altale.esperis.skills.buff.HealBuff;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -53,8 +54,7 @@ public class PlayerLevelComponentImp implements PlayerLevelComponent, AutoSynced
             pointStatComponent.addSP(StatPointType.TotalSP, 5);
             levelUp();
             StatManager.statUpdate((ServerPlayerEntity) player);
-            float currentHealth= player.getHealth();
-            player.setHealth( (player.getMaxHealth() / 2) + currentHealth );
+            HealBuff.giveHealBuff(player, 100, 5, player.getMaxHealth(),"레벨업 체력 회복");
 
             //레벨업 소리 이펙트
             Vec3d pos= player.getPos();
@@ -87,7 +87,7 @@ public class PlayerLevelComponentImp implements PlayerLevelComponent, AutoSynced
     public void levelUp(){
             setLevel(this.level+1);
             setCurrentExp(this.currentExp-this.maxExp);
-        setMaxExp((int) (this.maxExp * Math.max(1.1,(1.32-(getLevel()/100.0)))));
+        setMaxExp((int) (this.maxExp * Math.max(1.1,(1.22-(getLevel()/100.0)))));
 
     }
 
