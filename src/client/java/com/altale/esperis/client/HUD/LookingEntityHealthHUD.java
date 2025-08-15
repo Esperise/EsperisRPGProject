@@ -140,13 +140,13 @@ public class LookingEntityHealthHUD {
                     healthText= String.format("%.0f (+%.0f) / %.0f",cur,absorption,max);
                     textX= barLocateX+ 10;
                     textY= barLocateY+1;
-                    hpDiffText=108;
+                    hpDiffText=138;
                 }
                 else if(absorptionBar==0){
                     healthText = String.format("%.0f / %.0f",cur,max);
                     textX = barLocateX+10;
                     textY = barLocateY+1;
-                    hpDiffText=81;
+                    hpDiffText=111;
                 }
                 ctx.fillGradient(lvbarLocateX-1,barLocateY-1,barLocateX,barLocateY+10,0xFFBBBBBB, 0xFF444444);//level 테두리
                 ctx.fillGradient(lvbarLocateX,barLocateY,barLocateX-1,barLocateY+9,0xFF666666, 0xFF000000);//level

@@ -1,5 +1,6 @@
 package com.altale.esperis.skills.buff;
 
+import com.altale.esperis.player_data.skill_data.SkillsId;
 import com.altale.esperis.skills.visualEffect.DrawCircle;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
@@ -92,15 +93,31 @@ public class AbsorptionBuff {
                     //모든 버프 순회후 흡수량 총합 적용
                 } else {
                     Iterator<Map.Entry<String, AbsorptionData>> reductionIter = outerEntry.getValue().entrySet().iterator();
+                    float red = 1.0f;
+                    float blue= 1.0f;
+                    float green = 1.0f;
+                    float dustSize=0.15f;
                     while (reductionIter.hasNext()) {
                         AbsorptionData data = reductionIter.next().getValue();
                         totalAmount += data.amount;
+                        if(data.skillId.equals(SkillsId.STR_100.getSkillName())){
+                            red = 1f;
+                            blue= 0.2f;
+                            green= 0.2f;
+                            dustSize= 0.35f;
+                        }
+                        else if(data.skillId.equals(SkillsId.LUK_150.getSkillName())){
+                            red=1f;
+                            blue=0.2f;
+                            green=1f;
+                        }
                     }
                     beforeAbsorptionBuffAmount.put(uuid, totalAmount);
                     uuidLivingEntityMap.get(uuid).setAbsorptionAmount(totalAmount);
                     LivingEntity entity = uuidLivingEntityMap.get(uuid);
                     ServerWorld world= (ServerWorld) entity.getWorld();
-                    DrawCircle.spawnSphereAroundBarrier(entity, world,24,1f,1f,1f,0.15f,1);//계속 나오는게 얘임
+
+                    DrawCircle.spawnSphereAroundBarrier(entity, world,24,red,green,blue,dustSize,1);//계속 나오는게 얘임
                 }
                 if(totalAmount==0){
                     LivingEntity entity = uuidLivingEntityMap.get(uuid);

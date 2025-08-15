@@ -50,7 +50,6 @@ public class AbilityBuff {
                 }
                 if(entry.getValue().isEmpty()){
                     //uuid에 버프가 하나도 없을 경우 map에서 지워서 자원 아끼기
-                    System.out.println("uuid에 버프가 하나도 없을 경우 map에서 지워서 자원 아끼기");
                     outerIter.remove();
                     continue;
                 }
@@ -66,10 +65,10 @@ public class AbilityBuff {
                         if(buffData.remainingTicks <= 0){
                             buffListIter.remove();
                             StatManager.statUpdate(player);
-                            System.out.println("Removed " + buffData.remainingTicks + " ticks from " + statType);
+
                         }
                         if(buffData.remainingTicks == buffData.duration-1){
-                            System.out.println("buffData remainingTicks: " + buffData.remainingTicks);
+
                             StatManager.statUpdate(player);
                         }
                         if(innerEntry.getValue().isEmpty()){
@@ -93,9 +92,7 @@ public class AbilityBuff {
                     if(data.SkillId.equals(SkillId)){
                         stackTargetFound = true;
                         data.remainingTicks = duration;
-                        System.out.println( data.SkillId+ "버프 중첩: " +data.currentStack);
-                        System.out.println( data.SkillId+ "시간: " +data.currentStack);
-                        if(data.currentStack < maxStack){
+                        if(data.currentStack < maxStack-1){
                             data.currentStack++;
                             data.percentBuff += percentBuff;
                             data.constantBuff += constantBuff;

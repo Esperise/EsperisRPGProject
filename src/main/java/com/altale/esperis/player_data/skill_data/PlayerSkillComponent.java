@@ -25,6 +25,11 @@ public interface PlayerSkillComponent extends Component {
 
     boolean isPassiveSkill(SkillsId skillId);
     boolean isKeydownSkill(SkillsId skillId);
+
+    Set<SkillsId> getPassiveSkillSet();
+
+    boolean hasPassiveSkill(SkillsId skillId);
+
     boolean isUnlockedSkill(SkillsId skillId);
 
 

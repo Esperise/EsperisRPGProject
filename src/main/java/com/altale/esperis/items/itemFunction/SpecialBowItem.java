@@ -2,6 +2,10 @@ package com.altale.esperis.items.itemFunction;
 
 import com.altale.esperis.EsperisRPG;
 import com.altale.esperis.player_data.equipmentStat.EquipmentInfoManager;
+import com.altale.esperis.player_data.skill_data.PlayerSkillComponent;
+import com.altale.esperis.player_data.skill_data.SkillManager;
+import com.altale.esperis.player_data.skill_data.SkillsId;
+import com.altale.esperis.player_data.skill_data.passive.PassiveSkillManager;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
@@ -53,7 +57,7 @@ public class SpecialBowItem extends Item {
         this.baseDamage = baseDamage;
     }
     public SpecialBowItem(){
-        this(0.25, 40F,0.3,0.1,3);
+        this(1, 40F,0.3,0.1,3);
     }
     public  double getSpecialBowAttackSpeed() {
         return baseAttackSpeed;
@@ -140,7 +144,6 @@ public class SpecialBowItem extends Item {
             if(targeted){
                 ItemStack stack= player.getStackInHand(Hand.MAIN_HAND);
                 int usage = getUsage(stack);
-                incUsage(stack);
                 Vec3d playerLookVec= player.getRotationVec(1.0f).normalize();
                 Vec3d playerCameraPos= player.getCameraPosVec(1.0f);
                 double distance = GetEntityLookingAtDistance.getEntityLookingAtDistance((ServerPlayerEntity) player, target);
@@ -186,6 +189,7 @@ public class SpecialBowItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         ItemCooldownManager cooldownManager= user.getItemCooldownManager();
+
         if(cooldownManager.isCoolingDown(this)){
             return TypedActionResult.fail(stack);
         }
@@ -217,7 +221,7 @@ public class SpecialBowItem extends Item {
     public void useSpecialBow(ServerPlayerEntity player, ServerWorld world) {
         Entity target = GetEntityLookingAt.getEntityLookingAt(player, maxDistance, 0.2);
         ItemStack stack= player.getStackInHand(Hand.MAIN_HAND);
-
+        PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
 
         //
         if( target == null  ){ //타겟팅 대상 없음
@@ -225,20 +229,21 @@ public class SpecialBowItem extends Item {
         } else {
             // 타겟팅 대상에게
             if(target instanceof LivingEntity targetEntity){
-//                target.setFrozenTicks(target.getFrozenTicks() + 80);
-
-                AbilityBuff.giveBuff(player,"구인수의 격노", StatType.ATTACK_SPEED, 120, 0,0.1, 50);
-                AbilityBuff.giveBuff(player,"구인수의 격노", StatType.SPD, 120, 0,0.1, 5);
-                System.out.println(getAttackSpeed(player));
                 DamageSource src = world.getDamageSources().playerAttack(player);
                 targetEntity.timeUntilRegen = 0;
                 targetEntity.hurtTime = 0;
                 double shotDamage= specialBowDamage(player);
-                int usage = getUsage(stack);
-                if(usage==3){
-                    shotDamage+= 15;
-                }
+
+                PassiveSkillManager.bowHit(player,targetEntity);
                 specialBowEffects(true,world,player,targetEntity);
+                if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_50)){
+                    int usage = getUsage(stack);
+                    incUsage(stack);
+                    if(usage==3){
+                        shotDamage = PassiveSkillManager.bowHitAddDamage(player, targetEntity, (float) shotDamage);
+                    }
+                }
+                PassiveSkillManager.bowHit(player,targetEntity);
                 shotDamage= damageReducedByDistance(player, targetEntity, shotDamage, maxDistance);
                 targetEntity.damage(src, (float) shotDamage);
             }

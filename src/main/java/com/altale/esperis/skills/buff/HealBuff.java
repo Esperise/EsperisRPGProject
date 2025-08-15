@@ -88,7 +88,7 @@ public class HealBuff {
                     while(dataIter.hasNext()){
                         HealData data= dataIter.next();
                         if(data.skillId.equals(skillId)){
-                            if(data.remainingTicks< duration){
+                            if(data.remainingTicks <= duration){
                                 data.remainingTicks = duration;
                                 found = true;
                             }

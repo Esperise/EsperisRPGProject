@@ -35,8 +35,9 @@ public class SkillKeyBindingPacketReceiver {
                 }
                 if( playerSkillComponent.isUnlockedSkill(keyMatchesSkillId) ){//스킬이 해금되어있는지 검사
 
-                    if(isHolding && playerSkillComponent.isKeydownSkill(keyMatchesSkillId)) {
+                    if(isHolding /*&& playerSkillComponent.isKeydownSkill(keyMatchesSkillId)*/) {
                         //키다운 스킬이 키 다운 중일때
+                        player.sendMessage(Text.literal("키다운중 " + key),true);
                     }
                     else if(!isHolding && !playerSkillComponent.isKeydownSkill(keyMatchesSkillId)) {
                         //홀딩 중이 아니고 키다운 스킬이 아닐때

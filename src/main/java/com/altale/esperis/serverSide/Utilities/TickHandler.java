@@ -1,5 +1,6 @@
 package com.altale.esperis.serverSide.Utilities;
 
+import com.altale.esperis.player_data.skill_data.passive.PassiveSkillManager;
 import com.altale.esperis.serverSide.packet.AbsorptionSyncS2CPacket;
 import com.altale.esperis.serverSide.packet.CoolTimeS2CPacket;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
@@ -24,7 +25,7 @@ public class TickHandler {
             int count = worldTickCounters.getOrDefault(world, 0 )+1;
             if(count % 2==0){
                 count = 0;
-                //0.5초 마다 서버에서 실행할 거 기술
+                //0.1초 마다 서버에서 실행할 거 기술
                 for (ServerPlayerEntity player :world.getPlayers()){
                     String coolTimeText= CoolTimeManager.coolTimeText(player);
                     CoolTimeS2CPacket.send(player,coolTimeText);
@@ -34,6 +35,9 @@ public class TickHandler {
                         AbsorptionSyncS2CPacket.send(player, living.getId(), targetEntityAbsorption);
                     }
                 }
+//                for(ServerPlayerEntity player : world.getPlayers()){
+//                    PassiveSkillManager.hpFallBelowXPercent(player,30);
+//                }
 
             }
             if(count % 100 ==0 && world.getRegistryKey() == World.NETHER){

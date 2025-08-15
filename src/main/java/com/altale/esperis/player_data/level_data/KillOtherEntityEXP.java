@@ -1,6 +1,7 @@
 package com.altale.esperis.player_data.level_data;
 
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
+import com.altale.esperis.player_data.skill_data.passive.PassiveSkillManager;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.Monster;
@@ -14,6 +15,7 @@ public class KillOtherEntityEXP {
     public static void register() {
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity)->{
             if(killer instanceof PlayerEntity player){
+                PassiveSkillManager.killEntityFlag(player, killedEntity);
                 if(killedEntity instanceof PlayerEntity killedPlayer){
                     // 아무 이벤트 x
                 }

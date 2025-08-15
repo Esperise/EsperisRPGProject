@@ -2,33 +2,77 @@ package com.altale.esperis.player_data.skill_data;
 
 import com.altale.esperis.player_data.stat_data.StatType;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public enum SkillsId {
 
-    STR_1("str1", StatType.STR, 20),
+    STR_1("힘_더블점프", StatType.STR, 5),
+    STR_25("휩쓸기", StatType.STR, 25),
+    STR_50("패시브: 흡수의 일격", StatType.STR, 50),
+    STR_75("대검 돌격", StatType.STR, 75),
+    STR_100("패시브: 생명선", StatType.STR, 100),
+    STR_125("바람 가르기", StatType.STR, 125),
+    STR_150("죽음의 저항", StatType.STR, 150),
+    STR_175("??", StatType.STR, 175 ),
 
 
 
     DEX_1("민첩_더블점프", StatType.DEX, 5),
+    DEX_25("트리플 샷", StatType.DEX, 25),
+    DEX_50("패시브: 거인 학살자", StatType.DEX, 50),
+    //활 공격 적중시 1스택이 쌓임, 4스택일때 스택을 모두 잃고 6+ 대상 최대체력의 3%의 추가피해
+    DEX_75("신속 정확 고급", StatType.DEX, 75),
+    //버프스킬, 지속시간 12초 쿨타임 20초, 공격속도가 10%, 명중율이 2%, 치명타확률이 6%증가, 활 적중시 쿨타임이 0.5초 감소
+    DEX_100("패시브: 집중", StatType.DEX, 100),
+    //활 적중시 8초동안 공격속도가 7%증가, 최대 8스택(56%)
+    DEX_125("일제 사격", StatType.DEX, 125),
+    DEX_150("패시브: 관통상", StatType.DEX, 150),
+    //패시브: 활 공격 적중시 1스택이 쌓이고 4스택일때 스택을 모두 잃고 2초동안 대상에게 대상 최대체력의 4%의 총 피해를 입히는 출혈 부여 중첩가능
+    DEX_175("폭풍의 시", StatType.DEX, 175),
 
 
 
 
     LUK_1("트리플점프", StatType.LUK, 5),
-    LUK_20("더블스텝",StatType.LUK, 20),
-    LUK_60("그림자이동",StatType.LUK, 60),
-    LUK_80("페이탈블리츠",StatType.LUK, 80);
+    LUK_25("더블스텝",StatType.LUK, 25),
+    LUK_50("패시브: 치명적 회복",StatType.LUK, 50),
+    LUK_75("그림자이동",StatType.LUK, 75),
+    LUK_100("패시브: 출혈 폭발",StatType.LUK, 100),
+    LUK_125("페이탈블리츠",StatType.LUK, 125),
+    LUK_150("패시브: 위기 회피",StatType.LUK, 150),
+    LUK_175("레디 투 다이",StatType.LUK, 175),
 
 
-    public static final SkillsId[] STR_SKILLS = {};
-    public static final SkillsId[] DEX_SKILLS = {};
-    public static final SkillsId[] LUK_SKILLS = {LUK_1, LUK_20,LUK_60,LUK_80};
-    public static final SkillsId[] DUR_SKILLS = {};
-    public static final SkillsId[] PASSIVE_SKILLS={};
+
+
+    DUR_1("내구: 더블점프", StatType.DUR, 5),
+    DUR_25("지면 타격",StatType.DUR, 25),
+    DUR_50("패시브: 재생의 바람",StatType.DUR, 50),
+    DUR_75("길을 여는 자",StatType.DUR, 75),
+    DUR_100("패시브: 방어 태세",StatType.DUR, 100),
+    DUR_125("지진",StatType.DUR, 125),
+    DUR_150("패시브: 보호막 타격",StatType.DUR, 150),
+    DUR_175("포기와 선택",StatType.DUR, 175);
+
+
+    public static final SkillsId[] STR_SKILLS = {STR_1, STR_25, STR_50, STR_75,STR_100,STR_125,STR_150,STR_175};
+    public static final SkillsId[] DEX_SKILLS = {DEX_1, DEX_25, DEX_50, DEX_75, DEX_100, DEX_125, DEX_150, DEX_175};
+    public static final SkillsId[] LUK_SKILLS = {LUK_1, LUK_25,LUK_50,LUK_75,LUK_100, LUK_125,LUK_150,LUK_175};
+    public static final SkillsId[] DUR_SKILLS = {DUR_1,DUR_25,DUR_50,DUR_75,DUR_100,DUR_125,DUR_150,DUR_175};
+    public static final SkillsId[] PASSIVE_SKILLS={
+            STR_50,
+            STR_100,
+            STR_150,
+            DEX_50,
+            DEX_100,
+            DEX_150,
+            LUK_50,
+            LUK_100,
+            LUK_150,
+            DUR_50,
+            DUR_100,
+            DUR_150
+    };
     public static final SkillsId[] ACTIVE_SKILLS={};
     public static final SkillsId[] KEYDOWN_SKILLS={};
 
@@ -109,6 +153,14 @@ public enum SkillsId {
     }
     public static Set<SkillsId> getKeydownSkills(){
         return Set.of(KEYDOWN_SKILLS.clone());
+    }
+    public static List<SkillsId> getAllSkills(){
+        List<SkillsId> skills = new ArrayList<>();
+        skills.addAll(Arrays.asList(STR_SKILLS));
+        skills.addAll(Arrays.asList(DEX_SKILLS));
+        skills.addAll(Arrays.asList(LUK_SKILLS));
+        skills.addAll(Arrays.asList(DUR_SKILLS));
+        return  skills;
     }
 
 }

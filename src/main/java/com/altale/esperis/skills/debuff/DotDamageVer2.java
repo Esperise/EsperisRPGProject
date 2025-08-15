@@ -167,13 +167,13 @@ public class DotDamageVer2 {
             if(!tempList.isEmpty()){
                 for (DotData data : tempList) {
                     if (data.Id.equals(Id)) {
-                        float remainingDamage = (float) (data.remainingTicks * data.tickDelta) / duration;
+                        float remainingDamage =  data.expectedTotalDamage * (data.remainingTicks) / data.duration;
                         data.remainingTicks = duration;
                         data.expectedTotalDamage = remainingDamage +  (expectTotalDamage * overlapCoeff) ;
                         data.damagePerNTick = data.expectedTotalDamage * data.tickDelta / data.duration;
-//                        data.damagePerNTick += damagePerNTicks*overlapCoeff;
+//
+
                         found= true;
-                        break;
                     }
                 }
             }
@@ -220,45 +220,45 @@ public class DotDamageVer2 {
 
     }
 }
-    public static void giveDotDamage(LivingEntity target, LivingEntity source
-            , int duration, int tickDelta, float expectTotalDamage, DotTypeVer2 dotTypeVer2, String Id) {
-        float damagePerNTicks = expectTotalDamage * tickDelta / duration;
-        DotData newData = new DotData(duration, tickDelta, damagePerNTicks,
-                expectTotalDamage, dotTypeVer2, target, source,Id);
-
-            if(!dotDamageMap.isEmpty()) {
-                if(dotDamageMap.containsKey(target.getUuid())) {
-                    List<DotData> dataList = dotDamageMap.get(target.getUuid()).get(source.getUuid()).get(dotTypeVer2);
-                    if(dataList == null){
-                        dotDamageMap.computeIfAbsent(target.getUuid(), u -> new HashMap<>())
-                                .computeIfAbsent(source.getUuid(), u -> new HashMap<>())
-                                .computeIfAbsent(dotTypeVer2, d -> new ArrayList<>())
-                                .add(newData);
-                    }
-                    else{
-                        Iterator<DotData> dataIter = dataList.iterator();
-                        while(dataIter.hasNext()){
-                            DotData data= dataIter.next();
-                            if(data.Id.equals(Id)) {
-                                if (data.remainingTicks < duration) {
-                                    data.remainingTicks += tickDelta;
-                                }
-                            }
-                        }
-                    }
-
-
-
-            }
-            else{
-                dotDamageMap.computeIfAbsent(target.getUuid(), u -> new HashMap<>())
-                        .computeIfAbsent(source.getUuid(), u -> new HashMap<>())
-                        .computeIfAbsent(dotTypeVer2, d -> new ArrayList<>())
-                        .add(newData);
-            }
-
-        }
-    }
+//    public static void giveDotDamage(LivingEntity target, LivingEntity source
+//            , int duration, int tickDelta, float expectTotalDamage, DotTypeVer2 dotTypeVer2, String Id) {
+//        float damagePerNTicks = expectTotalDamage * tickDelta / duration;
+//        DotData newData = new DotData(duration, tickDelta, damagePerNTicks,
+//                expectTotalDamage, dotTypeVer2, target, source,Id);
+//
+//            if(!dotDamageMap.isEmpty()) {
+//                if(dotDamageMap.containsKey(target.getUuid())) {
+//                    List<DotData> dataList = dotDamageMap.get(target.getUuid()).get(source.getUuid()).get(dotTypeVer2);
+//                    if(dataList == null){
+//                        dotDamageMap.computeIfAbsent(target.getUuid(), u -> new HashMap<>())
+//                                .computeIfAbsent(source.getUuid(), u -> new HashMap<>())
+//                                .computeIfAbsent(dotTypeVer2, d -> new ArrayList<>())
+//                                .add(newData);
+//                    }
+//                    else{
+//                        Iterator<DotData> dataIter = dataList.iterator();
+//                        while(dataIter.hasNext()){
+//                            DotData data= dataIter.next();
+//                            if(data.Id.equals(Id)) {
+//                                if (data.remainingTicks < duration) {
+//                                    data.remainingTicks += tickDelta;
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//
+//
+//            }
+//            else{
+//                dotDamageMap.computeIfAbsent(target.getUuid(), u -> new HashMap<>())
+//                        .computeIfAbsent(source.getUuid(), u -> new HashMap<>())
+//                        .computeIfAbsent(dotTypeVer2, d -> new ArrayList<>())
+//                        .add(newData);
+//            }
+//
+//        }
+//    }
     public static boolean isDotDamage(LivingEntity target){
         if(dotDamageMap.containsKey(target.getUuid())){
             return dotDamageMap.containsKey(target.getUuid());
