@@ -2,10 +2,7 @@ package com.altale.esperis.player_data.skill_data;
 
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.skills.statSkills.dexStatSkill.DexJump;
-import com.altale.esperis.skills.statSkills.lukStatSkill.DoubleStep;
-import com.altale.esperis.skills.statSkills.lukStatSkill.FatalBlitz;
-import com.altale.esperis.skills.statSkills.lukStatSkill.ShadowTeleport;
-import com.altale.esperis.skills.statSkills.lukStatSkill.TripleJump;
+import com.altale.esperis.skills.statSkills.lukStatSkill.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
@@ -42,11 +39,12 @@ public class SkillManager {
     public static void lukSkill(ServerPlayerEntity player ,SkillsId skillId){
         String skillName= skillId.getSkillName();
         ServerWorld world= player.getServerWorld();
-        switch(skillName){
-            case "트리플점프" -> TripleJump.tripleJump(player, world);
-            case "더블스텝" -> DoubleStep.doubleStep(player, world);
-            case "그림자이동" -> ShadowTeleport.doShadowTeleportPlayer(player, world);
-            case "페이탈블리츠" -> FatalBlitz.doFatalBlitz(player, world);
+        switch(skillId){
+            case LUK_1 -> TripleJump.tripleJump(player, world);
+            case LUK_25 -> DoubleStep.doubleStep(player, world);
+            case LUK_75 -> ShadowTeleport.doShadowTeleportPlayer(player, world);
+            case LUK_125 -> FatalBlitz.doFatalBlitz(player, world);
+            case LUK_175 -> ReadyToDie.doReadyToDie(player, world);
         }
     }
     public static void durSkill(ServerPlayerEntity player ,SkillsId skillId){

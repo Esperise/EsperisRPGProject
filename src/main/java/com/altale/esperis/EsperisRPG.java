@@ -17,6 +17,7 @@ import com.altale.esperis.player_data.skill_data.skillKeybind.SkillKeyBindingPac
 import com.altale.esperis.player_data.stat_data.ApplyStat2Ability;
 import com.altale.esperis.player_data.stat_data.StatComponents.*;
 import com.altale.esperis.player_data.stat_data.StatManager;
+import com.altale.esperis.serverSide.Utilities.DelayedTaskManager;
 import com.altale.esperis.serverSide.Utilities.TickHandler;
 import com.altale.esperis.serverSide.packet.EquipmentAdditionalStatRerollRequestSender;
 import com.altale.esperis.serverSide.packet.ShowRerollGuiRequestReceiver;
@@ -87,6 +88,8 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         EquipmentAdditionalStatRerollRequestSender.register();
         DetectPlayerEquipmentChange.register();
 
+        //delayedTask
+        DelayedTaskManager.register();
 
         System.out.println("[EsperisRPG] 모드 초기화 완료!");
     }

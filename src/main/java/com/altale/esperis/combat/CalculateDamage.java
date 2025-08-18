@@ -90,7 +90,7 @@ public class CalculateDamage {
 //
                             if(attackerIsPlayer){
                                 ((PlayerEntity) attacker).sendMessage(Text.literal("치명타 피해 입힘").formatted(Formatting.BLUE, Formatting.BOLD),true);
-                                PassiveSkillManager.criticalFlag((PlayerEntity )attacker, target);
+                                PassiveSkillManager.criticalFlag((PlayerEntity )attacker, target, (float) damage);
                             }
                             if(targetIsPlayer){
                                 ((PlayerEntity) target).sendMessage(Text.literal("치명타 피해 받음").formatted(Formatting.DARK_RED, Formatting.BOLD),true);
@@ -122,6 +122,9 @@ public class CalculateDamage {
                         if(targetIsPlayer){
                             damage= PassiveSkillManager.getDamageFlag((PlayerEntity) target, (float) damage);
                             PassiveSkillManager.hpFallBelowXPercent((PlayerEntity) target, (float) damage,30);
+                        }
+                        if(attackerIsPlayer){
+                            PassiveSkillManager.giveDamage((PlayerEntity )attacker,target,(float) damage);
                         }
 //                        System.out.println("최종 피해: "+damage);
                         return (float) damage;

@@ -1,5 +1,6 @@
 package com.altale.esperis.skills.buff;
 
+import com.altale.esperis.player_data.skill_data.SkillsId;
 import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.player_data.stat_data.StatType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -127,6 +128,36 @@ public class AbilityBuff {
             }
         }
         return buffs;
+    }
+    public static int getBuffStack(LivingEntity target, String buffName){
+        UUID uuid = target.getUuid();
+
+        if(buffMap.containsKey(uuid)){
+            for(Map.Entry<StatType, List<BuffData>> innerEntry : buffMap.get(uuid).entrySet()){
+                List<BuffData> buffDataList = innerEntry.getValue();
+                for(BuffData buffData : buffDataList){
+                    if(buffData.SkillId.equals(buffName)){
+                        return buffData.currentStack+1;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+    public static Map<String, Map<Integer, Integer>> getBufInfoForDisplay(LivingEntity target){
+        Map<String, Map<Integer, Integer>> bufInfoMap = new HashMap<>();
+        UUID uuid = target.getUuid();
+        if(buffMap.containsKey(uuid)){
+            for(Map.Entry<StatType, List<BuffData>> innerEntry : buffMap.get(uuid).entrySet()){
+                List<BuffData> buffDataList = innerEntry.getValue();
+                for(BuffData buffData : buffDataList){
+                    Map<Integer, Integer> remainAndStacksMap = new HashMap<>();
+                    remainAndStacksMap.putIfAbsent(buffData.remainingTicks, buffData.currentStack);
+                    bufInfoMap.putIfAbsent(buffData.SkillId, remainAndStacksMap);
+                }
+            }
+        }
+        return bufInfoMap;//스킬이름 <스킬의 남은 시간(tick), 스킬의 현재 스택>
     }
 
 }

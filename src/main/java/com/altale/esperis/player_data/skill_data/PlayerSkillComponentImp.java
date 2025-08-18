@@ -142,7 +142,7 @@ public class PlayerSkillComponentImp implements PlayerSkillComponent, AutoSynced
         for (Map.Entry<String, SkillsId> entry : keybindingMap.entrySet()) {
             NbtCompound tag = new NbtCompound();
             tag.putString("Key", entry.getKey());
-            tag.putString("Skill", entry.getValue().name());
+            tag.putString("Skill", entry.getValue().getSkillName());
             kbList.add(tag);
         }
         nbt.put("KeyBindings", kbList);
@@ -159,8 +159,18 @@ public class PlayerSkillComponentImp implements PlayerSkillComponent, AutoSynced
                 String key = tag.getString("Key");
                 System.out.println("키바인드 : "+key);
 //                if(SkillsId.getAllSkills().contains(key)){
-                    SkillsId skill = SkillsId.valueOf(tag.getString("Skill"));
+//                if(SkillsId.getActiveSkills().contains(keybindingMap.get(key))){
+                    SkillsId skill = SkillsId.getSkillIdByName(tag.getString("Skill"));
+                    System.out.println("PlayerSkillComponentImp: "+skill);
+                    if(skill == null){
+                        continue;
+                    }
+//
+//                    SkillsId skill = SkillsId.valueOf(tag.getString("Skill"));
+
                     keybindingMap.put(key, skill);
+//                }
+
 //                }
 
             }

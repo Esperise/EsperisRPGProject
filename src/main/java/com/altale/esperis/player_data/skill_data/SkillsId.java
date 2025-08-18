@@ -8,7 +8,7 @@ public enum SkillsId {
 
     STR_1("힘_더블점프", StatType.STR, 5),
     STR_25("휩쓸기", StatType.STR, 25),
-    STR_50("패시브: 흡수의 일격", StatType.STR, 50),
+    STR_50("패시브: 전투 몰입", StatType.STR, 50),
     STR_75("대검 돌격", StatType.STR, 75),
     STR_100("패시브: 생명선", StatType.STR, 100),
     STR_125("바람 가르기", StatType.STR, 125),
@@ -39,7 +39,7 @@ public enum SkillsId {
     LUK_75("그림자이동",StatType.LUK, 75),
     LUK_100("패시브: 출혈 폭발",StatType.LUK, 100),
     LUK_125("페이탈블리츠",StatType.LUK, 125),
-    LUK_150("패시브: 위기 회피",StatType.LUK, 150),
+    LUK_150("패시브: 다크사이트",StatType.LUK, 150),
     LUK_175("레디 투 다이",StatType.LUK, 175),
 
 
@@ -73,7 +73,28 @@ public enum SkillsId {
             DUR_100,
             DUR_150
     };
-    public static final SkillsId[] ACTIVE_SKILLS={};
+    public static final SkillsId[] ACTIVE_SKILLS={
+            STR_1,
+            STR_25,
+            STR_75,
+            STR_125,
+            STR_175,
+            DEX_1,
+            DEX_25,
+            DEX_75,
+            DEX_125,
+            DEX_175,
+            LUK_1,
+            LUK_25,
+            LUK_75,
+            LUK_125,
+            LUK_175,
+            DUR_1,
+            DUR_25,
+            DUR_75,
+            DUR_125,
+            DUR_175
+    };
     public static final SkillsId[] KEYDOWN_SKILLS={};
 
 
@@ -108,9 +129,10 @@ public enum SkillsId {
 
 
     public static SkillsId getSkillIdByName(String skillName) {
-//        return BY_NAME.get(skillName);
-        return Optional.ofNullable(BY_NAME.get(skillName))
-                .orElseThrow(() -> new IllegalArgumentException("Invalid skillName: " + skillName));
+        System.out.println("getSKillIdByName Map: "+BY_NAME);
+        return BY_NAME.getOrDefault(skillName, null);
+//        return Optional.ofNullable(BY_NAME.get(skillName))
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid skillName: " + skillName));
     }
 
     public static SkillsId[] getStatTypeSkillsId(StatType statType) {

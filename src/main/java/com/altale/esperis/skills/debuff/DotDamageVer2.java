@@ -1,4 +1,5 @@
 package com.altale.esperis.skills.debuff;
+import com.altale.esperis.player_data.skill_data.passive.PassiveSkillManager;
 import com.altale.esperis.serverSide.Utilities.HealthHanlder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
@@ -297,6 +298,9 @@ public class DotDamageVer2 {
                         : target.getWorld().getDamageSources().mobAttack(damageSource);
                 target.damage(ds, totalDotDamage* HealthHanlder.getLostHealthRatio(target
                         ,true,additionalCoeff));
+                if(damageSource instanceof PlayerEntity player){
+                    PassiveSkillManager.instantDotDamageFlag(player, target, totalDotDamage);
+                }
                 if (target.getWorld() instanceof ServerWorld serverWorld) {
                     Vec3d pos = target.getPos();
                     int blood = (int)(15*((HealthHanlder.getLostHealthRatio(target,false))*50+1));
