@@ -9,6 +9,7 @@ import com.altale.esperis.skills.buff.AbsorptionBuff;
 import com.altale.esperis.skills.buff.HealBuff;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.DotTypeVer2;
+import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
 import com.altale.esperis.skills.statSkills.lukStatSkill.ReadyToDie;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.Entity;
@@ -57,6 +58,7 @@ public class Tomori extends Item {
 //            ReadyToDie.doReadyToDie((ServerPlayerEntity) user, (ServerWorld) world);
             AbilityBuff.giveBuff(user,"Tomori", StatType.DEF, 500, -5,0, 5);
             AbilityBuff.giveBuff(user,"Tomori", StatType.ATTACK_SPEED, 500, 0,0.2, 5);
+            KnockedAirborneVer2.giveKnockedAirborneVer2(user, 36, 4);
 //            DotDamageVer2.giveDotDamage(user, user,120,20,10, DotTypeVer2.DamageSource_Generic,true,1,"passive");
 //            user.setFrozenTicks(user.getFrozenTicks() + 40);
             cooldownManager.set(this, 10 );

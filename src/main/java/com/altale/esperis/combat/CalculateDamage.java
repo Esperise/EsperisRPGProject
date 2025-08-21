@@ -120,7 +120,7 @@ public class CalculateDamage {
                             );
                         }
                         if(targetIsPlayer){
-                            damage= PassiveSkillManager.getDamageFlag((PlayerEntity) target, (float) damage);
+                            damage= PassiveSkillManager.getDamageFlag((PlayerEntity) target,attacker ,(float) damage);
                             PassiveSkillManager.hpFallBelowXPercent((PlayerEntity) target, (float) damage,30);
                         }
                         if(attackerIsPlayer){
@@ -134,7 +134,7 @@ public class CalculateDamage {
                             PlayerFinalStatComponent playerComponent = PlayerFinalStatComponent.KEY.get(targetPlayer);
                             double def = playerComponent.getFinalStat(StatType.DEF);
                             damageAmount = (float) Math.round(damageAmount * ( 1- (def/(def + 100)) )*100)/100;
-                            damageAmount = PassiveSkillManager.getDamageFlag((PlayerEntity) target,  damageAmount);
+                            damageAmount = PassiveSkillManager.getDamageFlag((PlayerEntity) target, null,  damageAmount);
                             PassiveSkillManager.hpFallBelowXPercent(targetPlayer,  damageAmount,30);
 //                            System.out.println("최종 피해(낙하데미지 , 화염데미지 등): "+damageAmount);
                         }

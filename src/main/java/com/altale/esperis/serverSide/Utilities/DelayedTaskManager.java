@@ -4,14 +4,17 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
+import org.apache.logging.log4j.util.TriConsumer;
 
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.IntConsumer;
 
 public class DelayedTaskManager {
     private static class TaskData{
         Entity target;
         int nextRunTimeDelay;
-        Runnable task;
+        TaskAction taskAction;
         String taskSkillId;
         int maxRepeatCount;
         int currentRepeatCount;
@@ -19,11 +22,11 @@ public class DelayedTaskManager {
         Long nextRunTime;
         Long endTime ;
 
-        TaskData(Entity target, int nextRunTimeDelay, Runnable task, String taskSkillId
+        TaskData(Entity target, int nextRunTimeDelay, TaskAction taskAction, String taskSkillId
                 , int maxRepeatCount, Long startTime, Long nextRunTime){
             this.target = target;
             this.nextRunTimeDelay = nextRunTimeDelay;
-            this.task = task;
+            this.taskAction = taskAction;
             this.taskSkillId = taskSkillId;
             this.maxRepeatCount = maxRepeatCount;
             this.startTime = startTime;
@@ -32,7 +35,9 @@ public class DelayedTaskManager {
         }
     }
     private static final Map<ServerWorld, Map<UUID, Map<String,TaskData>>> delayedTaskMap = new HashMap<>();
+    private static final Map<ServerWorld, Map<UUID, Map<String,TaskData>>> delayedTaskCopyMap = new HashMap<>();
     private static final Map<ServerWorld, Map<UUID, Map<String,TaskData> >> pendingAdds = new HashMap<>();
+    private static final Map<ServerWorld, Map<UUID,String >> deleteRequest = new HashMap<>();
     public static void register(){
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (!pendingAdds.isEmpty()) {
@@ -79,6 +84,29 @@ public class DelayedTaskManager {
                 }
                 pendingAdds.clear();
             }
+            if(!deleteRequest.isEmpty()){
+                for(var worldEntry : deleteRequest.entrySet()) {
+                    ServerWorld world = worldEntry.getKey();
+                    Map<UUID, Map<String, TaskData>> destWorld =
+                            delayedTaskMap.computeIfAbsent(world, k -> new HashMap<>());
+                    for (var uEntry : worldEntry.getValue().entrySet()) {
+                        UUID uuid = uEntry.getKey();
+                        String taskId = uEntry.getValue();
+                        Map<String, TaskData> destByTask =
+                                destWorld.computeIfAbsent(uuid, k -> new HashMap<>());
+                            TaskData existing =destByTask.get(taskId);
+                            if(existing != null){
+                                existing.currentRepeatCount = existing.maxRepeatCount;
+                                destByTask.remove(taskId);
+                                System.out.println(taskId+"삭제 완료");
+                            }
+                    }
+                }
+                deleteRequest.clear();
+            }
+            delayedTaskCopyMap.putAll(delayedTaskMap);
+
+
             for(ServerWorld world : server.getWorlds()){
                 Map<UUID, Map<String,TaskData>> worldTaskMap = delayedTaskMap.getOrDefault(world, new HashMap<>());
                 if(worldTaskMap.isEmpty()) continue;
@@ -93,19 +121,22 @@ public class DelayedTaskManager {
                         String taskId = taskIdEntry.getKey();
                         TaskData taskData = taskIdEntry.getValue();
                             Entity target = taskData.target;
+                            int currentRepeatCount = taskData.currentRepeatCount;
                             if(target == null || target.isRemoved()|| target instanceof LivingEntity livingEntity && !livingEntity.isAlive()){
                                 taskIdMapIter.remove();
                             }
                             Long nextRunTime = taskData.nextRunTime;
-                            if(worldTime>= (nextRunTime)){
-                                taskData.task.run();
-                                taskData.currentRepeatCount++;
-                                taskData.nextRunTime += taskData.nextRunTimeDelay;
-                            }
+
                             if(taskData.currentRepeatCount >= taskData.maxRepeatCount){
                                 System.out.println("taskList 삭제");
                                 taskIdMapIter.remove();
                             }
+                            if(worldTime>= (nextRunTime)){
+                                taskData.taskAction.run(world, target, currentRepeatCount);
+                                taskData.currentRepeatCount++;
+                                taskData.nextRunTime += taskData.nextRunTimeDelay;
+                            }
+
                     }
                     if(taskMap.isEmpty()){
                         uuidIter.remove();
@@ -120,16 +151,47 @@ public class DelayedTaskManager {
 
 
 
-    public static void addTask(ServerWorld serverworld, Entity target, Runnable task, int delayTime, String taskSkillId, int maxRepeatCount) {
+    public static void addTask(ServerWorld serverworld, Entity target, Runnable runnable, int delayTime, String taskSkillId, int maxRepeatCount) {
+        addTaskAction(serverworld,target,  TaskAction.of(runnable)  , delayTime, taskSkillId, maxRepeatCount);
+    }
+    public static void addTask(ServerWorld serverworld, Entity target, Runnable runnable,Runnable last, int delayTime, String taskSkillId, int maxRepeatCount) {
+        addTaskAction(serverworld,target,  TaskAction.of(runnable)  , delayTime, taskSkillId, maxRepeatCount);
+    }
+    public static void addTask(ServerWorld serverworld, Entity target, IntConsumer c, int delayTime, String taskSkillId, int maxRepeatCount) {
+        addTaskAction(serverworld,target,  TaskAction.of(c)  , delayTime, taskSkillId, maxRepeatCount);
+    }
+    public static void addTask(ServerWorld serverworld, Entity target, BiConsumer<ServerWorld, Integer> biConsumer, int delayTime, String taskSkillId, int maxRepeatCount) {
+        addTaskAction(serverworld,target,  TaskAction.of(biConsumer)  , delayTime, taskSkillId, maxRepeatCount);
+    }
+    public static void addTask(ServerWorld serverworld, Entity target, TriConsumer<ServerWorld,Entity, Integer> biConsumer, int delayTime, String taskSkillId, int maxRepeatCount) {
+        addTaskAction(serverworld,target,  TaskAction.of(biConsumer)  , delayTime, taskSkillId, maxRepeatCount);
+    }
+
+    private static void addTaskAction(ServerWorld serverworld, Entity target, TaskAction taskAction, int delayTime, String taskSkillId, int maxRepeatCount) {
         long startTime = serverworld.getTime();
         UUID uuid = target.getUuid();
         long nextRunTime = serverworld.getTime() + delayTime;
-        TaskData newData = new TaskData(target, delayTime, task, taskSkillId, maxRepeatCount, startTime, nextRunTime);
+        TaskData newData = new TaskData(target, delayTime, taskAction, taskSkillId, maxRepeatCount, startTime, nextRunTime);
         pendingAdds
                 .computeIfAbsent(serverworld, k -> new HashMap<>())
                 .computeIfAbsent(uuid,  k -> new HashMap<>())
                 .put(taskSkillId, newData);
-
-
+    }
+    public static void deleteTask(ServerWorld world, Entity target, String taskId){
+        UUID uuid = target.getUuid();
+        deleteRequest
+                .computeIfAbsent(world, k-> new HashMap<>())
+                .put(uuid,  taskId);
+    }
+    public static int getCurrentRepeatCount(ServerWorld world, Entity target, String taskId){
+        UUID uuid = target.getUuid();
+        TaskData targetTask = delayedTaskCopyMap.computeIfAbsent(world, k -> new HashMap<>())
+                .computeIfAbsent(uuid,  k -> new HashMap<>())
+                .get(taskId);
+        if(targetTask != null){
+            return targetTask.currentRepeatCount;
+        }else{
+            return -1;
+        }
     }
 }

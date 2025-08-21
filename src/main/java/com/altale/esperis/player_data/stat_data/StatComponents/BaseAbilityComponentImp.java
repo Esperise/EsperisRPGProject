@@ -53,16 +53,16 @@ public class BaseAbilityComponentImp implements BaseAbilityComponent, AutoSynced
         double totalFinalDamage= eqFinalDamage;
         double totalDefPen= eqDefPen;
         double atk= (
-                0.1*(totalStr) + 0.025*(totalDex) + 0.05*(totalLuk)
+                2 + 0.1*(totalStr) + 0.025*(totalDex) + 0.05*(totalLuk)
                         + ( 0.2 * level)+ eqAtk
                 //무기로 얻는 스탯 넣기
         );
         double def= (
-                level + (0.6 * totalDur)+eqDef
+                20+ level + (totalDur) + eqDef
                 //+무기 방어력 추가
         );
         double maxHp= (//20+레벨당5+str당 1+ dur당5+ 장비체력
-                20+(4*level)+(0.5*totalStr)+(1.5*(totalDur))+eqMaxHealth
+                25 + (5*level)+(0.5*totalStr)+(1*(totalDur))+eqMaxHealth
                 //+무기 체력 추가
         );
         double spd= (

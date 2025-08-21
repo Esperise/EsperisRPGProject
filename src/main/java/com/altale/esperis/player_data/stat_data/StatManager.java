@@ -1,6 +1,7 @@
 package com.altale.esperis.player_data.stat_data;
 
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
+import com.altale.esperis.player_data.skill_data.passive.PassiveSkillManager;
 import com.altale.esperis.player_data.stat_data.StatComponents.BaseAbilityComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerEquipmentStatComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
@@ -139,6 +140,7 @@ public class StatManager {
                     }
                     if(world.getTime() % 80 ==0){
                         player.heal(player.getMaxHealth()/100); // 4초마다 (1% 최대체력 + 1) -> 1초당 0.25%+0.25 회복-> 8분에 풀피
+                        PassiveSkillManager.hpRegenFlag(player);
                     }
                 }
 

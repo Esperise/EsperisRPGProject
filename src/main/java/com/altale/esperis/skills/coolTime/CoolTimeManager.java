@@ -1,5 +1,6 @@
 package com.altale.esperis.skills.coolTime;
 
+import com.altale.esperis.player_data.skill_data.PlayerSkillComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -69,6 +70,16 @@ public class CoolTimeManager {
         }
 
     }
+    public static void ccCoolTime(ServerPlayerEntity player, int ccTimeTick) {
+        PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
+        Map<String,Integer> playerCoolTimeMap = coolTimeMap.getOrDefault(player.getUuid(), Collections.emptyMap());
+        playerSkillComponent.getUnlockedSkillsSet().forEach(skill->{
+            if(getRemainCoolTime(player, skill.getSkillName()) < ccTimeTick && !playerSkillComponent.isPassiveSkill(skill)) {
+                setCoolTime(player, skill.getSkillName(),ccTimeTick );
+            }
+        });
+
+    }
     // CoolTimeTickManager에서 사용되면 호출시 모든 player의 모든 skill 쿨타임을 1tick(0.05초) 감소시킴, 매 틱마다 호출시켜서 쿨타임 시스템 구현
     public static void tick(){
         for(Map<String, Integer> playerCoolTime : coolTimeMap.values()) {
@@ -85,7 +96,7 @@ public class CoolTimeManager {
         List<Map.Entry<String, Integer>> sortedEntries = new ArrayList<>(playerCoolTimeMap.entrySet());
         sortedEntries.sort(Comparator.comparingInt(Map.Entry::getValue));
         for(Map.Entry<String, Integer> entry : sortedEntries) {
-            if(count<5){
+            if(count<10){
                 String skillID= entry.getKey();
                 double coolTimeTick= entry.getValue()/20.0;
                 if(coolTimeTick>0) {

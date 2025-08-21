@@ -14,7 +14,7 @@ public class PlayerFallHandler {
         ignoreFallMap.put(player.getUuid(), true);
     }
 
-    public static boolean shouldIgnoreFall(PlayerEntity player) {
+    public static boolean earthQuakeFall(PlayerEntity player) {
 
         return ignoreFallMap.getOrDefault(player.getUuid(), false);
     }

@@ -21,57 +21,46 @@ public class ApplyStat2Ability {
             server.execute(() -> {
                 PlayerLevelComponent lvComponent = PlayerLevelComponent.KEY.get(player);
                 if(lvComponent.getLevel()==1 && lvComponent.getCurrentExp()==0) {
+
+//                    PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(player);
+//                    playerEquipmentStatComponent.initializeEquipmentStat(player);
                     StatManager.statUpdate(player);
                     ApplyStat2Ability.applyPlayerBaseAbility(player);
                 }
 //                ApplyStat2Ability.applyPlayerBaseAbility(player);
             });
             if(player.getMaxHealth()<= 1){
+
+//                PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(player);
+//                playerEquipmentStatComponent.initializeEquipmentStat(player);
                 StatManager.statUpdate(player);
                 ApplyStat2Ability.applyPlayerBaseAbility(player);
             }
             else{
-                PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(player);
-                playerEquipmentStatComponent.initializeEquipmentStat(player);
-
-                ApplyStat2Ability.applyPlayerBaseAbility(player);
+//                PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(player);
+//                playerEquipmentStatComponent.initializeEquipmentStat(player);
                 StatManager.statUpdate(player);
                 ApplyStat2Ability.applyPlayerBaseAbility(player);
             }
-
+            if(player.hasNoGravity()){
+                player.setNoGravity(false);
+            }
 
         });
         ServerPlayerEvents.COPY_FROM.register((oldP, newP,alive) -> {
-            PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(newP);
-            playerEquipmentStatComponent.initializeEquipmentStat(newP);
-
-            ApplyStat2Ability.applyPlayerBaseAbility(newP);
-//            if(newP.getMaxHealth() <=0 ) {
-//
-//                ApplyStat2Ability.applyPlayerBaseAbility(newP);
-//                newP.setHealth(newP.getMaxHealth());
-//
-//            }else {
-//                ApplyStat2Ability.applyPlayerBaseAbility(newP);
-//                newP.setHealth(newP.getMaxHealth());
-//            }
-
 //            PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(newP);
-//            playerEquipmentStatComponent.changeEquipment(newP, );
+//            playerEquipmentStatComponent.initializeEquipmentStat(newP);
+            StatManager.statUpdate(newP);
+            ApplyStat2Ability.applyPlayerBaseAbility(newP);
+//            PlayerEquipmentStatComponent oldPplayerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(oldP);
+//            oldPplayerEquipmentStatComponent.initializeEquipmentStat(oldP);
+//            StatManager.statUpdate(oldP);
+//            ApplyStat2Ability.applyPlayerBaseAbility(oldP);
 
         });
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
             PlayerEquipmentStatComponent playerEquipmentStatComponent = PlayerEquipmentStatComponent.KEY.get(player);
-
-//            for(StatType statType : StatType.values()) {
-//                double temp = playerEquipmentStatComponent.getEquipmentStat(statType);
-//                System.out.println(temp);
-//                playerEquipmentStatComponent.setEquipmentStat(statType, temp);
-//                System.out.println("statType: " + playerEquipmentStatComponent.getEquipmentStat(statType));
-//
-//            }
             playerEquipmentStatComponent.initializeEquipmentStat(player);
-
             ApplyStat2Ability.applyPlayerBaseAbility(player);
         });
         ServerPlayerEvents.AFTER_RESPAWN.register((oldP, newP, alive) -> {

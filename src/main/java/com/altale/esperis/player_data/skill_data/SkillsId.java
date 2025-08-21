@@ -7,9 +7,9 @@ import java.util.*;
 public enum SkillsId {
 
     STR_1("힘_더블점프", StatType.STR, 5),
-    STR_25("휩쓸기", StatType.STR, 25),
+    STR_25("수평 베기", StatType.STR, 25),
     STR_50("패시브: 전투 몰입", StatType.STR, 50),
-    STR_75("대검 돌격", StatType.STR, 75),
+    STR_75("유성", StatType.STR, 75),
     STR_100("패시브: 생명선", StatType.STR, 100),
     STR_125("바람 가르기", StatType.STR, 125),
     STR_150("죽음의 저항", StatType.STR, 150),
@@ -17,7 +17,7 @@ public enum SkillsId {
 
 
 
-    DEX_1("민첩_더블점프", StatType.DEX, 5),
+    DEX_1("민첩: 더블점프", StatType.DEX, 5),
     DEX_25("트리플 샷", StatType.DEX, 25),
     DEX_50("패시브: 거인 학살자", StatType.DEX, 50),
     //활 공격 적중시 1스택이 쌓임, 4스택일때 스택을 모두 잃고 6+ 대상 최대체력의 3%의 추가피해
@@ -52,7 +52,7 @@ public enum SkillsId {
     DUR_100("패시브: 방어 태세",StatType.DUR, 100),
     DUR_125("지진",StatType.DUR, 125),
     DUR_150("패시브: 보호막 타격",StatType.DUR, 150),
-    DUR_175("포기와 선택",StatType.DUR, 175);
+    DUR_175("총공세",StatType.DUR, 175);
 
 
     public static final SkillsId[] STR_SKILLS = {STR_1, STR_25, STR_50, STR_75,STR_100,STR_125,STR_150,STR_175};

@@ -1,6 +1,7 @@
 package com.altale.esperis.skills.buff;
 
 import com.altale.esperis.player_data.skill_data.SkillsId;
+import com.altale.esperis.player_data.skill_data.passive.PassiveSkillManager;
 import com.altale.esperis.skills.visualEffect.DrawCircle;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
@@ -138,5 +139,6 @@ public class AbsorptionBuff {
         absorptionBuff.computeIfAbsent(entity.getUuid(), k -> new HashMap<>())
                 .put(skillId, newData);
         uuidLivingEntityMap.putIfAbsent(entity.getUuid(), entity);
+        PassiveSkillManager.getBarrierFlag(entity, amount);
     }
 }

@@ -13,6 +13,7 @@ import com.altale.esperis.skills.buff.HealBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.DotTypeVer2;
+import com.altale.esperis.skills.statSkills.durSkill.PassiveBarrierBash;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -42,8 +43,9 @@ public class PassiveSkillManager {
     // 피해를 입을 시
     // 평타 공격시/ 피해를 줄 때
 
-    public static float getDamageFlag(PlayerEntity player, float damage){
+    public static float getDamageFlag(PlayerEntity player,LivingEntity attacker ,float damage){
         PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
+        PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
         if(playerSkillComponent.hasPassiveSkill(SkillsId.STR_150)){
             damage= damage/ 2;
             DotDamageVer2.giveDotDamage(player, player,
@@ -52,6 +54,27 @@ public class PassiveSkillManager {
             AbilityBuff.giveBuff(player, SkillsId.STR_150.getSkillName(), StatType.ATTACK_SPEED,100,0,0.03,5);
             AbilityBuff.giveBuff(player, SkillsId.STR_150.getSkillName(), StatType.DEF,100,0,4,5);
             System.out.println("죽음의 저항으로 유예된 피해: " + damage);
+        }
+        if(playerSkillComponent.hasPassiveSkill(SkillsId.DUR_100)){
+            if(attacker != null){
+                float def = (float) playerFinalStatComponent.getFinalStat(StatType.DEF);
+                attacker.damage(player.getDamageSources().playerAttack(player), def * 0.02f);
+            }
+            if(!CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, SkillsId.DUR_100.getSkillName())){
+                float maxHealth = (float) playerFinalStatComponent.getFinalStat(StatType.MAX_HEALTH);
+                float barrierAmount = maxHealth * 0.04f;
+                if(barrierAmount > damage){
+                    player.setAbsorptionAmount(barrierAmount);
+                    barrierAmount-=damage;
+                }else{
+                    player.setAbsorptionAmount(barrierAmount);
+                    barrierAmount=0;
+                }
+
+                AbsorptionBuff.giveAbsorptionBuff((ServerWorld) player.getWorld(), player, SkillsId.DUR_100.getSkillName(), barrierAmount, 40);
+                CoolTimeManager.setCoolTime((ServerPlayerEntity) player,SkillsId.DUR_100.getSkillName(),200 );
+            }
+
         }
         return damage;
     }
@@ -83,6 +106,9 @@ public class PassiveSkillManager {
             }
 
         }
+        if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
+            player.heal((float) (damage * 0.3));
+        }
     }
     public static void criticalFlag(PlayerEntity player, LivingEntity target, float damage){
         PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
@@ -98,13 +124,15 @@ public class PassiveSkillManager {
 
         }
     }
-    public static void tickFlag(PlayerEntity player){
+    public static void hpRegenFlag(PlayerEntity player){
         PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
         PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
         if (player.getWorld().getTime() % 80 == 0) {
             if(playerSkillComponent.hasPassiveSkill(SkillsId.DUR_50)){
                 float lostHealth = player.getMaxHealth() - player.getHealth();
-                player.heal(Math.min(4 , 2+ lostHealth/25));
+                System.out.println("잃은 체력: " + lostHealth);
+                System.out.println("패시브 회복: " + Math.max(4 , 2+ lostHealth/25));
+                player.heal(Math.max(4 , 2+ lostHealth/40));
             }
         }
     }
@@ -172,18 +200,6 @@ public class PassiveSkillManager {
                             pos.x, pos.y, pos.z, 3000, 2, 2.2, 2, 0.002);
                 }
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 80,4));
-//                float atk = (float) playerFinalStatComponent.getFinalStat(StatType.ATK);
-//                float barrierAmount = 10+atk*2;
-//                if(barrierAmount > damage){
-//                    System.out.println("보호막 일단 바로 적용: " + damage);
-//                    player.setAbsorptionAmount(barrierAmount);
-//                    barrierAmount-=damage;
-//                }else{
-//                    System.out.println("보호막 바로 깨짐");
-//                    player.setAbsorptionAmount(barrierAmount);
-//                    barrierAmount=0;
-//                }
-//                AbsorptionBuff.giveAbsorptionBuff((ServerWorld) player.getWorld(),player, skillName,barrierAmount ,40);
                 AbilityBuff.giveBuff(player, skillName, StatType.SPD, 50,0, 0.25,1);
                 AbilityBuff.giveBuff(player, skillName, StatType.AVD, 50,0, 1,1);
                 CoolTimeManager.specificCoolTimePercentReduction((ServerPlayerEntity) player, SkillsId.LUK_75.getSkillName(), 100);
@@ -192,12 +208,15 @@ public class PassiveSkillManager {
         }
     }
 
-    public static void getBarrierFlag(PlayerEntity player, LivingEntity target){
-        if(target instanceof PlayerEntity targetPlayer){
-
-        }else{
-
+    public static void getBarrierFlag(LivingEntity target, float barrierAmount){
+        if(target instanceof PlayerEntity player){
+            PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
+            if(playerSkillComponent.hasPassiveSkill(SkillsId.DUR_150)){
+                PassiveBarrierBash.PassiveBarrierBash((ServerWorld) player.getWorld(), (ServerPlayerEntity) player, barrierAmount);
+            }
         }
+
+
     }
     public static void avdFlag(PlayerEntity player, LivingEntity target){
         if(target instanceof PlayerEntity targetPlayer){
@@ -231,8 +250,8 @@ public class PassiveSkillManager {
                 Vec3d pos = player.getPos();
                 serverWorld.spawnParticles(new DustParticleEffect(new Vector3f(1.0f,0.0f,0.0f),0.5f),
                         pos.x, pos.y, pos.z, 250, 2.5, 0, 2.5, 0.0);
-                serverWorld.spawnParticles(ParticleTypes.EXPLOSION,
-                        pos.x, pos.y, pos.z, 3, 2.5, 0, 1.5, 0.0);
+                serverWorld.spawnParticles(ParticleTypes.SCULK_SOUL,
+                        pos.x, pos.y, pos.z, 10, 2.5, 0, 2.5, 0.0);
             }
         }
     }

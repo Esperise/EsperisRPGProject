@@ -36,46 +36,17 @@ public class DexJump {
             Vec3d velocity= new Vec3d(look.x * power ,0.30,look.z* power);
             targetEntity.addVelocity(velocity.x, velocity.y, velocity.z);
             targetEntity.velocityModified = true;
-            KnockedAirborneVer2.giveKnockedAirborneVer2(targetEntity,player, 3,3);//0.3초 에어본
+            KnockedAirborneVer2.giveKnockedAirborneVer2(targetEntity, 3,3);//0.3초 에어본
             double playerPower = -1.6-((1+spd)/2);
             Vec3d playerVelocity = new Vec3d(look.x * playerPower, 0.65, look.z * playerPower);
             player.addVelocity(playerVelocity.x, playerVelocity.y, playerVelocity.z);
             player.velocityModified = true;
             DrawCircle.spawnCircle(player, world, 2.0, 2.0, 30, 0,1,0
                     ,0,0,0,0,1,0,1.0f,20);
-//            Vec3d eye = player.getCameraPosVec(1.0F);
-//            Vec3d dir = player.getRotationVec(1.0F).normalize();
-//            Vec3d lateral = dir.crossProduct(new Vec3d(0, 1, 0)).normalize();
-//            Vec3d offsetEye = eye.add(lateral);
-//            double distance = 3.0; // 플레이어로부터의 거리
-//            double radius = 1.0;   // 원 반지름
-//
-//            Vec3d center = eye.add(look.multiply(distance)); // 원 중심
-//
-//            // look에 수직인 두 벡터 구하기
-//            Vec3d up = new Vec3d(0, 1, 0);
-//            Vec3d right = look.crossProduct(up).normalize();
-//            Vec3d normalUp = look.crossProduct(right).normalize();
-//
-//            int points = 30; // 원 둘레 점 개수
-//
-//            for (int i = 0; i < points; i++) {
-//                double angle = (2 * Math.PI / points) * i;
-//                double x = Math.cos(angle) * radius;
-//                double y = Math.sin(angle) * radius;
-//
-//                // 원의 평면 위 점
-//                Vec3d point = center.add(right.multiply(x)).add(normalUp.multiply(y));
-//
-//                world.spawnParticles(
-//                        new DustParticleEffect(new Vector3f(0.0f, 1.0f, 0.0f), 1.0f), // 빨강색
-//                        point.x, point.y, point.z,
-//                        10, 0, 0, 0, 0);
-//            }
         }
         else{
             double power= 2.0+((1+spd)/2);
-            Vec3d velocity = new Vec3d(look.x * power, Math.max(0.25+((1+spd)/2), look.y), look.z * power);
+            Vec3d velocity = new Vec3d(look.x * power, Math.min(0.25+((1+spd)/2), look.y), look.z * power);
             player.addVelocity(velocity.x, velocity.y, velocity.z);
             player.velocityModified = true;
             if (player.getWorld() instanceof ServerWorld serverWorld){

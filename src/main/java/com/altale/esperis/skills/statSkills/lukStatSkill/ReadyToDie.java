@@ -28,10 +28,8 @@ public class ReadyToDie {
             Runnable task= ()-> {
                 if (player.getWorld() instanceof ServerWorld serverWorld) {
                     Vec3d pos = player.getPos();
-                    serverWorld.spawnParticles(ParticleTypes.ANGRY_VILLAGER,
-                            pos.x, pos.y, pos.z, 3, 0.5, 0.3, 0.5, 0.3);
-                    serverWorld.spawnParticles(ParticleTypes.FLAME,
-                            pos.x, pos.y, pos.z, 10, 0.5, 1, 0.5, 0.3);
+                    serverWorld.spawnParticles(ParticleTypes.SOUL,
+                            pos.x, pos.y, pos.z, 8, 0.5, 0.3, 0.5, 0.3);
                 }
             };
             DelayedTaskManager.addTask(world, player, task, 5, SkillsId.LUK_175.getSkillName(),60);

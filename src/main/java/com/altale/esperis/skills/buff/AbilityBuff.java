@@ -159,5 +159,19 @@ public class AbilityBuff {
         }
         return bufInfoMap;//스킬이름 <스킬의 남은 시간(tick), 스킬의 현재 스택>
     }
+    public static boolean hasBuff(LivingEntity target, String buffName){
+        UUID uuid = target.getUuid();
+        if(buffMap.containsKey(uuid)){
+            for(Map.Entry<StatType, List<BuffData>> innerEntry : buffMap.get(uuid).entrySet()){
+                List<BuffData> buffDataList = innerEntry.getValue();
+                for(BuffData buffData : buffDataList){
+                    if(buffData.SkillId.equals(buffName)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 }

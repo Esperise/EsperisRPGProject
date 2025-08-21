@@ -17,6 +17,6 @@ public class CreeperMixin2 {
             )
     )
     private double modifyFuseCancelDistance(double original) {
-        return 36.0;
+        return 49.0;
     }
 }

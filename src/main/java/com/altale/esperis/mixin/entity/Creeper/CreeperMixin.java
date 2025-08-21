@@ -26,15 +26,15 @@ public class CreeperMixin  {
     private void explode(CallbackInfo ci) {
         CreeperEntity creeper = (CreeperEntity)(Object)this;
         if (!creeper.getWorld().isClient) {
-            creeper.getWorld().createExplosion(creeper, creeper.getX(), creeper.getY(), creeper.getZ(), 3 , World.ExplosionSourceType.MOB);
+            creeper.getWorld().createExplosion(creeper, creeper.getX(), creeper.getY(), creeper.getZ(), 2 + (fuseTime * 0.1f) , World.ExplosionSourceType.MOB);
             this.currentFuseTime=0;
             if(fuseTime == 30){
-                fuseTime = 15;
-            }else if(fuseTime == 10){
+                fuseTime = 20;
+            }else if(fuseTime == 25){
                 creeper.onDeath(creeper.getDamageSources().generic());
                 creeper.discard();
             }
-            fuseTime--;
+            fuseTime++;
 
             ci.cancel();
         }
