@@ -20,12 +20,18 @@ import java.util.Map;
 import static java.lang.Math.max;
 
 public class KnockedAirborneVer2 {
-    static class AirborneData{
+    public static class AirborneData{
         int duration;
         int delay;
         AirborneData(int duration, int delay){
             this.duration = duration;
             this.delay = delay;
+        }
+        public int getDuration(){
+            return duration;
+        }
+        public int getDelay(){
+            return delay;
         }
     }
     private static final Map<LivingEntity, Integer> airborneMap = new HashMap<>();
@@ -52,7 +58,7 @@ public class KnockedAirborneVer2 {
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, data.duration,9));
                     entity.setNoGravity(true);
                     entity.setVelocity(Vec3d.ZERO);
-                    airborneMap.put(entity, data.duration ); // 고정 20틱 등록
+                    airborneMap.put(entity, data.duration );
                     delayIter.remove();
                 }
 //                else {
@@ -115,18 +121,34 @@ public class KnockedAirborneVer2 {
 
     public static void giveKnockedAirborneVer2(Entity entity, int duration, int delay) {
         if (!(entity instanceof LivingEntity living)) return;
+        boolean found = false;
+        if(delayedAirborneMap.containsKey(living)){
+            AirborneData data = delayedAirborneMap.get(living);
+            found = true;
+            if(data.duration  >= duration){
+                return;
+            }
 
-        // 1. 위로 띄우기만 하고 고정은 지연시킴
-        living.setVelocity(new Vec3d(0, 1.0, 0));
-        living.velocityModified = true;
+        }
+        if(!found){
+            living.setVelocity(new Vec3d(0, 1.0, 0));
+            living.velocityModified = true;
+        }
         living.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, duration+delay,99));
         if(living instanceof PlayerEntity player){
             CoolTimeManager.ccCoolTime((ServerPlayerEntity) player, duration+delay);
         }
         AirborneData newData=new AirborneData(duration, delay);
-        // 0.5초 후 고정
         delayedAirborneMap.put(living, newData);
-
+    }
+    public static boolean hasKnockedAirborne(LivingEntity target) {
+        return delayedAirborneMap.containsKey(target) || airborneMap.containsKey(target);
+    }
+    public static AirborneData getAirborne(LivingEntity target) {
+        if(hasKnockedAirborne(target)){
+            return delayedAirborneMap.get(target);
+        }
+        return new AirborneData(0,0);
     }
 }
 

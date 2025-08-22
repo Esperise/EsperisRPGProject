@@ -69,7 +69,7 @@ public class BaseAbilityComponentImp implements BaseAbilityComponent, AutoSynced
                 1+(totalDex * 0.0015)+(totalLuk*0.00077)+eqSpd
         );//1.025의 이동속도 계수를 가짐
         double as=(
-                1+(totalDex * 0.003) + (totalLuk*0.00177)+eqAs
+                1+ (level * 0.015)+(totalDex * 0.003) + (totalLuk*0.00177)+eqAs
         );
         double crit=Math.min(1.0,
                 0.05+ totalLuk * 0.002 + eqCrit

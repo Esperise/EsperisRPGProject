@@ -9,11 +9,11 @@ public enum SkillsId {
     STR_1("힘_더블점프", StatType.STR, 5),
     STR_25("수평 베기", StatType.STR, 25),
     STR_50("패시브: 전투 몰입", StatType.STR, 50),
-    STR_75("유성", StatType.STR, 75),
+    STR_75("바람 가르기", StatType.STR, 75),
     STR_100("패시브: 생명선", StatType.STR, 100),
-    STR_125("바람 가르기", StatType.STR, 125),
+    STR_125("유성", StatType.STR, 125),
     STR_150("죽음의 저항", StatType.STR, 150),
-    STR_175("??", StatType.STR, 175 ),
+    STR_175("최후의 숨결", StatType.STR, 175 ),
 
 
 
@@ -24,7 +24,7 @@ public enum SkillsId {
     DEX_75("신속 정확 고급", StatType.DEX, 75),
     //버프스킬, 지속시간 12초 쿨타임 20초, 공격속도가 10%, 명중율이 2%, 치명타확률이 6%증가, 활 적중시 쿨타임이 0.5초 감소
     DEX_100("패시브: 집중", StatType.DEX, 100),
-    //활 적중시 8초동안 공격속도가 7%증가, 최대 8스택(56%)
+    //활 적중시 8초동안 공격속도가 5%증가, 최대 15스택(75%)
     DEX_125("일제 사격", StatType.DEX, 125),
     DEX_150("패시브: 관통상", StatType.DEX, 150),
     //패시브: 활 공격 적중시 1스택이 쌓이고 4스택일때 스택을 모두 잃고 2초동안 대상에게 대상 최대체력의 4%의 총 피해를 입히는 출혈 부여 중첩가능

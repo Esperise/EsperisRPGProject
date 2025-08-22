@@ -1,16 +1,13 @@
 package com.altale.esperis.skills.statSkills.durSkill;
 
-import com.altale.esperis.player_data.skill_data.PlayerSkillComponent;
 import com.altale.esperis.player_data.skill_data.SkillsId;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.Utilities.DelayedTaskManager;
 import com.altale.esperis.serverSide.Utilities.ParticleHelper;
-import com.altale.esperis.skillTest1.PlayerFallHandler;
 import com.altale.esperis.skills.buff.AbilityBuff;
 import com.altale.esperis.skills.buff.AbsorptionBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
-import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -26,15 +23,15 @@ import net.minecraft.util.math.Vec3d;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-public class EarthQuake {
+public class AbsoluteZero {
     public static final String skillName = SkillsId.DUR_125.getSkillName();
-    public static final float jumpPower= 3f;
-    public static final int coolTime = 100;
+    public static final int coolTime = 700;
+    public static final float baseDamage = 10;
     public static final float alloutBarrierAtkCoeffi = 1f;
     public static final float alloutLandingBarrierAtkCoeffi = 3.5f;
     public static void earthQuake( ServerPlayerEntity player, ServerWorld world) {
-
-        if(CoolTimeManager.isOnCoolTime(player, skillName) && DelayedTaskManager.getCurrentRepeatCount(world, player, skillName) >= 1){
+        System.out.println("현재 delayedTask "+DelayedTaskManager.getCurrentRepeatCount(world, player, skillName));
+        if(CoolTimeManager.isOnCoolTime(player, skillName) && DelayedTaskManager.getCurrentRepeatCount(world, player, skillName) > 5 ){
             int chargedTick = DelayedTaskManager.getCurrentRepeatCount(world, player, skillName);
             DelayedTaskManager.deleteTask(world, player, skillName);
             float radius = 1+ (chargedTick * 0.45f);
@@ -45,7 +42,10 @@ public class EarthQuake {
             Box box = player.getBoundingBox().expand(radius, 10, radius);
             List<Entity> entities = player.getWorld().getOtherEntities(player, box);
             Vec3d pos = player.getEyePos();
-            float damage = 10 + (hp* 0.007f * chargedTick) + (def * 0.015f * chargedTick);
+            float damage = baseDamage + (hp* 0.001f + def * 0.002f)  * chargedTick;
+            if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
+                damage = baseDamage + (hp* 0.003f + atk * 0.023f)  * chargedTick;
+            }
             for(Entity entity : entities) {
                 if (entity instanceof LivingEntity livingTarget) {
                     livingTarget.damage(livingTarget.getWorld().getDamageSources().playerAttack(player), damage);
@@ -59,18 +59,17 @@ public class EarthQuake {
             Runnable deleteTask = ()->{
                 DelayedTaskManager.deleteTask(world, player, skillName);
             };
-            DelayedTaskManager.addTask(world, player,deleteTask, 1, skillName+"delete", 5 );
+            DelayedTaskManager.addTask(world, player,deleteTask, 1, skillName+"delete", 20 );
 
-        }else{
-
+        }else if(!CoolTimeManager.isOnCoolTime(player, skillName)){
             PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
             float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);
             boolean allOutAttack = false;
-            float landingBarrier= player.getMaxHealth() * 0.3f;
+            float barrier= player.getMaxHealth() * 0.3f;
             if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
                 allOutAttack = true;
                 AbsorptionBuff.giveAbsorptionBuff(world, player, skillName, atk* alloutBarrierAtkCoeffi, 20);
-                landingBarrier=atk* alloutLandingBarrierAtkCoeffi;
+                barrier=atk* alloutLandingBarrierAtkCoeffi;
             }
             List<Entity> nearby = player.getWorld().getOtherEntities(player, player.getBoundingBox().expand(10));
             for (Entity entity : nearby) {
@@ -82,14 +81,9 @@ public class EarthQuake {
                     }
                 }
             }
-
-
-//            Vec3d velocity = new Vec3d(0, jumpPower, 0);
-//            player.addVelocity(0, velocity.y, 0);
-//            player.velocityModified = true;
             int repeats = 101;
 
-            float finalLandingBarrier = landingBarrier;
+            float finalBarrier = barrier;
             Vec3d pos = player.getPos();
             PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
             float hp =(float) playerFinalStatComponent.getFinalStat(StatType.MAX_HEALTH);
@@ -117,7 +111,7 @@ public class EarthQuake {
                     player.requestTeleportAndDismount(pos.x, pos.y, pos.z);
                     if(step % 20 == 1){
                         String buffName= skillName+step;
-                        AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, finalLandingBarrier/5, 120);
+                        AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, finalBarrier/5, 120);
                         CoolTimeManager.ccCoolTime( player, 30);
                     }
                 }

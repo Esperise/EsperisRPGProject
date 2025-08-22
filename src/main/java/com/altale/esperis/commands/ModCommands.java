@@ -33,8 +33,6 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 public class ModCommands {
     public static void register(){
-        CommandRegistrationCallback.EVENT.register(ModCommands::registerCommands);
-        CommandRegistrationCallback.EVENT.register(ModCommands::registerCommandsJump);
         CommandRegistrationCallback.EVENT.register(ModCommands::registerMoneyData);
         CommandRegistrationCallback.EVENT.register(ModCommands::setSkillKeyBinding);
 
@@ -50,33 +48,6 @@ public class ModCommands {
         );
     }
 
-    private static void registerCommandsJump(
-            CommandDispatcher<ServerCommandSource> dispatcher,
-            CommandRegistryAccess access,
-            CommandManager.RegistrationEnvironment env) {
-
-        dispatcher.register(
-                literal("sa")
-                        .then(literal("triple_jump")
-                                .executes(ctx -> {
-                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
-                                    ServerWorld world = ctx.getSource().getWorld();
-                                    TripleJump.tripleJump(player, world);
-                                    ctx.getSource().sendFeedback(() -> Text.literal("TripleJump activated!"), false);
-                                    return 1;
-                                })
-                        )
-                        .then(literal("dex_jump")
-                                .executes(ctx -> {
-                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
-                                    ServerWorld world = ctx.getSource().getWorld();
-                                    DexJump.dexJump(player, world);
-                                    ctx.getSource().sendFeedback(() -> Text.literal("DexJump activated!"), false);
-                                    return 1;
-                                })
-                        )
-        );
-    }
     private static void registerMoneyData(
             CommandDispatcher<ServerCommandSource> dispatcher,
             CommandRegistryAccess access,
@@ -184,7 +155,7 @@ public class ModCommands {
             CommandRegistryAccess access,
             CommandManager.RegistrationEnvironment env){
         dispatcher.register(
-                literal("키설정")
+                literal("키")
                         .then(literal("현재키")
                                         .executes(ctx -> {
                                             ServerPlayerEntity player = ctx.getSource().getPlayer();

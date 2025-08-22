@@ -23,7 +23,7 @@ import com.altale.esperis.serverSide.packet.EquipmentAdditionalStatRerollRequest
 import com.altale.esperis.serverSide.packet.ShowRerollGuiRequestReceiver;
 import com.altale.esperis.serverSide.packet.StatAddRequestReceiver;
 import com.altale.esperis.serverSide.packet.StatUpdateRequestReceiver;
-import com.altale.esperis.skills.statSkills.durSkill.DashLandingHandler;
+import com.altale.esperis.skills.statSkills.strSkill.GrandFallLandingHandler;
 import com.altale.esperis.skills.buff.AbilityBuff;
 import com.altale.esperis.skills.buff.AbsorptionBuff;
 import com.altale.esperis.skills.buff.HealBuff;
@@ -48,7 +48,7 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
     @Override
     public void onInitialize() {
 //        SwordDashHandler.register();
-        DashLandingHandler.register();
+        GrandFallLandingHandler.register();
         TickHandler.register();
         DotDamageVer2.register();
         KnockedAirborneVer2.register();
@@ -72,6 +72,7 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
 
         AvdDamage.register();
         CalculateDamage.register();
+
 
         //ITEM
         ModItems.registerAll();

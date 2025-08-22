@@ -43,7 +43,7 @@ public class StatManager {
                     value= Math.max(0, value);
                     value= Math.min(1, value);
                 }
-                finalStatComponent.setFinalStat(statType, value);
+                finalStatComponent. setFinalStat(statType, value);
             }else{
                 finalStatComponent.setFinalStat(statType, value);
             }

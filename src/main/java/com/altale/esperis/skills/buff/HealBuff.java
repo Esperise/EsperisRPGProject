@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 
 public class HealBuff {
-    private static class HealData{
+    public static class HealData{
         int remainingTicks;
         int duration;
         double expectedHealAmount;
@@ -29,6 +29,21 @@ public class HealBuff {
             this.healTickDelta = healDelta;
             this.skillId = skillId;
             this.targetRef = new WeakReference<>(target);
+        }
+        public int getRemainingTicks(){
+            return remainingTicks;
+        }
+        public int getDuration(){
+            return duration;
+        }
+        public double getHealAmount(){
+            return expectedHealAmount;
+        }
+        public int getHealTickDelta(){
+            return healTickDelta;
+        }
+        public String getSkillId(){
+            return skillId;
         }
 
     }
@@ -102,5 +117,8 @@ public class HealBuff {
         }else{
             healMap.computeIfAbsent(target.getUuid(), k -> new ArrayList<>()).add(healData);
         }
+    }
+    public static List<HealData> getHealData(LivingEntity target){
+        return healMap.get(target.getUuid());
     }
 }

@@ -93,23 +93,23 @@ public class DrawCircle {
 //                );
             }
         }
-        for (int i = 0; i < rings/8; i++) {
-            double phi = Math.PI * i / ((double) rings /6 - 1);       // 0 ≤ φ ≤ π
-            for (int j = 0; j < sectors/6; j++) {
-                double theta = 2 * Math.PI * j / ((double) sectors /6); // 0 ≤ θ < 2π
-
-                double x = (radius+1) * Math.sin(phi) * Math.cos(theta);
-                double y = (radius+1) * Math.cos(phi);
-                double z = (radius+1) * Math.sin(phi) * Math.sin(theta);
-
-                Vec3d point = center.add(x, y, z);
-                                world.spawnParticles(
-                        ParticleTypes.ELECTRIC_SPARK,
-                        point.x, point.y, point.z,
-                        amount, 0, 0, 0, 0
-                );
-            }
-        }
+//        for (int i = 0; i < rings/8; i++) {
+//            double phi = Math.PI * i / ((double) rings /6 - 1);       // 0 ≤ φ ≤ π
+//            for (int j = 0; j < sectors/6; j++) {
+//                double theta = 2 * Math.PI * j / ((double) sectors /6); // 0 ≤ θ < 2π
+//
+//                double x = (radius+1) * Math.sin(phi) * Math.cos(theta);
+//                double y = (radius+1) * Math.cos(phi);
+//                double z = (radius+1) * Math.sin(phi) * Math.sin(theta);
+//
+//                Vec3d point = center.add(x, y, z);
+//                                world.spawnParticles(
+//                        ParticleTypes.ELECTRIC_SPARK,
+//                        point.x, point.y, point.z,
+//                        amount, 0, 0, 0, 0
+//                );
+//            }
+//        }
     }
     public static void spawnDiamondAround(LivingEntity entity , ServerWorld serverWorld,int points
                                         , float red, float green, float blue

@@ -1,12 +1,13 @@
 package com.altale.esperis.player_data.skill_data;
 
 import com.altale.esperis.player_data.stat_data.StatType;
-import com.altale.esperis.serverSide.Utilities.HorizenSweepEffects;
 import com.altale.esperis.skills.statSkills.dexStatSkill.DexJump;
 import com.altale.esperis.skills.statSkills.durSkill.*;
 import com.altale.esperis.skills.statSkills.lukStatSkill.*;
 import com.altale.esperis.skills.statSkills.strSkill.GrandStarfall;
 import com.altale.esperis.skills.statSkills.strSkill.HorizenSweep;
+import com.altale.esperis.skills.statSkills.strSkill.LastBreath;
+import com.altale.esperis.skills.statSkills.strSkill.WindSlash;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
@@ -31,7 +32,9 @@ public class SkillManager {
         ServerWorld world= player.getServerWorld();
         switch(skillId){
             case STR_25 -> HorizenSweep.horizenSweep(player, world );
-            case STR_75 -> GrandStarfall.grandStarfall(player, world );
+            case STR_75 -> WindSlash.windSlash(player, world );
+            case STR_125 -> GrandStarfall.grandStarfall(player, world );
+            case STR_175 -> LastBreath.lastBreath(player, world );
         }
     }
     public static void dexSkill(ServerPlayerEntity player ,SkillsId skillId){
@@ -59,7 +62,7 @@ public class SkillManager {
             case DUR_1 -> DurJump.durJump(player, world);
             case DUR_25 -> GroundSlam.GroundSlam(player, world);
             case DUR_75 -> PathMaker.pathMaker(player, world);
-            case DUR_125 -> EarthQuake.earthQuake(player, world);
+            case DUR_125 -> AbsoluteZero.earthQuake(player, world);
             case DUR_175 -> AllOutAttack.AllOutAttack(player, world);
         }
     }

@@ -46,6 +46,8 @@ public class EsperisRPGClient implements ClientModInitializer {
         //skillKeyBinding
 
         SkillKeyBinding.register();
+        //버프 시간
+        CurrentBuffHUD.register();
 
         //반드시 맨 아래 두기!
         CurrentTimeHUD.register();

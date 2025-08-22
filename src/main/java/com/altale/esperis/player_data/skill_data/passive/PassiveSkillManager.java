@@ -49,10 +49,10 @@ public class PassiveSkillManager {
         if(playerSkillComponent.hasPassiveSkill(SkillsId.STR_150)){
             damage= damage/ 2;
             DotDamageVer2.giveDotDamage(player, player,
-                    100, 20, damage, DotTypeVer2.DamageSource_Generic,true, 1, SkillsId.STR_150.getSkillName());
-            AbilityBuff.giveBuff(player, SkillsId.STR_150.getSkillName(), StatType.SPD,100,0,0.03,5);
-            AbilityBuff.giveBuff(player, SkillsId.STR_150.getSkillName(), StatType.ATTACK_SPEED,100,0,0.03,5);
-            AbilityBuff.giveBuff(player, SkillsId.STR_150.getSkillName(), StatType.DEF,100,0,4,5);
+                    80, 20, damage, DotTypeVer2.DamageSource_Generic,true, 1, SkillsId.STR_150.getSkillName());
+            AbilityBuff.giveBuff(player, SkillsId.STR_150.getSkillName(), StatType.SPD,80,0,0.04,5);
+            AbilityBuff.giveBuff(player, SkillsId.STR_150.getSkillName(), StatType.ATTACK_SPEED,80,0,0.04,5);
+            AbilityBuff.giveBuff(player, SkillsId.STR_150.getSkillName(), StatType.DEF,80,0,4,5);
             System.out.println("죽음의 저항으로 유예된 피해: " + damage);
         }
         if(playerSkillComponent.hasPassiveSkill(SkillsId.DUR_100)){
@@ -78,37 +78,44 @@ public class PassiveSkillManager {
         }
         return damage;
     }
-    public static void giveDamage(PlayerEntity player,LivingEntity target, float damage){
+    public static double giveDamage(PlayerEntity player,LivingEntity target, float damage){
         PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
         if(playerSkillComponent.hasPassiveSkill(SkillsId.STR_50)){
             PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
             double atk = playerFinalStatComponent.getFinalStat(StatType.ATK);
-            if(atk*0.01 < 0.2){
-                AbilityBuff.giveBuff(player,SkillsId.STR_50.getSkillName(), StatType.ATK,160,0,0.2,15);
+            if(atk*0.0075 < 0.15){
+                AbilityBuff.giveBuff(player,SkillsId.STR_50.getSkillName(), StatType.ATK,160,0,0.15,20);
             }else{
-                AbilityBuff.giveBuff(player,SkillsId.STR_50.getSkillName(), StatType.ATK,160,1,0,15);
+                AbilityBuff.giveBuff(player,SkillsId.STR_50.getSkillName(), StatType.ATK,160,0.75,0,20);
             }
             System.out.println(AbilityBuff.getBuffStack(player, SkillsId.STR_50.getSkillName()));
-            if(AbilityBuff.getBuffStack(player, SkillsId.STR_50.getSkillName()) >=14){
-                System.out.println("풀스택");
-                player.heal((float) (damage * 0.1));
-                System.out.println(damage* 0.1);
+            if(AbilityBuff.getBuffStack(player, SkillsId.STR_50.getSkillName()) >=20){
+                player.heal((float) (damage * 0.13));
                     Runnable task= ()->{
                         if (player.getWorld() instanceof ServerWorld serverWorld) {
                             Vec3d pos = player.getPos();
-//                            serverWorld.spawnParticles(ParticleTypes.FIREWORK,
-//                                    pos.x, pos.y, pos.z, 3, 0.5, 1, 0.5, 0);
                             serverWorld.spawnParticles(ParticleTypes.GLOW,
-                                    pos.x, pos.y, pos.z, 8, 0.3, 1.8, 0.3, 0);
+                                    pos.x, pos.y, pos.z, 12, 0.3, 1.8, 0.3, 0);
                         }
                     };
                     DelayedTaskManager.addTask((ServerWorld) player.getWorld(),player, task, 5, SkillsId.STR_50.getSkillName()+" 최대 스택 효과",28);
             }
-
         }
         if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
             player.heal((float) (damage * 0.3));
         }
+//        if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_50)){
+//            damage+= damage + target.getMaxHealth() * 0.03f;
+//            if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_150)){
+//                DotDamageVer2.giveDotDamage(target,player, 100, 10, target.getMaxHealth()*0.05f, DotTypeVer2.Bleed, true, 0,SkillsId.DEX_150.getSkillName());
+//            }
+//        }
+        if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_100)){
+            AbilityBuff.giveBuff(player, SkillsId.DEX_100.getSkillName(), StatType.ATTACK_SPEED,200,0,0.05,15);
+        }
+
+
+        return damage;
     }
     public static void criticalFlag(PlayerEntity player, LivingEntity target, float damage){
         PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
@@ -261,7 +268,7 @@ public class PassiveSkillManager {
         PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
         if(playerSkillComponent.hasPassiveSkill(SkillsId.STR_150)){
             double atk= playerFinalStatComponent.getFinalStat(StatType.ATK);
-            HealBuff.giveHealBuff(player, 40, 4, atk*0.5 ,SkillsId.STR_150.getSkillName());
+            HealBuff.giveHealBuff(player, 60, 4, atk*0.85 ,SkillsId.STR_150.getSkillName());
         }
     }
 

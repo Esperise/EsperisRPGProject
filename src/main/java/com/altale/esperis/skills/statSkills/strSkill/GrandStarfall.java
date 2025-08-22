@@ -20,13 +20,10 @@ import org.joml.Vector3d;
 import java.util.function.IntConsumer;
 
 public class GrandStarfall {
-    public static final String skillName= SkillsId.STR_75.getSkillName();
-    public static final float baseDamage= 15;
-    public static final float hpCoeffi = 0.04f;
-    public static final float atkCoeffi = 1.25f;
-    public static final float barrierAtkCoeffi= 1f;
+    public static final String skillName= SkillsId.STR_125.getSkillName();
+    public static final float barrierAtkCoeffi= 0.8f;
     public static final float baseBarrierAmount= 10;
-    public static final int cooltime = 60;
+    public static final int cooltime = 460;
     public static void grandStarfall(ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
 
@@ -43,10 +40,12 @@ public class GrandStarfall {
                         float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);
                         Vec3d look = player.getRotationVec(1.0f);
                         AbsorptionBuff.giveAbsorptionBuff(world, player, skillName, baseBarrierAmount +atk * barrierAtkCoeffi, 60);
-                        Vec3d velocity2 = new Vec3d(look.x * 4, look.y * 15  , look.z * 4);
+                        Vec3d velocity2;
                         System.out.println(look.y);
                         if(look.y >= 0.0f ){
-                            velocity2 = new Vec3d(0, -look.y * 15 ,0);
+                            velocity2 = new Vec3d(0,  -10 ,0);
+                        }else{
+                            velocity2 = new Vec3d(look.x * 4, -10 + (look.y*5) , look.z * 4);
                         }
                         player.addVelocity(velocity2.x, velocity2.y  , velocity2.z);
                         player.velocityModified = true;

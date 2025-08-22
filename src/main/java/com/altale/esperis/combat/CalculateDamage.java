@@ -29,7 +29,7 @@ public class CalculateDamage {
         CalculateDamageCallBack.EVENT.register(
                 ((damageSource, target, damageAmount) ->{
                     if (!damageSource.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
-                        target.damageArmor(damageSource, damageAmount);
+                        target.damageArmor(damageSource, damageAmount/10);
                     }
 //                    System.out.println("원본 데미지: "+damageAmount);
                     if(target instanceof PlayerEntity player){
@@ -124,7 +124,7 @@ public class CalculateDamage {
                             PassiveSkillManager.hpFallBelowXPercent((PlayerEntity) target, (float) damage,30);
                         }
                         if(attackerIsPlayer){
-                            PassiveSkillManager.giveDamage((PlayerEntity )attacker,target,(float) damage);
+                            damage= PassiveSkillManager.giveDamage((PlayerEntity )attacker,target,(float) damage);
                         }
 //                        System.out.println("최종 피해: "+damage);
                         return (float) damage;
@@ -138,8 +138,6 @@ public class CalculateDamage {
                             PassiveSkillManager.hpFallBelowXPercent(targetPlayer,  damageAmount,30);
 //                            System.out.println("최종 피해(낙하데미지 , 화염데미지 등): "+damageAmount);
                         }
-
-
                         return damageAmount;
                     }
                 })

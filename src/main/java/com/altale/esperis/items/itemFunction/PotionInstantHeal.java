@@ -33,8 +33,7 @@ public class PotionInstantHeal extends Item {
                 int level = levelComponent.getLevel();
                 float healAmount= user.getMaxHealth()*0.1F + 7;
 //                user.heal(healAmount);
-                HealBuff.giveHealBuff(user, 200, 10, healAmount,"포션효과");
-                AbilityBuff.giveBuff(user, "포션효과", StatType.SPD,100,50,0, 1);
+                HealBuff.giveHealBuff(user, 200, 10, healAmount,"빨간 포션");
                 world.playSound(
                         null,
                         user.getX(), user.getY(), user.getZ(),
