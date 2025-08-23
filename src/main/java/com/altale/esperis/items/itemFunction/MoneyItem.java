@@ -20,7 +20,7 @@ public class MoneyItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand){
         ItemStack stack= user.getStackInHand(hand);
-        int amount =0;
+        int amount ;
         if(stack.hasNbt()){
             PlayerMoneyComponent playerMoneyComponent = PlayerMoneyComponent.KEY.get(user);
             NbtCompound nbt = stack.getNbt();

@@ -17,7 +17,8 @@
     "NormalBowAttackSpeedMixin",
     "VanillaToolDamageMixin",
     "entity.Creeper.CreeperMixin",
-    "entity.Creeper.CreeperMixin2"
+    "entity.Creeper.CreeperMixin2",
+    "FallDamageMixin"
   ],
   "injectors": {
     "defaultRequire": 1

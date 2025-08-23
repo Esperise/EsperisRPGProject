@@ -22,7 +22,6 @@ public class VanillaToolDamageMixin {
             Supplier<String> supplier = args.get(1);
             String name = supplier.get();
             double value= args.get(2);
-            System.out.println("Vanilla Tool Damage, string: "+name+"value: "+value);
             if(name.equals("Weapon modifier") || name.equals("Tool modifier")) {
                 value= value * 0.2 ;
                 args.set(2,value);

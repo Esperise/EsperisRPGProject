@@ -87,7 +87,7 @@ public class PlayerLevelComponentImp implements PlayerLevelComponent, AutoSynced
     public void levelUp(){
             setLevel(this.level+1);
             setCurrentExp(this.currentExp-this.maxExp);
-        setMaxExp((int) (this.maxExp * Math.max(1.1,(1.22-(getLevel()/100.0)))));
+        setMaxExp((int) (this.maxExp * Math.max(1.12,(1.27-(getLevel()/100.0)))));
 
     }
 

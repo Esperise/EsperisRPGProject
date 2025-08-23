@@ -1,4 +1,11 @@
 {
-  "item.esperis.instant_heal_potion": "회복 포션",
+  "item.esperis.potions.red_potion": "빨간 포션",
+  "item.esperis.potions.golden_potion": "금빛 포션",
+  "item.esperis.potions.blue_potion": "파란 포션",
+  "item.esperis.potions.orange_potion": "주황 포션",
+  "item.esperis.potions.purple_potion": "보라 포션",
+  "item.esperis.potions.elixir": "엘릭서",
+  "item.esperis.exp_coupon.exp_coupon": "경험치 쿠폰",
   "item.esperis.special_bow_1": "돌풍"
+
 }

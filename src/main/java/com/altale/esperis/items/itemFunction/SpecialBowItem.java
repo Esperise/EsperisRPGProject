@@ -46,8 +46,8 @@ public class SpecialBowItem extends Item {
     private final double dexCoeffi;
     private final double baseDamage;
     private final double baseAttackSpeed;
-
-    public SpecialBowItem(double baseAttackSpeed, float maxDistance, double atkCoeffi, double dexCoeffi, float baseDamage) {
+    private final String itemName;
+    public SpecialBowItem(double baseAttackSpeed, float maxDistance, double atkCoeffi, double dexCoeffi, float baseDamage, String itemName) {
         super(new FabricItemSettings().maxCount(1));
 //        this.specialBowCoolTime = cooltime;
         this.baseAttackSpeed= baseAttackSpeed;
@@ -55,9 +55,10 @@ public class SpecialBowItem extends Item {
         this.atkCoeffi = atkCoeffi;
         this.dexCoeffi = dexCoeffi;
         this.baseDamage = baseDamage;
+        this.itemName = itemName;
     }
     public SpecialBowItem(){
-        this(1, 40F,0.3,0.1,3);
+        this(1, 40F,0.25,0.08,3, "돌풍");
     }
     public  double getSpecialBowAttackSpeed() {
         return baseAttackSpeed;
@@ -92,7 +93,6 @@ public class SpecialBowItem extends Item {
         PlayerFinalStatComponent statComponent = PlayerFinalStatComponent.KEY.get(user);
         double atk= statComponent.getFinalStat(StatType.ATK);
         double dex= statComponent.getFinalStat(StatType.DEX);
-
         double shotDamage= baseDamage + (atk * atkCoeffi) + (dex * dexCoeffi);
         PlayerInventory inventory = user.getInventory();
         boolean hasArrow=inventory.contains(Items.ARROW.getDefaultStack());
@@ -189,7 +189,6 @@ public class SpecialBowItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         ItemCooldownManager cooldownManager= user.getItemCooldownManager();
-
         if(cooldownManager.isCoolingDown(this)){
             return TypedActionResult.fail(stack);
         }
@@ -209,21 +208,19 @@ public class SpecialBowItem extends Item {
     @Override
     public Text getName(ItemStack stack){
         if(EquipmentInfoManager.hasEquipmentInfo(stack)){
-
-            return Text.literal("돌풍");
+            return Text.literal(itemName);
         }else{
-            String custom = "돌풍 ✨";
-
+            String custom = itemName;
             return Text.literal(custom);
         }
     }
 
     public void useSpecialBow(ServerPlayerEntity player, ServerWorld world) {
-        Entity target = GetEntityLookingAt.getEntityLookingAt(player, maxDistance, 0.2);
+        PlayerFinalStatComponent finalStatComponent= PlayerFinalStatComponent.KEY.get(player);
+        float dex = (float) finalStatComponent.getFinalStat(StatType.DEX);
+        Entity target = GetEntityLookingAt.getEntityLookingAt(player, maxDistance, 0.2 + dex*0.008 );
         ItemStack stack= player.getStackInHand(Hand.MAIN_HAND);
         PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
-
-        //
         if( target == null  ){ //타겟팅 대상 없음
             specialBowEffects(false,world,player,null);
         } else {
@@ -233,7 +230,6 @@ public class SpecialBowItem extends Item {
                 targetEntity.timeUntilRegen = 0;
                 targetEntity.hurtTime = 0;
                 double shotDamage= specialBowDamage(player);
-
                 PassiveSkillManager.bowHit(player,targetEntity);
                 specialBowEffects(true,world,player,targetEntity);
                 if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_50)){

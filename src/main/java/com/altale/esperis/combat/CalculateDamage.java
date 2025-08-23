@@ -134,9 +134,10 @@ public class CalculateDamage {
                             PlayerFinalStatComponent playerComponent = PlayerFinalStatComponent.KEY.get(targetPlayer);
                             double def = playerComponent.getFinalStat(StatType.DEF);
                             damageAmount = (float) Math.round(damageAmount * ( 1- (def/(def + 100)) )*100)/100;
-                            damageAmount = PassiveSkillManager.getDamageFlag((PlayerEntity) target, null,  damageAmount);
-                            PassiveSkillManager.hpFallBelowXPercent(targetPlayer,  damageAmount,30);
-//                            System.out.println("최종 피해(낙하데미지 , 화염데미지 등): "+damageAmount);
+                            if(damageAmount > 1.5f ){
+                                damageAmount = PassiveSkillManager.getDamageFlag((PlayerEntity) target, null,  damageAmount);
+                                PassiveSkillManager.hpFallBelowXPercent(targetPlayer,  damageAmount,30);
+                            }
                         }
                         return damageAmount;
                     }

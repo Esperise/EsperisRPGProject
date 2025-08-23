@@ -18,7 +18,7 @@ public abstract class JumpCritInvalidationMixin {
 
     private float invalidateCritDamage(float originalDamage) {
         System.out.println(originalDamage);
-        return 1.05F;
+        return 1.15F;
 
     }
 }

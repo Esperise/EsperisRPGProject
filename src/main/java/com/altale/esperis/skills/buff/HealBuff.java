@@ -78,7 +78,7 @@ public class HealBuff {
                         }
                     }
                     if(data.remainingTicks<=0){
-//                        target.heal((float) data.healPerNTicks);
+                        target.heal((float) data.healPerNTicks);
                         innerIterator.remove();
                     }
 
