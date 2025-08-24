@@ -28,13 +28,16 @@ public class GrandStarfall {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
 
         }else{
-            if(AbilityBuff.hasBuff(player,skillName) && DelayedTaskManager.getCurrentRepeatCount(world, player, skillName) >= 0){
+            if(DelayedTaskManager.getCurrentRepeatCount(world, player, skillName) >= 0){
+                if(DelayedTaskManager.getCurrentRepeatCount(world, player, skillName) == 12){
+                    return;
+                } else if(DelayedTaskManager.getCurrentRepeatCount(world, player, skillName) == 13){
+                    return;
+                }
                 DelayedTaskManager.deleteTask(world, player,skillName);
                 DelayedTaskManager.deleteTask(world, player, skillName+"keep");
                 IntConsumer landingTask = task-> {
                     if(task ==1){
-                        DelayedTaskManager.deleteTask(world, player, skillName);
-                        DelayedTaskManager.deleteTask(world, player, skillName+"keep");
                         player.setNoGravity(false);
                         PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
                         float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);

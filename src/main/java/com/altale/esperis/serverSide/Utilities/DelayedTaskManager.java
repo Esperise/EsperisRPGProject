@@ -37,7 +37,7 @@ public class DelayedTaskManager {
     private static final Map<ServerWorld, Map<UUID, Map<String,TaskData>>> delayedTaskMap = new HashMap<>();
     private static final Map<ServerWorld, Map<UUID, Map<String,TaskData>>> delayedTaskCopyMap = new HashMap<>();
     private static final Map<ServerWorld, Map<UUID, Map<String,TaskData> >> pendingAdds = new HashMap<>();
-    private static final Map<ServerWorld, Map<UUID,String >> deleteRequest = new HashMap<>();
+    private static final Map<ServerWorld, Map<UUID,List<String> >> deleteRequest = new HashMap<>();
     public static void register(){
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (!pendingAdds.isEmpty()) {
@@ -91,15 +91,18 @@ public class DelayedTaskManager {
                             delayedTaskMap.computeIfAbsent(world, k -> new HashMap<>());
                     for (var uEntry : worldEntry.getValue().entrySet()) {
                         UUID uuid = uEntry.getKey();
-                        String taskId = uEntry.getValue();
-                        Map<String, TaskData> destByTask =
-                                destWorld.computeIfAbsent(uuid, k -> new HashMap<>());
+                        List<String> taskIdList = uEntry.getValue();
+                        for(String taskId : taskIdList){
+                            Map<String, TaskData> destByTask =
+                                    destWorld.computeIfAbsent(uuid, k -> new HashMap<>());
                             TaskData existing =destByTask.get(taskId);
                             if(existing != null){
                                 existing.currentRepeatCount = existing.maxRepeatCount;
                                 destByTask.remove(taskId);
                                 System.out.println(taskId+"삭제 완료");
                             }
+                        }
+
                     }
                 }
                 deleteRequest.clear();
@@ -179,9 +182,11 @@ public class DelayedTaskManager {
     }
     public static void deleteTask(ServerWorld world, Entity target, String taskId){
         UUID uuid = target.getUuid();
+        System.out.println("삭제하려는 taskId:" + taskId);
         deleteRequest
                 .computeIfAbsent(world, k-> new HashMap<>())
-                .put(uuid,  taskId);
+                .computeIfAbsent(uuid, k-> new ArrayList<>() )
+                .add(taskId);
     }
     public static int getCurrentRepeatCount(ServerWorld world, Entity target, String taskId){
         UUID uuid = target.getUuid();

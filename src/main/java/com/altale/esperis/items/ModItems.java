@@ -24,6 +24,7 @@ public class ModItems {
     public static final Item BLUE_POTION = register("potions/orange_potion", new HealingPotion( new FabricItemSettings(),13,0.038f,200, 10,200,"주황 포션"));
     public static final Item ORANGE_POTION = register("potions/blue_potion", new HealingPotion( new FabricItemSettings(),8,0.035f,60, 2,300,"파란 포션"));
     public static final Item PURPLE_POTION = register("potions/purple_potion", new HealingPotion( new FabricItemSettings(),12,0.045f,60, 2,300,"보라 포션"));
+    public static final Item PINK_POTION = register("potions/pink_potion", new HealingPotion( new FabricItemSettings(),1,0f,1, 1,1,"테스트용 쿨타임 감소 포션"));
     public static final Item ELIXIR = register("potions/elixir", new HealingPotion( new FabricItemSettings(),50,0.05f,1, 1,200,"엘릭서"));
     public static final Item MONEY = register("money", new MoneyItem());
     public static final Item EXP_COUPON = register("exp_coupon/exp_coupon", new ExpCoupon());

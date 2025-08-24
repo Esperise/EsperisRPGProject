@@ -29,16 +29,18 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.IntConsumer;
+import java.util.stream.Collectors;
 
 public class LastBreath implements SkillsInterface {
     public static final String skillName = SkillsId.STR_175.getSkillName();
     public static final int cooltime = 800;
     public static final  float atkCoeffi = 0.18f;//4번 적용됨, 총 1 + 평타 2-3번 가능 = 3.4
-    public static final  float barrierAtkCoeffi = 0.4f;
+    public static final  float barrierAtkCoeffi = 0.3f;
     public static final  int keepAirTime = 40;
     public static final BlockStateParticleEffect particle= new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.CHERRY_LEAVES.getDefaultState());
     public static final DefaultParticleType particle2= ParticleTypes.ELECTRIC_SPARK;
@@ -99,14 +101,21 @@ public class LastBreath implements SkillsInterface {
         Vec3d oppositeLookVec= nearestLookPos.multiply(-1.0f);
         float targetYaw = target.getYaw(1.0f);
         float targetPitch = target.getPitch(1.0f);
+        Box targetBox = target.getBoundingBox().expand(2, 1, 2);
+        List<Entity> entityList = player.getWorld().getOtherEntities(player, targetBox);
+        List<LivingEntity> livingEntityList = entityList.stream().filter(e-> e instanceof LivingEntity).map(e-> (LivingEntity) e).collect(Collectors.toCollection(ArrayList::new));
         PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
         float atk = (float) playerFinalStatComponent.getFinalStat(StatType.ATK);
         IntConsumer task = step->{
             if(step != keepAirTime-1 ){
                 if(step % 9 == 1){
                     AbsorptionBuff.giveAbsorptionBuff(world, player, skillName,atk*barrierAtkCoeffi , keepAirTime+100 );
-                    target.damage(target.getWorld().getDamageSources().playerAttack(player),atk*atkCoeffi );
-                    RandomStraight3DLines.spawnRandomStraightLines(world, target, particle ,1, 1.5, 1.5, -0.4, 6, 1,true,0);
+                    livingEntityList.forEach(e-> {
+                        e.hurtTime=0;
+                        e.timeUntilRegen=0;
+                        e.damage(e.getWorld().getDamageSources().playerAttack(player),atk*atkCoeffi );
+                        RandomStraight3DLines.spawnRandomStraightLines(world, e, particle ,1, 1.5, 1.5, -0.4, 6, 1,true,0);
+                    });
                     for (int i = 0; i < 2; i++) {
                         player.getWorld().playSound(
                                 null,
@@ -121,7 +130,9 @@ public class LastBreath implements SkillsInterface {
                     }
                 }
                 if(step % 8 == 1){
-                    RandomStraight3DLines.spawnRandomStraightLines(world, target, particle2 ,2, .5, .5, -0.3, 6, 0.2,true,0);
+                    livingEntityList.forEach(e->{
+                        RandomStraight3DLines.spawnRandomStraightLines(world, e, particle2 ,2, .5, .5, -0.3, 6, 0.2,true,0);
+                    });
                 }
                 target.teleport(world, nearestPos.x, nearestPos.y, nearestPos.z,
                         java.util.Collections.emptySet() , targetYaw, targetPitch);
@@ -136,9 +147,11 @@ public class LastBreath implements SkillsInterface {
                     );
                 }
             }else{
-                target.setVelocity(0, -5, 0);
+                livingEntityList.forEach(e ->{
+                    e.setVelocity(0, -5, 0);
+                    e.velocityModified = true;
+                });
                 player.setVelocity(0, -5, 0);
-                target.velocityModified = true;
                 player.velocityModified = true;
                 world.playSound(
                         null,

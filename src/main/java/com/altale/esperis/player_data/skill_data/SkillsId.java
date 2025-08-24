@@ -3,6 +3,7 @@ package com.altale.esperis.player_data.skill_data;
 import com.altale.esperis.player_data.stat_data.StatType;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public enum SkillsId {
 
@@ -166,6 +167,21 @@ public enum SkillsId {
     }
     public static SkillsId[] getDurSkills(){
         return DUR_SKILLS.clone();
+    }
+    public static String[] getStrSkillNames(){
+        return  Arrays.stream(getStrSkills()).filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+    }
+    public static String[] getDexSkillNames(){
+        return  Arrays.stream(getDexSkills()).filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+    }
+    public static String[] getLukSkillNames(){
+        return  Arrays.stream(getLukSkills()).filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+    }
+    public static String[] getDurSkillNames(){
+        return  Arrays.stream(getDurSkills()).filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+    }
+    public static boolean isActiveSkill(SkillsId skillId){
+        return getActiveSkills().contains(skillId);
     }
     public static Set<SkillsId> getPassiveSkills(){
         return Set.of(PASSIVE_SKILLS.clone());

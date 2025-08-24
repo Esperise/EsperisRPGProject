@@ -2,12 +2,14 @@ package com.altale.esperis.items.itemFunction;
 
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.skills.buff.HealBuff;
+import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -101,6 +103,10 @@ public class HealingPotion extends Item {
     private void givePotionHeal(PlayerEntity user, float baseHeal, float hpCoeffi, int duration, int healTickDelta, String potionName){
         float healAmount= user.getMaxHealth()* hpCoeffi + baseHeal;
         HealBuff.giveHealBuff(user, duration, healTickDelta, healAmount,potionName);
+        //FIXME
+        if(potionName.equals("테스트용 쿨타임 감소 포션")){
+            CoolTimeManager.allCoolTimePercentReduction((ServerPlayerEntity) user, 100);
+        }
     }
     private void potionEffect(PlayerEntity user, World world){
         world.playSound(

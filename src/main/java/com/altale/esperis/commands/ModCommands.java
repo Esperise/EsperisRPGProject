@@ -16,6 +16,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.CommandSource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -24,6 +25,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
@@ -32,9 +35,17 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 
 public class ModCommands {
+    private static final Map<String, List<String>> SKILLS_BY_STAT = Map.of(
+            "STR", List.of(SkillsId.getStrSkillNames()),
+            "DEX", List.of(SkillsId.getDexSkillNames()),
+            "LUK",   List.of(SkillsId.getLukSkillNames()),
+            "DUR", List.of(SkillsId.getDurSkillNames())
+    );
+    private static final String[] STATS = {"STR", "DEX", "LUK", "DUR"};
     public static void register(){
         CommandRegistrationCallback.EVENT.register(ModCommands::registerMoneyData);
         CommandRegistrationCallback.EVENT.register(ModCommands::setSkillKeyBinding);
+        CommandRegistrationCallback.EVENT.register(ModCommands::registerSetShopItemInfo);
 
     }
 
@@ -169,7 +180,21 @@ public class ModCommands {
 
                         )
                         .then(literal("스킬키1")
+                                .then(argument("StatType", StringArgumentType.word())
+                                        .suggests((c,b)-> CommandSource.suggestMatching(STATS,b))
                                 .then(argument("skillName",  StringArgumentType.greedyString())
+                                        .suggests((c,b)->{
+                                            String stat = StringArgumentType.getString(c, "StatType"); // 또는 c.getArgument("StatType", String.class)
+                                            if (c.getSource().getPlayer() != null) {
+                                                PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(c.getSource().getPlayer());
+                                                StatType statType = StatType.valueOf(stat);
+                                                List<SkillsId> list =playerSkillComponent.getUnlockedStatSkillsMap().get(statType);
+                                                String[] unlockedActiveSkillsList = list.stream().filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+                                                return CommandSource.suggestMatching(unlockedActiveSkillsList,b);
+                                            }
+                                            var list = SKILLS_BY_STAT.getOrDefault(stat, List.of());
+                                            return CommandSource.suggestMatching(list, b);
+                                        })
                                         .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
@@ -178,74 +203,176 @@ public class ModCommands {
                                     return 1;
                                 }))
 
-                        )
+                        ))
                         .then(literal("스킬키2")
-                                .then(argument("skillName",  StringArgumentType.greedyString())
-                                        .executes(ctx -> {
+                                .then(argument("StatType", StringArgumentType.word())
+                                        .suggests((c,b)-> CommandSource.suggestMatching(STATS,b))
+                                        .then(argument("skillName",  StringArgumentType.greedyString())
+                                                .suggests((c,b)->{
+                                                    String stat = StringArgumentType.getString(c, "StatType"); // 또는 c.getArgument("StatType", String.class)
+                                                    if (c.getSource().getPlayer() != null) {
+                                                        PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(c.getSource().getPlayer());
+                                                        StatType statType = StatType.valueOf(stat);
+                                                        List<SkillsId> list =playerSkillComponent.getUnlockedStatSkillsMap().get(statType);
+                                                        String[] unlockedActiveSkillsList = list.stream().filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+                                                        return CommandSource.suggestMatching(unlockedActiveSkillsList,b);
+                                                    }
+                                                    var list = SKILLS_BY_STAT.getOrDefault(stat, List.of());
+                                                    return CommandSource.suggestMatching(list, b);
+                                                })
+                                                .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
                                             String skillName = StringArgumentType.getString(ctx, "skillName");
                                     skillComponent.setKeyBinding("skill_key_2",SkillsId.getSkillIdByName(skillName));
                                     return 1;
-                                }))
+                                })))
 
                         )
                         .then(literal("스킬키3")
-                                .then(argument("skillName",  StringArgumentType.greedyString())
-                                        .executes(ctx -> {
+                                .then(argument("StatType", StringArgumentType.word())
+                                        .suggests((c,b)-> CommandSource.suggestMatching(STATS,b))
+                                        .then(argument("skillName",  StringArgumentType.greedyString())
+                                                .suggests((c,b)->{
+                                                    String stat = StringArgumentType.getString(c, "StatType"); // 또는 c.getArgument("StatType", String.class)
+                                                    if (c.getSource().getPlayer() != null) {
+                                                        PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(c.getSource().getPlayer());
+                                                        StatType statType = StatType.valueOf(stat);
+                                                        List<SkillsId> list =playerSkillComponent.getUnlockedStatSkillsMap().get(statType);
+                                                        String[] unlockedActiveSkillsList = list.stream().filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+                                                        return CommandSource.suggestMatching(unlockedActiveSkillsList,b);
+                                                    }
+                                                    var list = SKILLS_BY_STAT.getOrDefault(stat, List.of());
+                                                    return CommandSource.suggestMatching(list, b);
+                                                })
+                                                .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
                                             String skillName = StringArgumentType.getString(ctx, "skillName");
                                     skillComponent.setKeyBinding("skill_key_3",SkillsId.getSkillIdByName(skillName));
                                     return 1;
-                                }))
+                                })))
 
                         )
                         .then(literal("스킬키4")
-                                .then(argument("skillName",  StringArgumentType.greedyString())
-                                        .executes(ctx -> {
+                                .then(argument("StatType", StringArgumentType.word())
+                                        .suggests((c,b)-> CommandSource.suggestMatching(STATS,b))
+                                        .then(argument("skillName",  StringArgumentType.greedyString())
+                                                .suggests((c,b)->{
+                                                    String stat = StringArgumentType.getString(c, "StatType"); // 또는 c.getArgument("StatType", String.class)
+                                                    if (c.getSource().getPlayer() != null) {
+                                                        PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(c.getSource().getPlayer());
+                                                        StatType statType = StatType.valueOf(stat);
+                                                        List<SkillsId> list =playerSkillComponent.getUnlockedStatSkillsMap().get(statType);
+                                                        String[] unlockedActiveSkillsList = list.stream().filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+                                                        return CommandSource.suggestMatching(unlockedActiveSkillsList,b);
+                                                    }
+                                                    var list = SKILLS_BY_STAT.getOrDefault(stat, List.of());
+                                                    return CommandSource.suggestMatching(list, b);
+                                                })
+                                                .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
                                             String skillName = StringArgumentType.getString(ctx, "skillName");
                                     skillComponent.setKeyBinding("skill_key_4",SkillsId.getSkillIdByName(skillName));
                                     return 1;
-                                }))
+                                })))
 
                         )
                         .then(literal("스킬키5")
-                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                .then(argument("StatType", StringArgumentType.word())
+                                        .suggests((c,b)-> CommandSource.suggestMatching(STATS,b))
+                                        .then(argument("skillName",  StringArgumentType.greedyString())
+                                                .suggests((c,b)->{
+                                                    String stat = StringArgumentType.getString(c, "StatType"); // 또는 c.getArgument("StatType", String.class)
+                                                    if (c.getSource().getPlayer() != null) {
+                                                        PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(c.getSource().getPlayer());
+                                                        StatType statType = StatType.valueOf(stat);
+                                                        List<SkillsId> list =playerSkillComponent.getUnlockedStatSkillsMap().get(statType);
+                                                        String[] unlockedActiveSkillsList = list.stream().filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+                                                        return CommandSource.suggestMatching(unlockedActiveSkillsList,b);
+                                                    }
+                                                    var list = SKILLS_BY_STAT.getOrDefault(stat, List.of());
+                                                    return CommandSource.suggestMatching(list, b);
+                                                })
                                         .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
                                             String skillName = StringArgumentType.getString(ctx, "skillName");
                                     skillComponent.setKeyBinding("skill_key_5",SkillsId.getSkillIdByName(skillName));
                                     return 1;
-                                }))
+                                })))
 
                         )
                         .then(literal("스킬키6")
-                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                .then(argument("StatType", StringArgumentType.word())
+                                        .suggests((c,b)-> CommandSource.suggestMatching(STATS,b))
+                                        .then(argument("skillName",  StringArgumentType.greedyString())
+                                                .suggests((c,b)->{
+                                                    String stat = StringArgumentType.getString(c, "StatType"); // 또는 c.getArgument("StatType", String.class)
+                                                    if (c.getSource().getPlayer() != null) {
+                                                        PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(c.getSource().getPlayer());
+                                                        StatType statType = StatType.valueOf(stat);
+                                                        List<SkillsId> list =playerSkillComponent.getUnlockedStatSkillsMap().get(statType);
+                                                        String[] unlockedActiveSkillsList = list.stream().filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+                                                        return CommandSource.suggestMatching(unlockedActiveSkillsList,b);
+                                                    }
+                                                    var list = SKILLS_BY_STAT.getOrDefault(stat, List.of());
+                                                    return CommandSource.suggestMatching(list, b);
+                                                })
                                         .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
                                             String skillName = StringArgumentType.getString(ctx, "skillName");
                                     skillComponent.setKeyBinding("skill_key_6",SkillsId.getSkillIdByName(skillName));
                                     return 1;
-                                }))
+                                })))
 
                         )
                         .then(literal("스킬키7")
-                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                .then(argument("StatType", StringArgumentType.word())
+                                        .suggests((c,b)-> CommandSource.suggestMatching(STATS,b))
+                                        .then(argument("skillName",  StringArgumentType.greedyString())
+                                                .suggests((c,b)->{
+                                                    String stat = StringArgumentType.getString(c, "StatType"); // 또는 c.getArgument("StatType", String.class)
+                                                    if (c.getSource().getPlayer() != null) {
+                                                        PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(c.getSource().getPlayer());
+                                                        StatType statType = StatType.valueOf(stat);
+                                                        List<SkillsId> list =playerSkillComponent.getUnlockedStatSkillsMap().get(statType);
+                                                        String[] unlockedActiveSkillsList = list.stream().filter(SkillsId::isActiveSkill).map(SkillsId::getSkillName).toArray(String[]::new);
+                                                        return CommandSource.suggestMatching(unlockedActiveSkillsList,b);
+                                                    }
+                                                    var list = SKILLS_BY_STAT.getOrDefault(stat, List.of());
+                                                    return CommandSource.suggestMatching(list, b);
+                                                })
                                         .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
                                             String skillName = StringArgumentType.getString(ctx, "skillName");
                                     skillComponent.setKeyBinding("skill_key_7",SkillsId.getSkillIdByName(skillName));
                                     return 1;
-                                }))
+                                })))
 
                         )
 
+        );
+
+    }
+    private static void registerSetShopItemInfo(
+            CommandDispatcher<ServerCommandSource> dispatcher,
+            CommandRegistryAccess access,
+            CommandManager.RegistrationEnvironment env) {
+        dispatcher.register(
+                literal("SetItemPrice")
+                        .then(argument("PurchasePrice", integer(-1, Integer.MAX_VALUE))
+                            .then(argument("SalesPrice", integer(-1, Integer.MAX_VALUE)))
+                                .executes(ctx->{
+                                    //들고있는(mainHand) 아이템의 상점용 nbt추가 전달 인자: (player, purchasePrice, salesPrice)
+                                    //purchasePrice 와 salesPrice 값이 -1이면 구매 혹은 판매 [불가] 임
+                                    return 1;
+                                })
+
+                        )
         );
 
     }

@@ -29,8 +29,8 @@ public class HorizenSweep {
     public static final String skillName= SkillsId.STR_25.getSkillName();
     public static final float atkCoeffi = 0.75f;
     public static final float baseDamage= 5.0f;
-    public static final float barrierAtkCoeffi = 0.1f;
-    public static final float baseBarrierAmount = 2f;
+    public static final float healAtkCoeffi = 0.14f;
+    public static final float baseHealAmount = 2f;
     public static final int cooltime = 100;
     public static final float delayReduceCoeffi = 100/5.0f;
     public static final float cooltimeReduceCoeffi = 100/3.0f;
@@ -75,7 +75,7 @@ public class HorizenSweep {
         List<Entity> totalEntityList = player.getWorld().getOtherEntities(player, totalBox);
         int targets = totalEntityList.size();
         if( targets>0 ){
-            AbsorptionBuff.giveAbsorptionBuff(world, player, skillName, (baseBarrierAmount+barrierAtkCoeffi)*targets , 40);
+            player.heal((baseHealAmount+healAtkCoeffi) *targets );
         }
 // 2) 스케줄에 넘길 action: 매 틱 현재 step을 스윕에 전달 + 박스 계산
         IntConsumer action = step -> {
