@@ -10,6 +10,7 @@ import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatCo
 import com.altale.esperis.player_data.stat_data.StatManager;
 import com.altale.esperis.player_data.stat_data.StatPointType;
 import com.altale.esperis.player_data.stat_data.StatType;
+import com.altale.esperis.shop.ShopItemManager;
 import com.altale.esperis.skills.statSkills.dexStatSkill.DexJump;
 import com.altale.esperis.skills.statSkills.lukStatSkill.TripleJump;
 import com.mojang.brigadier.CommandDispatcher;
@@ -17,6 +18,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -46,6 +48,7 @@ public class ModCommands {
         CommandRegistrationCallback.EVENT.register(ModCommands::registerMoneyData);
         CommandRegistrationCallback.EVENT.register(ModCommands::setSkillKeyBinding);
         CommandRegistrationCallback.EVENT.register(ModCommands::registerSetShopItemInfo);
+        CommandRegistrationCallback.EVENT.register(ModCommands::registerShowItemInfo);
 
     }
 
@@ -365,18 +368,51 @@ public class ModCommands {
         dispatcher.register(
                 literal("SetItemPrice")
                         .then(argument("PurchasePrice", integer(-1, Integer.MAX_VALUE))
-                            .then(argument("SalesPrice", integer(-1, Integer.MAX_VALUE)))
+                            .then(argument("SalesPrice", integer(-1, Integer.MAX_VALUE))
                                 .executes(ctx->{
+                                    PlayerEntity player = ctx.getSource().getPlayer();
+                                    if(player ==null) return 0;
+                                    if(player.getMainHandStack().isEmpty()) {
+                                        player.sendMessage(Text.literal("아이템을 들고 있지 않습니다."));
+                                    }else{
+                                        ItemStack stack = ShopItemManager.makeShopItem(player, ctx.getArgument("PurchasePrice", Integer.class), ctx.getArgument("SalesPrice", Integer.class));
+                                        player.sendMessage(Text.literal("상점용 아이템 생성에 성공하였습니다. "));
+                                    }
                                     //들고있는(mainHand) 아이템의 상점용 nbt추가 전달 인자: (player, purchasePrice, salesPrice)
                                     //purchasePrice 와 salesPrice 값이 -1이면 구매 혹은 판매 [불가] 임
+
                                     return 1;
                                 })
 
                         )
-        );
+        ));
+
+    }
+    private static void registerShowItemInfo(
+            CommandDispatcher<ServerCommandSource> dispatcher,
+            CommandRegistryAccess access,
+            CommandManager.RegistrationEnvironment env) {
+        dispatcher.register(
+                literal("비틱").executes(ctx->{
+                    PlayerEntity player = ctx.getSource().getPlayer();
+                    ItemStack stack = player.getMainHandStack();
+                    if(stack == null || stack.isEmpty()){
+                        player.sendMessage(Text.literal("들고 있는 아이템이 없습니다.").formatted(Formatting.RED));
+                        return 1;
+                    }else{
+                        Text msg = Text.empty()
+                                .append(player.getDisplayName().copy().formatted(Formatting.GRAY, Formatting.BOLD))
+                                .append(Text.literal(" 이/가 비틱을 하였습니다.  ").formatted(Formatting.GOLD))
+                                .append(stack.toHoverableText().copy().formatted(Formatting.ITALIC, Formatting.AQUA)); // ← 마우스 올리면 아이템 툴팁이 뜸
+
+                        ctx.getSource().getServer().getPlayerManager().broadcast(msg, false);
+                        return 1;
+                    }
+                }));
 
     }
 
 
 }
+
 

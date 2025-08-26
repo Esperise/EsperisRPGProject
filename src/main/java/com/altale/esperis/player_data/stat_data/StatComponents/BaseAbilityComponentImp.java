@@ -13,7 +13,19 @@ import java.util.Map;
 public class BaseAbilityComponentImp implements BaseAbilityComponent, AutoSyncedComponent {
     private final PlayerEntity player;
     private final Map<StatType, Double> BaseAbilityMap = new EnumMap<StatType, Double>(StatType.class);
-    private StatType Str;
+    public static final double StrAtk = 0.1;
+    public static final double DexAtk = 0.025;
+    public static final double LukAtk = 0.05;
+    public static final double DurDef = 1;
+    public static final double StrHp = 0.5;
+    public static final double DurHp = 1;
+    public static final double DexSpd = 0.0015;
+    public static final double LukSpd = 0.00077;
+    public static final double DexAs = 0.004;
+    public static final double LukAs = 0.00177;
+    public static final double LukCrit = 0.002;
+    public static final double DexCrit = 0.0008;
+    public static final double LukCritDmg = 0.001;
 
     public BaseAbilityComponentImp(PlayerEntity player) {
         this.player = player;
@@ -53,29 +65,29 @@ public class BaseAbilityComponentImp implements BaseAbilityComponent, AutoSynced
         double totalFinalDamage= eqFinalDamage;
         double totalDefPen= eqDefPen;
         double atk= (
-                2 + 0.1*(totalStr) + 0.025*(totalDex) + 0.05*(totalLuk)
+                2 + (totalStr * StrAtk) + (totalDex * DexAtk) + (totalLuk * LukAtk)
                         + ( 0.2 * level)+ eqAtk
                 //무기로 얻는 스탯 넣기
         );
         double def= (
-                20+ level + (totalDur) + eqDef
+                20+ level + (totalDur * DurDef) + eqDef
                 //+무기 방어력 추가
         );
         double maxHp= (//20+레벨당5+str당 1+ dur당5+ 장비체력
-                25 + (5*level)+(0.5*totalStr)+(1*(totalDur))+eqMaxHealth
+                25 + (5*level)+(StrHp*totalStr)+(DurHp*totalDur)+eqMaxHealth
                 //+무기 체력 추가
         );
         double spd= (
-                1+(totalDex * 0.0015)+(totalLuk*0.00077)+eqSpd
+                1+(totalDex * DexSpd)+(totalLuk*LukSpd)+eqSpd
         );//1.025의 이동속도 계수를 가짐
         double as=(
-                1+ (level * 0.015)+(totalDex * 0.003) + (totalLuk*0.00177)+eqAs
+                1+ (level * 0.015)+(totalDex * DexAs) + (totalLuk*LukAs)+eqAs
         );
         double crit=Math.min(1.0,
-                0.05+ totalLuk * 0.002 + eqCrit
+                0.05+ (totalLuk *LukCrit)+(totalDex * DexCrit) + eqCrit
         );//기본 크확 5% 나중에 100곱하기, luk당 0.25%
         double critDamage =(
-                1.75+(totalLuk * 0.002) +eqCritDamage
+                1.75+(totalLuk * LukCritDmg) +eqCritDamage
         );// 기본 크뎀 배율 175% luk당 0.25%
         double acc= Math.round(
                 ((totalDex+(totalLuk/4.0)) / ( totalDex+(totalLuk/4.0) + 1000)) *1000

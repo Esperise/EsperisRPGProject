@@ -12,14 +12,16 @@ import net.minecraft.screen.ScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 
-public class ModScreenHandlers {
+public final class ModScreenHandlers {
+    public static ScreenHandlerType<AdditionalStatMaker> ADDITIONAL_STAT_MAKER;
 
-    public static final ScreenHandlerType<AdditionalStatMaker> ADDITIONAL_STAT_MAKER_SCREEN_HANDLER =
-            Registry.register(
-                    Registries.SCREEN_HANDLER,
-                            new Identifier("esperis","additional_stat_maker"),
-                            new ScreenHandlerType<>((AdditionalStatMaker::new),
-                                    FeatureFlags.VANILLA_FEATURES)
-            );
+    public static void register() {
+        ADDITIONAL_STAT_MAKER = Registry.register(
+                Registries.SCREEN_HANDLER,
+                new Identifier("esperis", "additional_stat_maker"),
+                new ScreenHandlerType<>(AdditionalStatMaker::new, FeatureFlags.VANILLA_FEATURES)
+        );
+    }
+
     private ModScreenHandlers() {}
 }

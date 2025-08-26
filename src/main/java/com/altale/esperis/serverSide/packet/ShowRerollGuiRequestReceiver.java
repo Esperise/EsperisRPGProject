@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public class ShowRerollGuiRequestReceiver {
     public static final Identifier ID = new Identifier("esperis", "show_reroll_stat_gui");
+    public static final Identifier ID2 = new Identifier("esperis", "additional_stat_maker");
     public static void register(){
         ServerPlayNetworking.registerGlobalReceiver(ID,(server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();

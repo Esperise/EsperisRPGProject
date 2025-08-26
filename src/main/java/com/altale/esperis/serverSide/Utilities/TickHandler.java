@@ -3,6 +3,9 @@ package com.altale.esperis.serverSide.Utilities;
 import com.altale.esperis.player_data.skill_data.passive.PassiveSkillManager;
 import com.altale.esperis.serverSide.packet.AbsorptionSyncS2CPacket;
 import com.altale.esperis.serverSide.packet.CoolTimeS2CPacket;
+import com.altale.esperis.serverSide.packet.CurrentBuffS2CPacketSender;
+import com.altale.esperis.skills.buff.AbilityBuff;
+import com.altale.esperis.skills.buff.HealBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
@@ -29,6 +32,7 @@ public class TickHandler {
                 for (ServerPlayerEntity player :world.getPlayers()){
                     String coolTimeText= CoolTimeManager.coolTimeText(player);
                     CoolTimeS2CPacket.send(player,coolTimeText);
+                    CurrentBuffS2CPacketSender.send(player, AbilityBuff.getBufInfoForDisplay(player), HealBuff.healDataForHUD(player));
                     Entity targetEntity= GetEntityLookingAt.getEntityLookingAt(player, 17, 1.3);
                     if(targetEntity instanceof LivingEntity living){
                         float targetEntityAbsorption= living.getAbsorptionAmount();

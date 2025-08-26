@@ -5,6 +5,7 @@ import com.altale.esperis.client.HUD.*;
 import com.altale.esperis.client.item.tooltip.*;
 import com.altale.esperis.client.packet.AbsorptionSyncReceiver;
 import com.altale.esperis.client.packet.CoolTimePacketReceiver;
+import com.altale.esperis.client.packet.CurrentBuffS2CPacketReceiver;
 import com.altale.esperis.client.screen.InventoryStatTest;
 import com.altale.esperis.client.screen.RerollAdditionalStatScreen;
 import com.altale.esperis.player_data.equipmentStat.ModScreenHandlers;
@@ -15,6 +16,8 @@ public class EsperisRPGClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        //버프 패킷 수신
+        CurrentBuffS2CPacketReceiver.register();
         CoolTimeHUD.register();
         HealthBarOverlay.register();
         AbsorptionSyncReceiver.register();
@@ -32,8 +35,9 @@ public class EsperisRPGClient implements ClientModInitializer {
         GenericItemTooltip.register();
         TomoriTooltip.registerTooltip();
         ExpCouponTooltip.registerTooltip();
+        ShopItemTooltip.registerTooltip();
         //gui
-        HandledScreens.register(ModScreenHandlers.ADDITIONAL_STAT_MAKER_SCREEN_HANDLER , RerollAdditionalStatScreen::new);
+        HandledScreens.register(ModScreenHandlers.ADDITIONAL_STAT_MAKER , RerollAdditionalStatScreen::new);
         //skillKeyBinding
 
         SkillKeyBinding.register();

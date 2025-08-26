@@ -1,6 +1,7 @@
 package com.altale.esperis.client.HUD;
 
 import com.altale.esperis.client.cache.CoolTimeTextCache;
+import com.altale.esperis.client.cache.CurrentBuffsCache;
 import com.altale.esperis.skills.buff.AbilityBuff;
 import com.altale.esperis.skills.buff.HealBuff;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -31,8 +32,8 @@ public class CurrentBuffHUD {
             int x = client.getWindow().getScaledWidth()/2 + 100;
             int light = 15728880;
             if (client.player != null) {
-                Map<String, Map<Integer, Integer>> buffMap = AbilityBuff.getBufInfoForDisplay((PlayerEntity)client.player);
-                List<HealBuff.HealData> healDataList = HealBuff.getHealData(client.player);
+                Map<String, Map<Integer, Integer>> buffMap = CurrentBuffsCache.getBuffsMap();
+                Map<String, Double> healDataMap = CurrentBuffsCache.getHealBuffsMap();
                 Set<Map.Entry<String, Map<Integer, Integer>>> buffEntry= buffMap.entrySet();
                 String buffName;
                 int buffRemainingTicks;
@@ -71,11 +72,11 @@ public class CurrentBuffHUD {
                     }
                 }
                 int healY =0;
-                if(healDataList!=null && !healDataList.isEmpty()){
-                    for(int i =0; i<healDataList.size(); i++){
-                        HealBuff.HealData healData = healDataList.get(i);
-                        float remainingHeal = (float) (healData.getRemainingTicks()*healData.getHealAmount()/ healData.getDuration());
-                        OrderedText healText= Text.literal(String.format("%s : %.0f",healData.getSkillId(), remainingHeal )).formatted(Formatting.GREEN, Formatting.BOLD).asOrderedText();
+                if(healDataMap!=null && !healDataMap.isEmpty()){
+                    for(Map.Entry<String, Double> entry : healDataMap.entrySet()) {
+                        String name = entry.getKey();
+                        double remainingHeal =  entry.getValue();
+                        OrderedText healText= Text.literal(String.format("%s : %.0f",name, remainingHeal )).formatted(Formatting.GREEN, Formatting.BOLD).asOrderedText();
                         client.textRenderer.drawWithOutline(
                                 healText,
                                 x+150, (float) (client.getWindow().getScaledHeight() - (9.0*(healY+1))),
@@ -87,6 +88,9 @@ public class CurrentBuffHUD {
                         );
                         healY++;
                     }
+
+
+
                 }
 
             }

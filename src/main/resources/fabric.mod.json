@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "EsperisRPGProject",
   "description": "",
-  "authors": [],
+  "authors": ["Altale"],
   "contact": {},
   "license": "All-Rights-Reserved",
   "icon": "assets/esperis/icon.png",

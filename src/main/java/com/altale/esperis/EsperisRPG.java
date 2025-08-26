@@ -3,7 +3,9 @@ import com.altale.esperis.combat.AvdDamage;
 import com.altale.esperis.combat.CalculateDamage;
 import com.altale.esperis.commands.ModCommands;
 import com.altale.esperis.items.ModItems;
+import com.altale.esperis.player_data.equipmentStat.AdditionalStatMaker;
 import com.altale.esperis.player_data.equipmentStat.DetectPlayerEquipmentChange;
+import com.altale.esperis.player_data.equipmentStat.ModScreenHandlers;
 import com.altale.esperis.player_data.level_data.KillOtherEntityEXP;
 import com.altale.esperis.player_data.level_data.PlayerCustomExpSystem;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
@@ -30,7 +32,6 @@ import com.altale.esperis.skills.buff.HealBuff;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.KnockedAirborneVer2;
 import com.altale.esperis.skills.statSkills.lukStatSkill.DoubleStep;
-import com.altale.esperis.skills.test1;
 import com.altale.esperis.skills.coolTime.CoolTimeTickManager;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
@@ -53,7 +54,6 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         DotDamageVer2.register();
         KnockedAirborneVer2.register();
         DoubleStep.register();
-        test1.register();
         CoolTimeTickManager.register();
         ModCommands.register();
         AbsorptionBuff.register();
@@ -76,6 +76,7 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
 
         //ITEM
         ModItems.registerAll();
+        ModScreenHandlers.register();
 
         //exp
         KillOtherEntityEXP.register();

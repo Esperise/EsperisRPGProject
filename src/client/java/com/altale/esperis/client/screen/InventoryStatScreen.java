@@ -3,6 +3,7 @@ package com.altale.esperis.client.screen;
 import com.altale.esperis.client.packet.StatAddRequestSender;
 import com.altale.esperis.client.packet.StatUpdateRequestSender;
 import com.altale.esperis.client.screen.Button.SpButtonFactory;
+import com.altale.esperis.player_data.stat_data.StatComponents.BaseAbilityComponentImp;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerPointStatComponent;
 import com.altale.esperis.player_data.stat_data.StatPointType;
@@ -19,12 +20,16 @@ import net.minecraft.text.Text;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class InventoryStatScreen extends Screen {
     private static final Map<StatType, Integer> spending = new EnumMap<>(StatType.class);
+    private static final String[] order = {
+            "공격력","방어력","체력","이동속도 (%)","공격 속도(%)","치명타 확률(%)","치명타 데미지(%)"
+    };
     MinecraftClient client= MinecraftClient.getInstance();
     PlayerPointStatComponent pointStatComponent = PlayerPointStatComponent.KEY.get(Objects.requireNonNull(client.player));
     PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(Objects.requireNonNull(client.player));
@@ -169,6 +174,53 @@ public class InventoryStatScreen extends Screen {
                 textY+= yDelta;
 
             }
+        Map<String, Double> abilityMap = Map.of(
+                "공격력",
+                (
+                        (BaseAbilityComponentImp.StrAtk * spending.getOrDefault(StatType.STR, 0))
+                                + (BaseAbilityComponentImp.DexAtk * spending.getOrDefault(StatType.DEX, 0))
+                                + (BaseAbilityComponentImp.LukAtk * spending.getOrDefault(StatType.LUK, 0))
+                ),
+                "방어력",
+                BaseAbilityComponentImp.DurDef * spending.getOrDefault(StatType.DUR, 0),
+                "체력",
+                (
+                        (BaseAbilityComponentImp.StrHp * spending.getOrDefault(StatType.STR, 0))
+                                + (BaseAbilityComponentImp.DurHp * spending.getOrDefault(StatType.DUR, 0))
+                ),
+                "이동속도 (%)",
+                (
+                        (BaseAbilityComponentImp.DexSpd * spending.getOrDefault(StatType.DEX, 0))
+                                + (BaseAbilityComponentImp.LukSpd * spending.getOrDefault(StatType.LUK, 0))
+                ) * 100,
+                "공격 속도(%)",
+                (
+                        (BaseAbilityComponentImp.DexAs * spending.getOrDefault(StatType.DEX, 0))
+                                + (BaseAbilityComponentImp.LukAs * spending.getOrDefault(StatType.LUK, 0))
+                ) * 100,
+                "치명타 확률(%)",
+                (
+                        (BaseAbilityComponentImp.DexCrit * spending.getOrDefault(StatType.DEX, 0))
+                                + (BaseAbilityComponentImp.LukCrit * spending.getOrDefault(StatType.LUK, 0))
+                ) * 100,
+                "치명타 데미지(%)",
+                (BaseAbilityComponentImp.LukCrit * spending.getOrDefault(StatType.LUK, 0) * 100)
+        );
+
+
+        int abilityY = y + 20;
+        for (String key : order) {
+            double value = abilityMap.getOrDefault(key, 0.0);
+            if (Math.abs(value) < 1e-9) continue;
+            OrderedText abilityText = Text.literal(String.format("%s : +%.2f", key, value)).asOrderedText();
+            textRenderer.drawWithOutline(abilityText, x+180, abilityY, 0xFFFFFF, 0x000000,
+                    matrices.peek().getPositionMatrix(), ctx.getVertexConsumers(), 15728880);
+            abilityY += 14;
+        }
+
+
+
+
         // 버튼 등 자식 위젯 렌더
         super.render(ctx, mouseX, mouseY, delta);
     }

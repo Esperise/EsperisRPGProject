@@ -14,7 +14,7 @@ import net.minecraft.server.MinecraftServer;
 public class AdditionalStatMaker extends ScreenHandler {
     private final Inventory statMakerInventory;
     public AdditionalStatMaker(int syncId, PlayerInventory playerInventory) {
-        super(ModScreenHandlers.ADDITIONAL_STAT_MAKER_SCREEN_HANDLER, syncId);
+        super(ModScreenHandlers.ADDITIONAL_STAT_MAKER, syncId);
         this.statMakerInventory= new SimpleInventory(1);
         this.statMakerInventory.onOpen(playerInventory.player);
         this.addSlot(new EquipmentOnlySlot(statMakerInventory, 0, 138, 91));

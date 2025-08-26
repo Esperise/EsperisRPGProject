@@ -2,6 +2,7 @@ package com.altale.esperis.skills.buff;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -119,6 +120,21 @@ public class HealBuff {
         }
     }
     public static List<HealData> getHealData(LivingEntity target){
-        return healMap.get(target.getUuid());
+        if(healMap.containsKey(target.getUuid())){
+            return healMap.get(target.getUuid());
+        }
+        return new ArrayList<>();
+    }
+
+    public static Map<String, Double> healDataForHUD(PlayerEntity player){
+        List<HealData> dataList = getHealData(player);
+        Map<String, Double> map = new HashMap<>();
+        if(dataList == null || dataList.isEmpty()){
+            return map;
+        }
+        for(HealData data: dataList){
+            map.put(data.skillId, (data.getRemainingTicks() * data.getHealAmount())/ data.getDuration());
+        }
+        return map;
     }
 }

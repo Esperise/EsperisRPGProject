@@ -27,7 +27,7 @@ public class DurJump {
 
         }
         else{
-            CoolTimeManager.setCoolTime(player, skillName, 60);
+            CoolTimeManager.setCoolTime(player, skillName, 80);
             doDurJump(player, world);
         }
 

@@ -29,7 +29,7 @@ public class TripleJump {
 
         }
         else{
-            CoolTimeManager.setCoolTime(player, "트리플점프",40);
+            CoolTimeManager.setCoolTime(player, "트리플점프",90);
             doJump(player,world);
             for(long trig=now; trig<=now+10; trig+=10){
                 delayedTasksTripleJump
