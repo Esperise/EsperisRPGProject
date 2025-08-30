@@ -40,7 +40,7 @@ public class LastBreath implements SkillsInterface {
     public static final String skillName = SkillsId.STR_175.getSkillName();
     public static final int cooltime = 800;
     public static final  float atkCoeffi = 0.18f;//4번 적용됨, 총 1 + 평타 2-3번 가능 = 3.4
-    public static final  float barrierAtkCoeffi = 0.3f;
+    public static final  float barrierAtkCoeffi = 0.24f;
     public static final  int keepAirTime = 40;
     public static final BlockStateParticleEffect particle= new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.CHERRY_LEAVES.getDefaultState());
     public static final DefaultParticleType particle2= ParticleTypes.ELECTRIC_SPARK;

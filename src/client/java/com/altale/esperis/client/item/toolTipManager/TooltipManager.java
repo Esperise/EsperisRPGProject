@@ -119,7 +119,7 @@ public class TooltipManager {
         if(item instanceof ArmorItem) return true;
         if(item instanceof ToolItem) return true;
         if(item instanceof SwordItem) return true;
-//        if(item instanceof SpecialBowItem) return true;
+        if(item instanceof SpecialBowItem) return true;
         return false;
     }
 

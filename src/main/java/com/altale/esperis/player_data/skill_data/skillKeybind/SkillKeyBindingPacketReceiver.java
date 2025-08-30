@@ -4,11 +4,8 @@ import com.altale.esperis.player_data.skill_data.PlayerSkillComponent;
 import com.altale.esperis.player_data.skill_data.SkillManager;
 import com.altale.esperis.player_data.skill_data.SkillsId;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import java.util.UUID;
 
 public class SkillKeyBindingPacketReceiver {
     public static final Identifier ID= new Identifier("esperis","skill_keybinding");
@@ -41,7 +38,7 @@ public class SkillKeyBindingPacketReceiver {
                     }
                     else if(!isHolding && !playerSkillComponent.isKeydownSkill(keyMatchesSkillId)) {
                         //홀딩 중이 아니고 키다운 스킬이 아닐때
-                        SkillManager.excuteSkill(player, keyMatchesSkillId);
+                        SkillManager.executeSkill(player, keyMatchesSkillId);
                     }
                     else{
                         player.sendMessage(Text.literal(String.format("스킬ID: %s, Key: %s | 키가 저장이 되어있지 않거나 해금이 되지 않은 스킬입니다.", keyMatchesSkillId.toString(), key)), false);

@@ -36,16 +36,42 @@ public class ShopItemManager {
                     }
                     return itemStack;
     }
-    public static ItemStack priceFluctuation(ItemStack itemStack){
-        int purchasePrice = getPurchasePrice(itemStack);
+
+//    public static ItemStack priceFluctuation(ItemStack itemStack){
+//        int purchasePrice = getPurchasePrice(itemStack);
+//        int salesPrice = getSalesPrice(itemStack);
+//        int beforePurchasePrice = getBeforePurchasePrice(itemStack);
+//        int beforeSalesPrice = getBeforeSalesPrice(itemStack);
+//        int purchaseAmount = getPurchaseAmount(itemStack);
+//        int salesAmount = getSalesAmount(itemStack);
+//
+//
+//        return itemStack;
+//    }
+    public static ItemStack salesPriceFluctuation(ItemStack itemStack){
         int salesPrice = getSalesPrice(itemStack);
-        int beforePurchasePrice = getBeforePurchasePrice(itemStack);
         int beforeSalesPrice = getBeforeSalesPrice(itemStack);
-        int purchaseAmount = getPurchaseAmount(itemStack);
         int salesAmount = getSalesAmount(itemStack);
+        int itemTradeMinAmount = itemStack.getCount();
+        int tradedItemSetAmount = salesAmount/(itemTradeMinAmount * itemStack.getMaxCount());
+        double fluctuationCoefficient = 1;
+        if(tradedItemSetAmount >=  beforeSalesPrice * 5 ) return itemStack;
+        if(tradedItemSetAmount < 16){
+            fluctuationCoefficient =  ((1/4.0) - (Math.log10(Math.abs(salesPrice - 25.0)/Math.log10(2) )/8.0 ));
+            fluctuationCoefficient = Math.min(fluctuationCoefficient, 0.25);
+        }else {
+            fluctuationCoefficient =  (-1)* ((1/4.0) - (Math.log10(Math.abs(salesPrice - 25.0)/Math.log10(2) )/8.0 ));
+            fluctuationCoefficient = Math.min(fluctuationCoefficient, 0.25);
+
+        }
+        setSalesPrice(itemStack, (int) (salesPrice * fluctuationCoefficient));
+
 
         return itemStack;
     }
+
+
+
     public static boolean hasShopInfo(ItemStack itemStack) {
         NbtCompound root = itemStack.getOrCreateNbt();
         return root.contains(SHOP_INFO);
@@ -67,6 +93,21 @@ public class ShopItemManager {
     }
     public static void setSalesPrice(NbtCompound nbt, int price){
         setPrice(nbt, SALES_PRICE, price);
+    }
+    public static void setPurchasePrice(ItemStack stack , int price){
+        if(hasShopInfo(stack)){
+            NbtCompound shopInfo = stack.getOrCreateNbt().getCompound(SHOP_INFO);
+            shopInfo.putInt(PURCHASE_PRICE, price);
+        }
+
+    }
+    public static void setSalesPrice(ItemStack stack , int price){
+        if(hasShopInfo(stack)){
+            NbtCompound shopInfo = stack.getOrCreateNbt().getCompound(SHOP_INFO);
+            System.out.println(price);
+            shopInfo.putInt(SALES_PRICE, price);
+        }
+
     }
     public static int getPurchasePrice(ItemStack itemStack){
         NbtCompound root = itemStack.getOrCreateNbt();
@@ -132,6 +173,36 @@ public class ShopItemManager {
         if(getSalesAmount(itemStack) >= 0){
             NbtCompound trade = getNbtCompound(itemStack.getOrCreateNbt(), TRADE_BEFORE_SALES_PRICE);
             trade.putInt(TRADE_BEFORE_PURCHASE_PRICE, getSalesPrice(itemStack)+ count);
+        }
+    }
+    public static void setBeforePurchasePrice(ItemStack itemStack, int price){
+        NbtCompound root = itemStack.getOrCreateNbt();
+        if(root.contains(SHOP_INFO)){
+            NbtCompound shopInfo = root.getCompound(SHOP_INFO);
+            NbtCompound trade = shopInfo.getCompound(TRADE);
+            trade.putInt(TRADE_BEFORE_PURCHASE_PRICE, price);
+        }
+
+    }
+    public static void setBeforeSalesPrice(ItemStack itemStack, int price){
+        NbtCompound root = itemStack.getOrCreateNbt();
+        if(root.contains(SHOP_INFO)){
+            NbtCompound shopInfo = root.getCompound(SHOP_INFO);
+            if(shopInfo.contains(TRADE)){
+                NbtCompound trade = shopInfo.getCompound(TRADE);
+                trade.putInt(TRADE_BEFORE_SALES_PRICE, price);
+            }
+        }
+    }
+    public static void resetTradeAmount(ItemStack itemStack){
+        NbtCompound root = itemStack.getOrCreateNbt();
+        if(root.contains(SHOP_INFO)){
+            NbtCompound shopInfo = root.getCompound(SHOP_INFO);
+            if(shopInfo.contains(TRADE)){
+                NbtCompound trade = shopInfo.getCompound(TRADE);
+                trade.putInt(TRADE_PURCHASE_AMOUNT, 0);
+                trade.putInt(TRADE_SALES_AMOUNT, 0);
+            }
         }
     }
 

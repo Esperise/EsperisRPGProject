@@ -1,5 +1,6 @@
 package com.altale.esperis.player_data.stat_data;
 
+import com.altale.esperis.items.ModItems;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerEquipmentStatComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
@@ -8,8 +9,10 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -18,7 +21,15 @@ public class ApplyStat2Ability {
     public static void register() {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
+
             server.execute(() -> {
+                if (!player.getCommandTags().contains("First_Join_Done")) {
+                    player.giveItemStack(new ItemStack(ModItems.RED_POTION, 10));
+                    player.giveItemStack(ModItems.SPECIAL_BOW_1.getDefaultStack());
+                    player.giveItemStack(new ItemStack(ModItems.PURPLE_POTION, 128));
+                    player.addCommandTag("First_Join_Done");
+                }
+
                 PlayerLevelComponent lvComponent = PlayerLevelComponent.KEY.get(player);
                 if(lvComponent.getLevel()==1 && lvComponent.getCurrentExp()==0) {
 

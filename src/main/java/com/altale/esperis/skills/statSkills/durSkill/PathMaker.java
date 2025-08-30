@@ -28,11 +28,11 @@ public class PathMaker {
     public static final String skillName= SkillsId.DUR_75.getSkillName();
     public static final int airborneDelay = 2;
     public static final int airborneDuration = 50 - airborneDelay;
-    public static final float xzRange= 3.5f;
+    public static final float xzRange= 5.5f;
     public static final float baseDamage = 12f;
-    public static final float hpCoeffi = 0.03f;
-    public static final float defCoeffi = 0.05f;
-    public static final float allOutAtkCoeffi = 1.5f;
+    public static final float hpCoeffi = 0.04f;
+    public static final float defCoeffi = 0.06f;
+    public static final float allOutAtkCoeffi = 2.3f;
     public static final int cooltime = 200;
     public static void pathMaker( ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){

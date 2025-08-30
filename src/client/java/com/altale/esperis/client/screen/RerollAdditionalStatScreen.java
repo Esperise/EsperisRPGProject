@@ -1,33 +1,27 @@
 package com.altale.esperis.client.screen;
 
 import com.altale.esperis.client.packet.EquipmentAdditionalStatRerollRequestSender;
-import com.altale.esperis.player_data.equipmentStat.AdditionalStatMaker;
+import com.altale.esperis.screenHandlers.AdditionalStatMaker;
 import com.altale.esperis.player_data.equipmentStat.ChangeEquipmentStat;
 import com.altale.esperis.player_data.equipmentStat.EquipmentInfoManager;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
-import com.ibm.icu.text.BidiTransform;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stat.Stat;
-import net.minecraft.stat.Stats;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 

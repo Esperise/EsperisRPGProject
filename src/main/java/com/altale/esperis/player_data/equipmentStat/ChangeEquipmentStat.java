@@ -77,13 +77,12 @@ public class ChangeEquipmentStat {
         NbtCompound equipAdditionalTotalStatsCompound=equipAdditionalStat.getCompound("equipment_additional_total_stats_cmp");//여기에 저장
         int eqRarity = equipmentBasicStat.getInt("equipment_basic_rarity");//(기본: 0) 노말 0 레어 1 유니크 2 레전더리 3 에픽 4 태초 5
         int eqLevel = equipmentBasicStat.getInt("equipment_basic_level");
-
         if(consumeAvailable){
             int left = equipAdditionalStat.getInt("equipment_change_additional_stat_number") -1 ;
             equipAdditionalStat.putInt("equipment_change_additional_stat_number", left);//변경가능 횟수 감소
         }
 
-        Map<StatType, Double> newStatsMap= computeRandomStatMap(eqLevel, eqRarity, player);
+        Map<StatType, Double> newStatsMap= computeRandomStatMap(eqLevel, eqRarity, player, stack);
         //map을 통해 장비 스탯을 nbt에 저장
         for (Map.Entry<StatType, Double> e : newStatsMap.entrySet()) {
             double value = e.getValue();
@@ -93,51 +92,58 @@ public class ChangeEquipmentStat {
         }
     }
 
-    private static int calculateBase(int level, int rarity, PlayerEntity player){
+    private static int calculateBase(int level, int rarity, PlayerEntity player, ItemStack stack){
         PlayerFinalStatComponent playerStatComponent = PlayerFinalStatComponent.KEY.get(player);
         int luk =(int) playerStatComponent.getFinalStat(StatType.LUK);
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        int baseStat= 4 + rarity + (int) Math.round(level/5.0);
+        int meterial = ((int) (stack.getItem().getEnchantability() /10)) + 5 ;
+        if(meterial ==0){
+            meterial = 7;
+        }
+        int baseStat= meterial + rarity + (int) Math.round(level/5.0);
         int randInt=random.nextInt(100000+(luk*10));
         if(randInt > 100500) {//0%(luk=0)
-            baseStat+= 10;
-        } else if (randInt > 99900) {//0.1%
-            baseStat += 8;
-        }else if (randInt > 99700) {//0.3%
-            baseStat += 7;
+            baseStat+= 17;
+        } else if (randInt > 99990) {//0.01%
+            baseStat += 16;
+        }else if (randInt > 99900) {//0.1%
+            baseStat += 13;
         }else if (randInt > 99000) {//1
+            baseStat += 10;
+        }else if (randInt > 96000) {//1
+            baseStat += 7;
+        } else if (randInt > 93000) {//1
             baseStat += 5;
-        }else if (randInt > 95000) {//5
+        }else if (randInt > 90000) {//1
             baseStat += 4;
         }else if (randInt > 85000) {//15
-            baseStat += 3;
-        }else if (randInt > 70000) {//30
             baseStat += 2;
-        }else if (randInt > 50000) {//20
+        }else if (randInt > 70000) {//30
             baseStat += 1;
-        } else if (randInt > 40000) {
+        }else if (randInt > 50000) {//20
 
-        }else if(randInt > 30000 ){
+        } else if (randInt > 40000) {
             baseStat -= 1;
-        }else if(randInt > 10000){
+        }else if(randInt > 30000 ){
             baseStat -= 2;
-        } else{
+        }else if(randInt > 10000){
             baseStat -= 3;
+        } else{
+            baseStat -= 5;
         }
         System.out.println(baseStat);
         return baseStat;
     }
-    private static Map<StatType, Double> computeRandomStatMap(int level, int rarity, PlayerEntity player){
-
+    private static Map<StatType, Double> computeRandomStatMap(int level, int rarity, PlayerEntity player , ItemStack stack){
         Random random = new Random();
-        int baseStat = calculateBase(level, rarity, player);
+        int baseStat = calculateBase(level, rarity, player , stack);
         Map<StatType, Double> eqStatsMap = new EnumMap<>(StatType.class);
 
-        while(baseStat>=6 && random.nextInt(20)<=baseStat){
-            baseStat -=3;
+        while(baseStat >= 8 && random.nextInt(17)<=baseStat){
+            baseStat -= 3 ;
             StatType[] specialStats= StatType.getSpecialStatType();//spd, crit, critDmg, finalDmg, acc,avd,defPen
             StatType pick = specialStats[random.nextInt(specialStats.length)];
-            eqStatsMap.merge(pick, Math.max(0.5, random.nextDouble(1.5)), Double::sum);//computIf, Absent 없이 한줄로 가능함
+            eqStatsMap.merge(pick, Math.max(0.75, random.nextDouble(2.5)), Double::sum);//computIf, Absent 없이 한줄로 가능함
         }
         int firstIndex= random.nextInt(StatType.getNoneSpecialStats().length-1);
         System.out.println("firstIndex: "+firstIndex);
@@ -159,16 +165,16 @@ public class ChangeEquipmentStat {
     }
     private static double getStatMultiplier(StatType stat) {
         return switch(stat) {
-            case STR, DEX, LUK, DUR ,ATK      -> 1.0;
-            case MAX_HEALTH                 -> 3.0;
-            case DEF                        -> 2.0;
+            case STR, DEX, LUK, DUR , DEF     -> 1.0;
+            case MAX_HEALTH                 -> 2.0;
+            case ATK                        ->  0.4;
 
-            case ATTACK_SPEED -> 0.09;
+            case ATTACK_SPEED -> 0.08;
             case SPD, CRIT  -> 0.04;
             case ACC, AVD                   -> 0.022;
             case CRIT_DAMAGE                -> 0.05;
             case DefPenetrate               -> 0.055;
-            case FinalDamagePercent         -> 0.035;
+            case FinalDamagePercent         -> 0.045;
         };
     }
 }

@@ -1,6 +1,6 @@
-package com.altale.esperis.player_data.equipmentStat;
+package com.altale.esperis.screenHandlers;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
+import com.altale.esperis.player_data.equipmentStat.EquipmentOnlySlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -8,7 +8,6 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.MinecraftServer;
 
 
 public class AdditionalStatMaker extends ScreenHandler {

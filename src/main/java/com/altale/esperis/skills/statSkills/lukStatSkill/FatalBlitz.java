@@ -1,5 +1,6 @@
 package com.altale.esperis.skills.statSkills.lukStatSkill;
 
+import com.altale.esperis.player_data.skill_data.SkillsId;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
@@ -25,17 +26,24 @@ import org.joml.Vector3f;
 import java.util.List;
 
 public class FatalBlitz {
-    private static final double maxDistance = 5.0;
+    public  static final double maxDistance = 6.0;
+    public  static final String skillName = SkillsId.LUK_125.getSkillName();
+    public static final float baseDotDamage = 5f;
+    public static final float dotDamageAtkCoeffi = 1.13f;
+    public static final int shadowTeleportCooltimeReduceTick = 80;
+    public static final int dotDuration = 60;
+    public static final int  cooltime = 160;
+
     public static void fatalBlitz(ServerPlayerEntity player, ServerWorld world) {
 
 
     }
     public static void doFatalBlitz(ServerPlayerEntity player, ServerWorld world) {
-        if(CoolTimeManager.isOnCoolTime(player, "페이탈블리츠")){
+        if(CoolTimeManager.isOnCoolTime(player, skillName)){
 
         }else{
-            CoolTimeManager.setCoolTime(player, "페이탈블리츠", 120);
-            CoolTimeManager.specificCoolTimeReduction(player, "그림자이동", 80);
+            CoolTimeManager.setCoolTime(player, skillName, cooltime);
+            CoolTimeManager.specificCoolTimeReduction(player, skillName, shadowTeleportCooltimeReduceTick);
             PlayerFinalStatComponent playerFinalStatComponent= PlayerFinalStatComponent.KEY.get(player);
             double atk= playerFinalStatComponent.getFinalStat(StatType.ATK);
             Vec3d cameraPos = player.getCameraPosVec(1.0F);
@@ -64,7 +72,7 @@ public class FatalBlitz {
                 if(e instanceof LivingEntity livingEntity){
                     hit= true;
                     System.out.println(livingEntity);
-                    DotDamageVer2.giveDotDamage(livingEntity, player, 60,10 ,(float) (5+ (atk*0.8)),  DotTypeVer2.Bleed, true,0.1f,"페이탈블리츠" );
+                    DotDamageVer2.giveDotDamage(livingEntity, player, dotDuration,10 ,(float) (baseDotDamage+ (atk*dotDamageAtkCoeffi)),  DotTypeVer2.Bleed, true,0.1f,"페이탈블리츠" );
                     player.getWorld().playSound(
                             null,
                             player.getX(),

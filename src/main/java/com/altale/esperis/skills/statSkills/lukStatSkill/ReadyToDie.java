@@ -13,16 +13,20 @@ import net.minecraft.util.math.Vec3d;
 
 
 public class ReadyToDie {
+    public static final int duration = 301;
+    public static final int cooltime = 2400;
+
     public static void doReadyToDie(ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, SkillsId.LUK_175.getSkillName())){
 
         }else{
-            CoolTimeManager.setCoolTime(player, SkillsId.LUK_175.getSkillName(), 2400);
+            CoolTimeManager.setCoolTime(player, SkillsId.LUK_175.getSkillName(), cooltime);
             BaseAbilityComponent baseAbilityComponent= BaseAbilityComponent.KEY.get(player);
             double avd= baseAbilityComponent.getBaseAbility(StatType.AVD);
             AbilityBuff.giveBuff(player,SkillsId.LUK_175.getSkillName(), StatType.AVD, 300, 0,avd*(-1),1 );
             AbilityBuff.giveBuff(player,SkillsId.LUK_175.getSkillName(), StatType.FinalDamagePercent, 300, 0, avd,1 );
             AbilityBuff.giveBuff(player,SkillsId.LUK_175.getSkillName(), StatType.CRIT, 300, 0, avd,1 );
+            AbilityBuff.giveBuff(player,SkillsId.LUK_175.getSkillName(), StatType.DefPenetrate, 300, 0, avd,1 );
 
 
             Runnable task= ()-> {
@@ -32,7 +36,7 @@ public class ReadyToDie {
                             pos.x, pos.y, pos.z, 8, 0.5, 0.3, 0.5, 0.3);
                 }
             };
-            DelayedTaskManager.addTask(world, player, task, 5, SkillsId.LUK_175.getSkillName(),60);
+            DelayedTaskManager.addTask(world, player, task, 5, SkillsId.LUK_175.getSkillName(),duration/5);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.altale.esperis.items.itemFunction;
 
+import com.altale.esperis.player_data.equipmentStat.EquipmentInfoManager;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.skills.buff.HealBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
@@ -13,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -30,6 +32,7 @@ public class HealingPotion extends Item {
     private final int cooltime;
     private final String potionName;
     private final ParticleEffect particle;
+    private final boolean infinite;
     public HealingPotion(Settings settings,
                         float baseHeal, float hpCoeff, int duration, int healTickDelta, int cooltime,
                         String potionName, ParticleEffect particle) {
@@ -41,6 +44,7 @@ public class HealingPotion extends Item {
         this.healTickDelta = healTickDelta;
         this.potionName = potionName;
         this.particle = particle;
+        this.infinite = false;
     }
     public HealingPotion(Settings settings,
                         float baseHeal, float hpCoeff, int duration, int healTickDelta,int cooltime,
@@ -54,6 +58,21 @@ public class HealingPotion extends Item {
         this.potionName = potionName;
         this.particle = ParticleTypes.HAPPY_VILLAGER;
         INSTANCES.add(this);
+        this.infinite = true;
+    }
+    public HealingPotion(Settings settings,
+                        float baseHeal, float hpCoeff, int duration, int healTickDelta,int cooltime,
+                        String potionName, boolean infiniteBoolean) {
+        super(settings.maxCount(64));
+        this.baseHeal = baseHeal;
+        this.hpCoeff = hpCoeff;
+        this.duration = duration;
+        this.healTickDelta = healTickDelta;
+        this.cooltime = cooltime;
+        this.potionName = potionName;
+        this.particle = ParticleTypes.HAPPY_VILLAGER;
+        INSTANCES.add(this);
+        this.infinite = infiniteBoolean;
     }
 
     public float getHpCoeff() {
@@ -74,6 +93,9 @@ public class HealingPotion extends Item {
     public int getCooltime() {
         return cooltime;
     }
+    public boolean isInfinite() {
+        return infinite;
+    }
 
     @Override
         public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand){
@@ -88,7 +110,9 @@ public class HealingPotion extends Item {
                 for (HealingPotion potion : INSTANCES) {
                     user.getItemCooldownManager().set(potion, cooltime);
                 }
-                stack.decrement(1);
+                if(!infinite){
+                    stack.decrement(1);
+                }
             }
         return super.use(world, user, hand);
     }
@@ -97,6 +121,10 @@ public class HealingPotion extends Item {
             return true;
         }
         return false; // 무조건 인챈트 반짝임
+    }
+    @Override
+    public Text getName(ItemStack stack){
+        return Text.literal(potionName);
     }
 
 

@@ -21,6 +21,7 @@ public class DurJump {
     public static final float barrierHPCoeffi = 0.03f;
     public static final float barrierAlloutAtkCoeffi = 0.6f;
     public static final int barrierDuration = 20;
+    public static final int allloutCooltimeReducePercent = 40;
 
     public static void durJump(ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
@@ -38,13 +39,14 @@ public class DurJump {
         float hp = (float) playerFinalStatComponent.getFinalStat(StatType.MAX_HEALTH);
         double spd= playerFinalStatComponent.getFinalStat(StatType.SPD);
         double power= 0.6+((1+spd)/2);
-        Vec3d velocity = new Vec3d(look.x * power, Math.min(0.35+(power/4), look.y), look.z * power);
+        Vec3d velocity = new Vec3d(look.x * power, Math.min(0.3+(power/4), look.y), look.z * power);
         float barrierAmount = baseBarrier+(hp * barrierHPCoeffi) ;
         if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
             float atk = (float) playerFinalStatComponent.getFinalStat(StatType.ATK);
             barrierAmount= baseBarrier+ (atk * barrierAlloutAtkCoeffi);
             power= 1.5f;
             velocity = new Vec3d(look.x * power, Math.min(0.35+(power/2), look.y), look.z * power);
+            CoolTimeManager.specificCoolTimePercentReduction(player, skillName, allloutCooltimeReducePercent);
         }
         AbsorptionBuff.giveAbsorptionBuff((ServerWorld) player.getWorld(), player, skillName, barrierAmount ,barrierDuration);
         player.addVelocity(velocity.x, velocity.y, velocity.z);

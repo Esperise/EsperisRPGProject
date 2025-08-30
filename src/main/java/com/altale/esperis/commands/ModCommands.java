@@ -68,8 +68,7 @@ public class ModCommands {
             CommandManager.RegistrationEnvironment env) {
 
         dispatcher.register(
-                literal("입금")//지폐 아이템 구현-> 사용 구현-> 기능 옮기고 삭제하기
-                        .then(argument("amount",integer(1))
+                literal("입금").requires(ctx -> ctx.hasPermissionLevel(1))
                                 .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerMoneyComponent  component = PlayerMoneyComponent.KEY.get(Objects.requireNonNull(player));
@@ -78,10 +77,10 @@ public class ModCommands {
                                     ctx.getSource().sendFeedback(() -> Text.literal(text), false);
                                     return 1;
                                 })
-                        )
+
         );
         dispatcher.register(
-                literal("출금")
+                literal("출금").requires(ctx -> ctx.hasPermissionLevel(1))
                         .then(argument("amount",integer(1))
                                 .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
@@ -114,7 +113,7 @@ public class ModCommands {
                         )
         );
         dispatcher.register(
-                literal("경험치초기화")//FIXME 디버깅용임
+                literal("경험치초기화").requires(ctx -> ctx.hasPermissionLevel(4))//FIXME 디버깅용임
                         .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerLevelComponent component = PlayerLevelComponent.KEY.get(Objects.requireNonNull(player));
@@ -133,7 +132,7 @@ public class ModCommands {
 
         );
         dispatcher.register(
-                literal("clearAll")//FIXME 디버깅용임
+                literal("clearAll").requires(ctx -> ctx.hasPermissionLevel(2))//FIXME 디버깅용임
                         .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerLevelComponent component = PlayerLevelComponent.KEY.get(Objects.requireNonNull(player));
@@ -169,14 +168,14 @@ public class ModCommands {
             CommandRegistryAccess access,
             CommandManager.RegistrationEnvironment env){
         dispatcher.register(
-                literal("키")
+                literal("키").requires(ctx -> ctx.hasPermissionLevel(0))
                         .then(literal("현재키")
                                         .executes(ctx -> {
                                             ServerPlayerEntity player = ctx.getSource().getPlayer();
                                             PlayerSkillComponent skillComponent = PlayerSkillComponent.KEY.get(player);
                                             var map= skillComponent.getKeyBindSkills();
                                             for(var entry: map.entrySet()){
-                                                player.sendMessage(Text.literal(String.format("%s : %s", entry.getKey(), entry.getValue())), false);
+                                                player.sendMessage(Text.literal(String.format("%s : %s", entry.getKey(), entry.getValue().getSkillName())), false);
                                             }
                                             return 1;
                                         })
@@ -185,7 +184,7 @@ public class ModCommands {
                         .then(literal("스킬키1")
                                 .then(argument("StatType", StringArgumentType.word())
                                         .suggests((c,b)-> CommandSource.suggestMatching(STATS,b))
-                                .then(argument("skillName",  StringArgumentType.greedyString())
+                                        .then(argument("skillName",  StringArgumentType.greedyString())
                                         .suggests((c,b)->{
                                             String stat = StringArgumentType.getString(c, "StatType"); // 또는 c.getArgument("StatType", String.class)
                                             if (c.getSource().getPlayer() != null) {
@@ -366,7 +365,7 @@ public class ModCommands {
             CommandRegistryAccess access,
             CommandManager.RegistrationEnvironment env) {
         dispatcher.register(
-                literal("SetItemPrice")
+                literal("SetItemPrice").requires(ctx -> ctx.hasPermissionLevel(1))
                         .then(argument("PurchasePrice", integer(-1, Integer.MAX_VALUE))
                             .then(argument("SalesPrice", integer(-1, Integer.MAX_VALUE))
                                 .executes(ctx->{
@@ -385,7 +384,24 @@ public class ModCommands {
                                 })
 
                         )
-        ));
+        )
+                        .then(literal("change").executes(ctx->{
+                            PlayerEntity player = ctx.getSource().getPlayer();
+                            if(player ==null) return 0;
+                            if(player.getMainHandStack().isEmpty()) {
+                                player.sendMessage(Text.literal("아이템을 들고 있지 않습니다."));
+                            }else{
+                                ItemStack item = player.getMainHandStack();
+                                if(ShopItemManager.hasShopInfo(item)){
+                                    ItemStack stack = ShopItemManager.salesPriceFluctuation(item);
+                                    player.sendMessage(Text.literal("상점용 아이템 가격 변동에 성공하였습니다. "));
+                                }
+
+                            }
+                            return 1;
+                        })
+                        )
+        );
 
     }
     private static void registerShowItemInfo(
@@ -393,7 +409,7 @@ public class ModCommands {
             CommandRegistryAccess access,
             CommandManager.RegistrationEnvironment env) {
         dispatcher.register(
-                literal("비틱").executes(ctx->{
+                literal("비틱").requires(ctx -> ctx.hasPermissionLevel(0)).executes(ctx->{
                     PlayerEntity player = ctx.getSource().getPlayer();
                     ItemStack stack = player.getMainHandStack();
                     if(stack == null || stack.isEmpty()){
@@ -408,7 +424,8 @@ public class ModCommands {
                         ctx.getSource().getServer().getPlayerManager().broadcast(msg, false);
                         return 1;
                     }
-                }));
+                })
+        );
 
     }
 

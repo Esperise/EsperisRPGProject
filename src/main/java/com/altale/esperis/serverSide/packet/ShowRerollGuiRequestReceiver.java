@@ -1,6 +1,6 @@
 package com.altale.esperis.serverSide.packet;
 
-import com.altale.esperis.player_data.equipmentStat.AdditionalStatMaker;
+import com.altale.esperis.screenHandlers.AdditionalStatMaker;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

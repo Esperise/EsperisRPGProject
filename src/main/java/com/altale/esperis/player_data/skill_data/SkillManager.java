@@ -2,12 +2,12 @@ package com.altale.esperis.player_data.skill_data;
 
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.skills.statSkills.dexStatSkill.DexJump;
+import com.altale.esperis.skills.statSkills.dexStatSkill.FastAccurateAdvanced;
+import com.altale.esperis.skills.statSkills.dexStatSkill.Snipe;
+import com.altale.esperis.skills.statSkills.dexStatSkill.TripleShot;
 import com.altale.esperis.skills.statSkills.durSkill.*;
 import com.altale.esperis.skills.statSkills.lukStatSkill.*;
-import com.altale.esperis.skills.statSkills.strSkill.GrandStarfall;
-import com.altale.esperis.skills.statSkills.strSkill.HorizenSweep;
-import com.altale.esperis.skills.statSkills.strSkill.LastBreath;
-import com.altale.esperis.skills.statSkills.strSkill.WindSlash;
+import com.altale.esperis.skills.statSkills.strSkill.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
@@ -15,8 +15,7 @@ public class SkillManager {
     //SkillsId 등록,
 
 
-    public static void excuteSkill(ServerPlayerEntity player , SkillsId skillId){
-
+    public static void executeSkill(ServerPlayerEntity player , SkillsId skillId){
         String skillName= skillId.getSkillName();
         StatType skillStatType= skillId.getSkillStatType();
         switch(skillStatType.name()){
@@ -31,6 +30,7 @@ public class SkillManager {
         String skillName= skillId.getSkillName();
         ServerWorld world= player.getServerWorld();
         switch(skillId){
+            case STR_1 -> StrJump.strJump(player,world);
             case STR_25 -> HorizenSweep.horizenSweep(player, world );
             case STR_75 -> WindSlash.windSlash(player, world );
             case STR_125 -> GrandStarfall.grandStarfall(player, world );
@@ -42,6 +42,9 @@ public class SkillManager {
         ServerWorld world= player.getServerWorld();
         switch(skillId){
             case DEX_1 -> DexJump.dexJump(player, world);
+            case DEX_25 -> TripleShot.tripleShot(player, world);
+            case DEX_75 -> FastAccurateAdvanced.fastAccurateAdvanced(player, world);
+            case DEX_125 -> Snipe.snipe(player, world);
         }
     }
     public static void lukSkill(ServerPlayerEntity player ,SkillsId skillId){

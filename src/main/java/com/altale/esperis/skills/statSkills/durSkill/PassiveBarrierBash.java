@@ -44,7 +44,7 @@ public class PassiveBarrierBash {
                 player.getX(),
                 player.getY(),
                 player.getZ(),
-                SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE,
+                SoundEvents.BLOCK_ANVIL_PLACE,
                 SoundCategory.PLAYERS,
                 3.0f,
                 0.5f

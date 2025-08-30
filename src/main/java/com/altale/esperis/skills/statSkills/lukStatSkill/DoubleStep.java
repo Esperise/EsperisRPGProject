@@ -1,5 +1,6 @@
 package com.altale.esperis.skills.statSkills.lukStatSkill;
 
+import com.altale.esperis.player_data.skill_data.SkillsId;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
@@ -29,6 +30,13 @@ import java.util.*;
 public class DoubleStep {
     // World별, 실행할 시간 → 실행 로직(Runnable) 맵
     private static final Map<ServerWorld, Map<UUID, Map<Long, Runnable>>> delayedTasks = new HashMap<>();
+    public static final String skillName= SkillsId.LUK_25.getSkillName();
+    public static final int cooltime= 60;
+    public static final float baseDamage= 1;
+    public static final float atkCoeffi = 0.37f;
+    public static final float baseDotDamage = 2.5f;
+    public static final float dotAtkCoeffi= 0.77f;
+
     public static void doubleStep(ServerPlayerEntity player, ServerWorld world1) {
         // 효과는 기존 doStepEffect() 내용
         ServerWorld serverWorld = (ServerWorld) world1;
@@ -130,9 +138,8 @@ public class DoubleStep {
     private static void doStepEffect(ServerPlayerEntity player, ServerWorld world) {
         PlayerFinalStatComponent playerStatComponent = PlayerFinalStatComponent.KEY.get(player);
         double atk= playerStatComponent.getFinalStat(StatType.ATK);
-        double luk= playerStatComponent.getFinalStat(StatType.LUK);
-        float stepDamage= (float) (1.0+ (atk*0.2));
-        float dotDamage= (float) (2.0 +  atk*0.1 + (luk* 0.1));
+        float stepDamage= (float) (baseDamage+  (atk* atkCoeffi));
+        float dotDamage= (float) (baseDotDamage +  atk* dotAtkCoeffi);
 
         Vec3d eye = player.getCameraPosVec(1.0F);
         Vec3d dir = player.getRotationVec(1.0F).normalize();
@@ -189,11 +196,6 @@ public class DoubleStep {
         Entity entity =GetEntityLookingAt.getEntityLookingAt(player, 6.0F+randint, randint);
         if(entity != null){
             LivingEntity living = (LivingEntity) entity;
-            float entityAbsorption = living.getAbsorptionAmount();
-            float barrierAdditionalDamage=0;
-            if(entityAbsorption>0){
-                barrierAdditionalDamage=living.getAbsorptionAmount()/5;
-            }
             // 즉시 데미지
             living.getWorld().playSound(
                     null,
@@ -213,7 +215,7 @@ public class DoubleStep {
             living.setVelocity(Vec3d.ZERO);
             living.velocityModified = true;
             // 출혈 DOT
-            DotDamageVer2.giveDotDamage(living, player, 50, 10, dotDamage, DotTypeVer2.Bleed, true,0.1f, "doubleStep");
+            DotDamageVer2.giveDotDamage(living, player, 50, 10, dotDamage, DotTypeVer2.Bleed, false,0f, skillName);
             CoolTimeManager.specificCoolTimeReduction(player, "그림자이동", 20);
         }
         else{

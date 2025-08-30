@@ -19,7 +19,7 @@ import java.util.Map;
 public class ModItems {
     public static final String MODID="esperis";
     public static final Map<String, Item> ITEM_MAP = new LinkedHashMap<>();
-    public static final Item RED_POTION = register("potions/red_potion", new HealingPotion( new FabricItemSettings(),7,0.02f,200, 10,200,"빨간 포션"));
+    public static final Item RED_POTION = register("potions/red_potion", new HealingPotion( new FabricItemSettings(),11,0.04f,260, 10,400,"빨간 포션 (무한)", true));
     public static final Item GOLDEN_POTION = register("potions/golden_potion", new HealingPotion( new FabricItemSettings(),9,0.032f,200, 10,200,"금빛 포션"));
     public static final Item BLUE_POTION = register("potions/orange_potion", new HealingPotion( new FabricItemSettings(),13,0.038f,200, 10,200,"주황 포션"));
     public static final Item ORANGE_POTION = register("potions/blue_potion", new HealingPotion( new FabricItemSettings(),8,0.035f,60, 2,300,"파란 포션"));

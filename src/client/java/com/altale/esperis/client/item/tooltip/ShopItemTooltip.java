@@ -24,7 +24,7 @@ public class ShopItemTooltip {
                     tooltip = Text.literal("");
                     lines.add(tooltip);
                     if(purchasePrice > 0){
-                        tooltip = tooltip.copy().append(Text.literal("[판매]").copy().formatted(Formatting.BOLD, Formatting.RED))
+                        tooltip = tooltip.copy().append(Text.literal("[구매]").copy().formatted(Formatting.BOLD, Formatting.AQUA))
                                 .append(Text.literal(String.format(": %d esp",ShopItemManager.getPurchasePrice(stack))));
                     }else{
                         tooltip = tooltip.copy().append(Text.literal("판매 불가").copy().formatted(Formatting.BOLD, Formatting.RED));
@@ -32,7 +32,7 @@ public class ShopItemTooltip {
                     lines.add(tooltip);
                     tooltip = Text.literal("");
                     if(salesPrice >0){
-                        tooltip = tooltip.copy().append(Text.literal("[구매]").copy().formatted(Formatting.BOLD, Formatting.AQUA))
+                        tooltip = tooltip.copy().append(Text.literal("[판매]").copy().formatted(Formatting.BOLD, Formatting.RED))
                                 .append(Text.literal(String.format(": %d esp",ShopItemManager.getSalesPrice(stack))));
                     }else{
                         tooltip = tooltip.copy().append(Text.literal("구매 불가").copy().formatted(Formatting.BOLD, Formatting.RED));

@@ -39,10 +39,15 @@ public class PotionTooltip {
                                     tooltip= Text.literal("")
                                             .append(Text.literal(String.format("%d = ( %.0f + ♥ %.2f%% )",Math.round(baseHeal + maxHp * hpCoeffi ),baseHeal,hpCoeffi*100 )).formatted(Formatting.GREEN))
                                             .append(String.format("를 %.1f초에 걸쳐서 회복", Math.round(100* duration /20f) /100f) );
-
                                 }
                                 lines.add(tooltip);
-                                lines.add(Text.literal(String.format("사용 쿨타임 : %.1f초", Math.round(100* cooltime /20f) /100f)).formatted(Formatting.UNDERLINE));
+                                lines.add(Text.literal(String.format("사용 쿨타임 : %.1f초              ", Math.round(100* cooltime /20f) /100f)).formatted(Formatting.UNDERLINE));
+                                if(healingPotion.isInfinite()){
+                                    lines.add(Text.literal(""));
+                                    tooltip = Text.literal("무한: 사용시 아이템을 소모하지 않음").formatted(Formatting.DARK_GRAY);
+                                    lines.add(tooltip);
+                                }
+
                             }
 
                         }

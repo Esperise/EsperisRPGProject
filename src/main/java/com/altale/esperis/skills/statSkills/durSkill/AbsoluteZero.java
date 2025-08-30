@@ -27,8 +27,19 @@ public class AbsoluteZero {
     public static final String skillName = SkillsId.DUR_125.getSkillName();
     public static final int coolTime = 700;
     public static final float baseDamage = 10;
-    public static final float alloutBarrierAtkCoeffi = 1f;
-    public static final float alloutLandingBarrierAtkCoeffi = 3.5f;
+    public static final float alloutHealAtkCoeffi = 1f;
+    public static final float alloutBarrierAtkCoeffi = 3.5f;
+    public static final float barrierCount = 5;
+    public static final float barrierHpcoeffi = 0.2f;
+    public static final float damageHpCoeffi = 0.0007f;
+    public static final float damageDefCoeffi =  0.0007f;
+    public static final float alloutDamageHpCoeffi = 0.0001f;
+    public static final float alloutDamageAtkCoeffi = 0.023f;
+    public static final int repeats = 100;
+    public static final int selfCCDuration = 80;
+    public static final int alloutSkillSpeed = 2;
+    public static  int skillSpeed = 1;
+
     public static void earthQuake( ServerPlayerEntity player, ServerWorld world) {
         System.out.println("현재 delayedTask "+DelayedTaskManager.getCurrentRepeatCount(world, player, skillName));
         if(CoolTimeManager.isOnCoolTime(player, skillName) && DelayedTaskManager.getCurrentRepeatCount(world, player, skillName) > 5 ){
@@ -42,15 +53,15 @@ public class AbsoluteZero {
             Box box = player.getBoundingBox().expand(radius, 10, radius);
             List<Entity> entities = player.getWorld().getOtherEntities(player, box);
             Vec3d pos = player.getEyePos();
-            float damage = baseDamage + (hp* 0.001f + def * 0.002f)  * chargedTick;
+            float damage = baseDamage + ((hp* damageHpCoeffi + def *damageDefCoeffi)  * chargedTick);
             if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
-                damage = baseDamage + (hp* 0.003f + atk * 0.023f)  * chargedTick;
+                damage = baseDamage + ((hp* alloutDamageHpCoeffi + atk * alloutDamageAtkCoeffi)  * chargedTick);
             }
             for(Entity entity : entities) {
                 if (entity instanceof LivingEntity livingTarget) {
                     livingTarget.damage(livingTarget.getWorld().getDamageSources().playerAttack(player), damage);
                     if(livingTarget instanceof PlayerEntity playerTarget) {
-                        CoolTimeManager.ccCoolTime((ServerPlayerEntity) playerTarget, 80);
+                        CoolTimeManager.ccCoolTime((ServerPlayerEntity) playerTarget, selfCCDuration);
                     }
                 }
             }
@@ -65,11 +76,12 @@ public class AbsoluteZero {
             PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
             float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);
             boolean allOutAttack = false;
-            float barrier= player.getMaxHealth() * 0.3f;
+            float barrier= player.getMaxHealth() * barrierHpcoeffi;
             if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
                 allOutAttack = true;
-                AbsorptionBuff.giveAbsorptionBuff(world, player, skillName, atk* alloutBarrierAtkCoeffi, 20);
-                barrier=atk* alloutLandingBarrierAtkCoeffi;
+                player.heal(atk * alloutDamageHpCoeffi);
+                barrier=atk* alloutBarrierAtkCoeffi;
+                skillSpeed= alloutSkillSpeed;
             }
             List<Entity> nearby = player.getWorld().getOtherEntities(player, player.getBoundingBox().expand(10));
             for (Entity entity : nearby) {
@@ -81,7 +93,7 @@ public class AbsoluteZero {
                     }
                 }
             }
-            int repeats = 101;
+
 
             float finalBarrier = barrier;
             Vec3d pos = player.getPos();
@@ -89,9 +101,9 @@ public class AbsoluteZero {
             float hp =(float) playerFinalStatComponent.getFinalStat(StatType.MAX_HEALTH);
             float def =(float) playerFinalStatComponent.getFinalStat(StatType.DEF);
             IntConsumer task = step->{
-                float radius = 1+ (step * 0.14f);
+                float radius = 1+ (step * 0.14f) * skillSpeed;
                 if(step <= repeats-2){
-                    player.sendMessage(Text.literal(String.format( "재사용 가능 시간: %.2f ", Math.round(100* ( repeats-step-1)/20.0f)/100f) ), true);
+                    player.sendMessage(Text.literal(String.format( "재사용 가능 시간: %.2f ", Math.round(100* ( repeats-step-1)/20.0f)/(skillSpeed* 100f)) ), true);
                     player.sendMessage(Text.literal( "radius "+ radius ), false);
                     player.requestTeleport(pos.x, pos.y, pos.z);
                     ParticleHelper.drawCircleXZ(world, pos, ParticleTypes.SNOWFLAKE, radius, (int) radius * 24);
@@ -107,15 +119,18 @@ public class AbsoluteZero {
                             }
                         }
                     }
-                    world.spawnParticles(ParticleTypes.SNOWFLAKE, pos.x,pos.y, pos.z, 100 *(int) radius, radius, 5.0, radius, 0);
+                    world.spawnParticles(ParticleTypes.SNOWFLAKE, pos.x,pos.y, pos.z, 25 *(int) radius, radius, 5.0, radius, 0);
                     player.requestTeleportAndDismount(pos.x, pos.y, pos.z);
-                    if(step % 20 == 1){
+                    if(step % (20/skillSpeed) == 1){
                         String buffName= skillName+step;
                         AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, finalBarrier/5, 120);
                         CoolTimeManager.ccCoolTime( player, 30);
                     }
                 }
                 else if(step == repeats -1 ){
+                    String buffName= skillName+step;
+                    AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, finalBarrier/5, 120);
+                    CoolTimeManager.ccCoolTime( player, 30);
                     Box box = player.getBoundingBox().expand(radius, 5, radius);
                     List<Entity> entities = player.getWorld().getOtherEntities(player, box);
                     float damage = 10 + (hp* 0.007f * step) + (def * 0.015f * step);
@@ -124,11 +139,11 @@ public class AbsoluteZero {
                             livingTarget.damage(livingTarget.getWorld().getDamageSources().playerAttack(player), damage);
                         }
                     }
-                    world.spawnParticles(ParticleTypes.SNOWFLAKE, pos.x,pos.y, pos.z, 500 *(int) radius, radius, 0.5, radius, 0);
+                    world.spawnParticles(ParticleTypes.SNOWFLAKE, pos.x,pos.y, pos.z, 125 *(int) radius, radius, 0.5, radius, 0);
 
                 }
             };
-            DelayedTaskManager.addTask(world, player, task, 1, skillName, repeats);
+            DelayedTaskManager.addTask(world, player, task, 1, skillName, repeats/skillSpeed);
         }
     }
 }

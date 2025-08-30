@@ -29,19 +29,21 @@ import java.util.List;
 import java.util.function.IntConsumer;
 
 public class GroundSlam {
-    public static final String GROUND_SLAM = SkillsId.DUR_25.getSkillName();
+    public static final String skillName = SkillsId.DUR_25.getSkillName();
     public static final float hpCoeffi = 0.02f;
-    public static final float defCoeffi = 0.05f;
-    public static final float baseDamage = 1f;
-    public static final float allOutAttackAtkCoeffi = 0.6f;
-    public static final float XZrange = 4f;
+    public static final float defCoeffi = 0.04f;
+    public static final float baseDamage = 2f;
+    public static final float allOutAttackAtkCoeffi = 1.2f;
+    public static final float XZrange = 4.5f;
+    public static final int cooltime = 80;
+    public static final int alloutCooltimeReducePercent = 30;
 
 
     public static void GroundSlam(ServerPlayerEntity player,ServerWorld world ) {
-        if(CoolTimeManager.isOnCoolTime( player, GROUND_SLAM)){
+        if(CoolTimeManager.isOnCoolTime( player, skillName)){
 
         }else{
-            CoolTimeManager.setCoolTime(player,GROUND_SLAM, 80 );
+            CoolTimeManager.setCoolTime(player,skillName, cooltime );
             doGroundSlam(player,world);
         }
     }
@@ -56,7 +58,7 @@ public class GroundSlam {
         Box range = player.getBoundingBox().expand(XZrange, -1.2f, XZrange).stretch(vec).expand(0,2.0f,0);
         if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
             damage= (float) (5+ atk* allOutAttackAtkCoeffi);
-            CoolTimeManager.setCoolTime(player,GROUND_SLAM, 40 );
+            CoolTimeManager.specificCoolTimePercentReduction(player, skillName, alloutCooltimeReducePercent);
             allOutAttack=true;
             Vec3d playerLook = player.getRotationVec(1.0f);
             player.getBoundingBox().expand(XZrange + 1.5f, -1.2f, XZrange+1.5f).stretch(vec).expand(0,2.0f,0);
@@ -66,20 +68,21 @@ public class GroundSlam {
 
         for(Entity entity : entities){
             if(!(entity instanceof LivingEntity livingTarget)) continue;
-            if(livingTarget.isOnGround() && !allOutAttack){
+//            if(!allOutAttack){
                 KnockedAirborneVer2.giveKnockedAirborneVer2(livingTarget, 10,2);
                 if(livingTarget instanceof PlayerEntity targetPlayer){
-                    AbilityBuff.giveBuff(targetPlayer, GROUND_SLAM, StatType.SPD,30,45,0,1);
+                    AbilityBuff.giveBuff(targetPlayer, skillName, StatType.SPD,30,45,0,1);
                 }else{
                     livingTarget.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS , 30, 2,false, false));
                 }
-            }else if( !livingTarget.isOnGround() && !allOutAttack){
-                if(livingTarget instanceof PlayerEntity targetPlayer){
-                    AbilityBuff.giveBuff(targetPlayer, GROUND_SLAM, StatType.SPD,30,45,0,1);
-                }else{
-                    livingTarget.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS , 30, 2,false, false));
-                }
-            }
+//            }
+//            else if( !livingTarget.isOnGround() && !allOutAttack){
+//                if(livingTarget instanceof PlayerEntity targetPlayer){
+//                    AbilityBuff.giveBuff(targetPlayer, GROUND_SLAM, StatType.SPD,30,45,0,1);
+//                }else{
+//                    livingTarget.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS , 30, 2,false, false));
+//                }
+//            }
 
 
             livingTarget.damage(src, damage);
@@ -106,7 +109,7 @@ public class GroundSlam {
                     new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.DIRT.getDefaultState()),  // 원하는 파티클로 교체 가능
                     0.3, 0.72, 0.15, 120
             );
-            DelayedTaskManager.addTask(world, player, task2, 1, GROUND_SLAM+" Effect", 5);
+            DelayedTaskManager.addTask(world, player, task2, 1, skillName+" Effect", 5);
 
 
 
@@ -131,10 +134,10 @@ public class GroundSlam {
                     new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.DIAMOND_BLOCK.getDefaultState()),  // 원하는 파티클로 교체 가능
                     0.3, 1.04, 0.15, 180
             );
-            DelayedTaskManager.addTask(world, player, task2, 1, GROUND_SLAM+" Effect", 5);
+            DelayedTaskManager.addTask(world, player, task2, 1, skillName+" Effect", 5);
         }
 
-        DelayedTaskManager.addTask(world, player, task, 1, GROUND_SLAM+" sound", 5);
+        DelayedTaskManager.addTask(world, player, task, 1, skillName+" sound", 5);
 
 
 

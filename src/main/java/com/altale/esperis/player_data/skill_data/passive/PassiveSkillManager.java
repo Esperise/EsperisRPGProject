@@ -13,6 +13,7 @@ import com.altale.esperis.skills.buff.HealBuff;
 import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.DotTypeVer2;
+import com.altale.esperis.skills.statSkills.dexStatSkill.FastAccurateAdvanced;
 import com.altale.esperis.skills.statSkills.durSkill.PassiveBarrierBash;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -40,8 +41,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class PassiveSkillManager {
 
-    // 피해를 입을 시
-    // 평타 공격시/ 피해를 줄 때
 
     public static float getDamageFlag(PlayerEntity player,LivingEntity attacker ,float damage){
         PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
@@ -56,9 +55,10 @@ public class PassiveSkillManager {
             System.out.println("죽음의 저항으로 유예된 피해: " + damage);
         }
         if(playerSkillComponent.hasPassiveSkill(SkillsId.DUR_100)){
-            if(attacker != null){
+            if(attacker != null && !CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, "패시브: 반격")){
+                CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "패시브: 반격", 30);
                 float def = (float) playerFinalStatComponent.getFinalStat(StatType.DEF);
-                attacker.damage(player.getDamageSources().playerAttack(player), def * 0.02f);
+                attacker.damage(player.getDamageSources().playerAttack(player), def * 0.045f);
             }
             if(!CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, SkillsId.DUR_100.getSkillName())){
                 float maxHealth = (float) playerFinalStatComponent.getFinalStat(StatType.MAX_HEALTH);
@@ -102,17 +102,10 @@ public class PassiveSkillManager {
             }
         }
         if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
-            player.heal((float) (damage * 0.3));
+            player.heal((float) (damage * 0.25));
         }
-//        if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_50)){
-//            damage+= damage + target.getMaxHealth() * 0.03f;
-//            if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_150)){
-//                DotDamageVer2.giveDotDamage(target,player, 100, 10, target.getMaxHealth()*0.05f, DotTypeVer2.Bleed, true, 0,SkillsId.DEX_150.getSkillName());
-//            }
-//        }
-        if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_100)){
-            AbilityBuff.giveBuff(player, SkillsId.DEX_100.getSkillName(), StatType.ATTACK_SPEED,200,0,0.05,15);
-        }
+
+
 
 
         return damage;
@@ -147,10 +140,10 @@ public class PassiveSkillManager {
         PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
         PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
         if(playerSkillComponent.isUnlockedSkill(SkillsId.DEX_75)){
-            CoolTimeManager.specificCoolTimeReduction((ServerPlayerEntity) player, SkillsId.DEX_75.getSkillName(),20);
+            CoolTimeManager.specificCoolTimeReduction((ServerPlayerEntity) player, SkillsId.DEX_75.getSkillName(), FastAccurateAdvanced.hitCooltimeReduce);
         }
         if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_100)){
-            AbilityBuff.giveBuff(player, SkillsId.DEX_100.getSkillName(), StatType.ATTACK_SPEED, 160,0, 0.07,8);
+            AbilityBuff.giveBuff(player, SkillsId.DEX_100.getSkillName(), StatType.ATTACK_SPEED,240,0,0.05,15);
         }
     }
     public static float bowHitAddDamage(PlayerEntity player, LivingEntity target, float damage){
@@ -161,12 +154,12 @@ public class PassiveSkillManager {
         if(itemStack.hasNbt()){
             NbtCompound nbtCompound = itemStack.getOrCreateNbt();
                 if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_50)){
-                    player.sendMessage(Text.literal("패시브: 거인학살자"));
-                    damage = damage+  6 + target.getMaxHealth()*3/100;
+                    damage = damage+  4 + target.getMaxHealth()*1/20;
             }
+
                 if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_150)){
-                    DotDamageVer2.giveDotDamage(target, player, 80, 10,
-                            target.getMaxHealth()/20, DotTypeVer2.Bleed,true, 1, SkillsId.DEX_50.getSkillName());
+                    DotDamageVer2.giveDotDamage(target, player, 40, 10,
+                            target.getMaxHealth()/25, DotTypeVer2.Bleed,true, 1, SkillsId.DEX_150.getSkillName());
                 }
         }
 

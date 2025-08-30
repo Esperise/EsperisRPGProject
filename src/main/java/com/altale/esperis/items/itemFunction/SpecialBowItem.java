@@ -58,7 +58,7 @@ public class SpecialBowItem extends Item {
         this.itemName = itemName;
     }
     public SpecialBowItem(){
-        this(1, 40F,0.25,0.08,3, "돌풍");
+        this(0.4, 40F,0.25,0.05,4, "돌풍");
     }
     public  double getSpecialBowAttackSpeed() {
         return baseAttackSpeed;
@@ -89,7 +89,7 @@ public class SpecialBowItem extends Item {
     public double getBaseDamage(){
         return baseDamage;
     }
-    public double specialBowDamage(PlayerEntity user){
+    public double specialBowDamage(PlayerEntity user, double additionalDamage, double additionalDamagePercent){
         PlayerFinalStatComponent statComponent = PlayerFinalStatComponent.KEY.get(user);
         double atk= statComponent.getFinalStat(StatType.ATK);
         double dex= statComponent.getFinalStat(StatType.DEX);
@@ -98,6 +98,12 @@ public class SpecialBowItem extends Item {
         boolean hasArrow=inventory.contains(Items.ARROW.getDefaultStack());
         if(hasArrow){
             shotDamage += 4;
+        }
+        if(additionalDamage != 0.0){
+            shotDamage += additionalDamage;
+        }
+        if(additionalDamagePercent !=  0.0){
+            shotDamage = shotDamage * ( 1 + (additionalDamagePercent/100.0f) );
         }
         return shotDamage;
     }
@@ -194,7 +200,7 @@ public class SpecialBowItem extends Item {
         }
         if(!world.isClient){
             // 스킬
-            useSpecialBow((ServerPlayerEntity) user, (ServerWorld) world);
+            useSpecialBow((ServerPlayerEntity) user, (ServerWorld) world,0,0);
             PlayerInventory inventory = user.getInventory();
             boolean hasArrow=inventory.contains(Items.ARROW.getDefaultStack());
             if(hasArrow){
@@ -215,7 +221,7 @@ public class SpecialBowItem extends Item {
         }
     }
 
-    public void useSpecialBow(ServerPlayerEntity player, ServerWorld world) {
+    public void useSpecialBow(ServerPlayerEntity player, ServerWorld world, double addtionalDamage, double additionalDamagePercent) {
         PlayerFinalStatComponent finalStatComponent= PlayerFinalStatComponent.KEY.get(player);
         float dex = (float) finalStatComponent.getFinalStat(StatType.DEX);
         Entity target = GetEntityLookingAt.getEntityLookingAt(player, maxDistance, 0.2 + dex*0.008 );
@@ -229,8 +235,7 @@ public class SpecialBowItem extends Item {
                 DamageSource src = world.getDamageSources().playerAttack(player);
                 targetEntity.timeUntilRegen = 0;
                 targetEntity.hurtTime = 0;
-                double shotDamage= specialBowDamage(player);
-                PassiveSkillManager.bowHit(player,targetEntity);
+                double shotDamage= specialBowDamage(player,addtionalDamage,additionalDamagePercent);
                 specialBowEffects(true,world,player,targetEntity);
                 if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_50)){
                     int usage = getUsage(stack);

@@ -28,6 +28,5 @@ public class CurrentBuffS2CPacketSender {
         buf.writeMap(healBuffMap,
                 PacketByteBuf::writeString, PacketByteBuf::writeDouble);
         ServerPlayNetworking.send(player,BUFF_ID,buf);
-
     }
 }

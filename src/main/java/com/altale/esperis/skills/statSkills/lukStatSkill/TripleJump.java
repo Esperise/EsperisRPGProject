@@ -1,5 +1,6 @@
 package com.altale.esperis.skills.statSkills.lukStatSkill;
 
+import com.altale.esperis.player_data.skill_data.SkillsId;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.skills.buff.AbsorptionBuff;
@@ -22,14 +23,16 @@ import static com.google.common.primitives.Floats.max;
 
 public class TripleJump {
     private static final Map<ServerWorld, Map<UUID, Map<Long, Runnable>>> delayedTasksTripleJump = new HashMap<>();
+    public static final String skillName= SkillsId.LUK_1.getSkillName();
+    public static final int cooltime = 100;
     public static void tripleJump(ServerPlayerEntity player, ServerWorld  world) {
         long now = world.getTime();
 
-        if(CoolTimeManager.isOnCoolTime(player,"트리플점프")){
+        if(CoolTimeManager.isOnCoolTime(player,skillName)){
 
         }
         else{
-            CoolTimeManager.setCoolTime(player, "트리플점프",90);
+            CoolTimeManager.setCoolTime(player, skillName,cooltime);
             doJump(player,world);
             for(long trig=now; trig<=now+10; trig+=10){
                 delayedTasksTripleJump
@@ -63,7 +66,7 @@ public class TripleJump {
         PlayerFinalStatComponent playerFinalStatComponent= PlayerFinalStatComponent.KEY.get(player);
         double spd= playerFinalStatComponent.getFinalStat(StatType.SPD);
         double power= 0.6 * (1+(spd/2)) ;
-        Vec3d velocity = new Vec3d(look.x * power, Math.max(0.25* (1+(spd/2)), look.y), look.z * power);
+        Vec3d velocity = new Vec3d(look.x * power, Math.max(0.3* (1+(spd/2)), look.y), look.z * power);
         player.addVelocity(velocity.x, velocity.y, velocity.z);
         player.velocityModified = true;
 //        Vec3d offsetEye = eye.add(lateral);

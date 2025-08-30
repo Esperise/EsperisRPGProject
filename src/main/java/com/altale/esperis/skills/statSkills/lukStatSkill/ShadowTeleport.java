@@ -1,5 +1,6 @@
 package com.altale.esperis.skills.statSkills.lukStatSkill;
 
+import com.altale.esperis.player_data.skill_data.SkillsId;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.Utilities.GetEntityLookingAt;
@@ -19,13 +20,20 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 
 public class ShadowTeleport {
+    public static final String skillName= SkillsId.LUK_75.getSkillName();
+    public static final float healAtkCoeffi = 0.5f;
+    public static final float baseHeal = 3;
+    public static final int cooltime = 300;
+    public static final float failCooltimeReducePercent = 60;
+    public static final int addstepCooltime = -15;
+
     public static void doShadowTeleportPlayer(ServerPlayerEntity player, ServerWorld serverWorld) {
-        if(CoolTimeManager.isOnCoolTime(player, "그림자이동")) {
-            CoolTimeManager.showRemainCoolTime(player, "그림자이동");
+        if(CoolTimeManager.isOnCoolTime(player, skillName)) {
+            CoolTimeManager.showRemainCoolTime(player, skillName);
         }else{
             PlayerFinalStatComponent playerFinalStatComponent= PlayerFinalStatComponent.KEY.get(player);
             double atk= playerFinalStatComponent.getFinalStat(StatType.ATK);
-            CoolTimeManager.setCoolTime(player,"그림자이동",300);
+            CoolTimeManager.setCoolTime(player,skillName,cooltime);
             Entity target =GetEntityLookingAt.getEntityLookingAt(player, 17.0f,0.7);
             if(target instanceof LivingEntity){
                 Vec3d playerLookVec= player.getRotationVec(1.0f);
@@ -57,17 +65,16 @@ public class ShadowTeleport {
                         , target.getPitch());
                 if(DotDamageVer2.isDotDamage((LivingEntity) target)){
                     DotDamageVer2.instantDotDamage((LivingEntity) target , player,0.3);
-                    CoolTimeManager.specificCoolTimePercentReduction(player, "그림자이동",100);
+                    CoolTimeManager.specificCoolTimePercentReduction(player, skillName,100);
                     player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY,  20,2));
-                    CoolTimeManager.specificCoolTimeReduction(player, "더블스텝", -15);
+                    CoolTimeManager.specificCoolTimeReduction(player, SkillsId.LUK_25.getSkillName(), addstepCooltime);
                 }
-                player.heal(3 + (float) (atk * 0.5));
+                player.heal(baseHeal + (float) (atk * healAtkCoeffi));
 
                 
             }
             else{
-                CoolTimeManager.specificCoolTimePercentReduction(player, "그림자이동",60);
-                AbsorptionBuff.giveAbsorptionBuff(serverWorld, player,"그림자이동",(float) ( 3+ (atk * 0.3)),4);
+                CoolTimeManager.specificCoolTimePercentReduction(player, skillName,failCooltimeReducePercent);
             }
         }
     }

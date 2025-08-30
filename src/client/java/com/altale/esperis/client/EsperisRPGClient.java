@@ -6,9 +6,10 @@ import com.altale.esperis.client.item.tooltip.*;
 import com.altale.esperis.client.packet.AbsorptionSyncReceiver;
 import com.altale.esperis.client.packet.CoolTimePacketReceiver;
 import com.altale.esperis.client.packet.CurrentBuffS2CPacketReceiver;
+import com.altale.esperis.client.packet.ScopePacketReceiver;
 import com.altale.esperis.client.screen.InventoryStatTest;
 import com.altale.esperis.client.screen.RerollAdditionalStatScreen;
-import com.altale.esperis.player_data.equipmentStat.ModScreenHandlers;
+import com.altale.esperis.screenHandlers.ModScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 
@@ -18,6 +19,7 @@ public class EsperisRPGClient implements ClientModInitializer {
     public void onInitializeClient() {
         //버프 패킷 수신
         CurrentBuffS2CPacketReceiver.register();
+        ScopePacketReceiver.register();
         CoolTimeHUD.register();
         HealthBarOverlay.register();
         AbsorptionSyncReceiver.register();
@@ -29,10 +31,10 @@ public class EsperisRPGClient implements ClientModInitializer {
 //        InventoryScreenHUD.register();
         InventoryReceipeAdditionalButton.register();
         InventoryStatTest.register();
-
+        Scope.register();
         PotionTooltip.registerTooltip();
-        SpecialBow1Tooltip.registerTooltip();
         GenericItemTooltip.register();
+        SpecialBow1Tooltip.registerTooltip();
         TomoriTooltip.registerTooltip();
         ExpCouponTooltip.registerTooltip();
         ShopItemTooltip.registerTooltip();

@@ -13,15 +13,15 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
 public class AllOutAttack {
-    public static String skillName= SkillsId.DUR_175.getSkillName();
-    public static double reduceDefPercent= 50;
-    public static double reduceHPPercent= 50;
-    public static double atkBuffCoeffi = 0.05;
-    public static double allSpdBuffPercent = 50;
-    public static double defPenBuff= 0.2;
-    public static int buffDuration = 400;
-    public static int cooltime = 2400;
-    public static int cooltimeReduce = 200;
+    public static final String skillName= SkillsId.DUR_175.getSkillName();
+    public static final double reduceDefPercent= 60;
+    public static final double reduceHPPercent= 35;
+    public static final double atkBuffCoeffi = 0.05;
+    public static final double allSpdBuffPercent = 50;
+    public static final double defPenBuff= 0.2;
+    public static final int buffDuration = 400;
+    public static final int cooltime = 2400;
+    public static final int cooltimeReduce = 200;
     public static void AllOutAttack(ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
 
