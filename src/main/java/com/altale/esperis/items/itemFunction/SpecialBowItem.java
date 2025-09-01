@@ -69,12 +69,12 @@ public class SpecialBowItem extends Item {
         double as = statComponent.getFinalStat(StatType.ATTACK_SPEED);
         return (int) Math.round(1/ Math.max(0.01,baseAttackSpeed*as)*20);
     }
-    public static void incUsage(ItemStack stack) {
+    public  void incUsage(ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
         nbt.putInt("UsageCount", nbt.getInt("UsageCount") + 1 > 3 ? 0 : nbt.getInt("UsageCount") + 1 );
     }
 
-    public static int getUsage(ItemStack stack) {
+    public  int getUsage(ItemStack stack) {
         return stack.getOrCreateNbt().getInt("UsageCount");
     }
     public double getMaxDistance(){

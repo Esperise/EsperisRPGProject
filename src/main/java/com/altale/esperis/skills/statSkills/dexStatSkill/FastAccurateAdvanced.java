@@ -13,9 +13,9 @@ public class FastAccurateAdvanced {
     public static final double accuracyBuff = 0.02;
     public static final double critBuff = 0.04;
     public static final int maxStack = 3;
-    public static final int duration = 200;
-    public static final int cooltime = 400;
-    public static final int hitCooltimeReduce = 30;
+    public static final int duration = 1200;
+    public static final int cooltime = 1200;
+    public static final int hitCooltimeReduce = 60;
 
     public static void fastAccurateAdvanced(ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){

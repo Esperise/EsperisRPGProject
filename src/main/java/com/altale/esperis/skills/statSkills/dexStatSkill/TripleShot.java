@@ -34,7 +34,7 @@ public class TripleShot {
                 player.sendMessage(Text.literal("특수 활을 들고 있어야 사용 가능합니다."), false);
                 return;
             }
-            Runnable task = () -> bow.useSpecialBow(player, world,0,-20);
+            Runnable task = () -> bow.useSpecialBow(player, world,0,20);
             DelayedTaskManager.addTask(world, player, task, 2, skillName, 3);
 
 

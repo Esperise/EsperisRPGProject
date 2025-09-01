@@ -14,6 +14,7 @@ import com.altale.esperis.skills.coolTime.CoolTimeManager;
 import com.altale.esperis.skills.debuff.DotDamageVer2;
 import com.altale.esperis.skills.debuff.DotTypeVer2;
 import com.altale.esperis.skills.statSkills.dexStatSkill.FastAccurateAdvanced;
+import com.altale.esperis.skills.statSkills.dexStatSkill.StormsPoem;
 import com.altale.esperis.skills.statSkills.durSkill.PassiveBarrierBash;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -142,6 +143,9 @@ public class PassiveSkillManager {
         if(playerSkillComponent.isUnlockedSkill(SkillsId.DEX_75)){
             CoolTimeManager.specificCoolTimeReduction((ServerPlayerEntity) player, SkillsId.DEX_75.getSkillName(), FastAccurateAdvanced.hitCooltimeReduce);
         }
+        if(playerSkillComponent.isUnlockedSkill(SkillsId.DEX_75)){
+            CoolTimeManager.specificCoolTimeReduction((ServerPlayerEntity) player, SkillsId.DEX_175.getSkillName(), StormsPoem.bowHitCooltimeReduceTick);
+        }
         if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_100)){
             AbilityBuff.giveBuff(player, SkillsId.DEX_100.getSkillName(), StatType.ATTACK_SPEED,240,0,0.05,15);
         }
@@ -158,8 +162,8 @@ public class PassiveSkillManager {
             }
 
                 if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_150)){
-                    DotDamageVer2.giveDotDamage(target, player, 40, 10,
-                            target.getMaxHealth()/25, DotTypeVer2.Bleed,true, 1, SkillsId.DEX_150.getSkillName());
+                    DotDamageVer2.giveDotDamage(target, player, 60, 10,
+                            2+target.getMaxHealth()/25, DotTypeVer2.Bleed,true, 1, SkillsId.DEX_150.getSkillName());
                 }
         }
 

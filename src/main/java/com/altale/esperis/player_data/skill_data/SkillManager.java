@@ -1,10 +1,7 @@
 package com.altale.esperis.player_data.skill_data;
 
 import com.altale.esperis.player_data.stat_data.StatType;
-import com.altale.esperis.skills.statSkills.dexStatSkill.DexJump;
-import com.altale.esperis.skills.statSkills.dexStatSkill.FastAccurateAdvanced;
-import com.altale.esperis.skills.statSkills.dexStatSkill.Snipe;
-import com.altale.esperis.skills.statSkills.dexStatSkill.TripleShot;
+import com.altale.esperis.skills.statSkills.dexStatSkill.*;
 import com.altale.esperis.skills.statSkills.durSkill.*;
 import com.altale.esperis.skills.statSkills.lukStatSkill.*;
 import com.altale.esperis.skills.statSkills.strSkill.*;
@@ -45,6 +42,7 @@ public class SkillManager {
             case DEX_25 -> TripleShot.tripleShot(player, world);
             case DEX_75 -> FastAccurateAdvanced.fastAccurateAdvanced(player, world);
             case DEX_125 -> Snipe.snipe(player, world);
+            case DEX_175 -> StormsPoem.stormsPoem(player, world);
         }
     }
     public static void lukSkill(ServerPlayerEntity player ,SkillsId skillId){
