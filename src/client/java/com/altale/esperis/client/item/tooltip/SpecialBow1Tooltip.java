@@ -20,7 +20,7 @@ import net.minecraft.util.Formatting;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public class SpecialBow1Tooltip {
+public class  SpecialBow1Tooltip {
         public static void registerTooltip() {
             ItemTooltipCallback.EVENT.register(
                     (stack, ctx, lines) -> {
