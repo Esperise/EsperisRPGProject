@@ -13,7 +13,7 @@ public enum SkillsId {
     STR_75("바람 가르기", StatType.STR, 75),
     STR_100("패시브: 생명선", StatType.STR, 100),
     STR_125("유성", StatType.STR, 125),
-    STR_150("죽음의 저항", StatType.STR, 150),
+    STR_150("패시브: 죽음의 저항", StatType.STR, 150),
     STR_175("최후의 숨결", StatType.STR, 175 ),
 
 
@@ -26,7 +26,7 @@ public enum SkillsId {
     DEX_100("패시브: 집중", StatType.DEX, 100),
     //활 적중시 8초동안 공격속도가 5%증가, 최대 15스택(75%)
     DEX_125("저격", StatType.DEX, 125),
-    DEX_150("패시브: 관통상", StatType.DEX, 150),
+    DEX_150("패시브: 출혈상", StatType.DEX, 150),
     //패시브: 활 공격 적중시 1스택이 쌓이고 4스택일때 스택을 모두 잃고 2초동안 대상에게 대상 최대체력의 4%의 총 피해를 입히는 출혈 부여 중첩가능
     DEX_175("폭풍의 시", StatType.DEX, 175),
 
@@ -46,7 +46,7 @@ public enum SkillsId {
     DUR_50("패시브: 재생의 바람",StatType.DUR, 50),
     DUR_75("길을 여는 자",StatType.DUR, 75),
     DUR_100("패시브: 방어 태세",StatType.DUR, 100),
-    DUR_125("지진",StatType.DUR, 125),
+    DUR_125("절대 영도",StatType.DUR, 125),
     DUR_150("패시브: 보호막 타격",StatType.DUR, 150),
     DUR_175("총공세",StatType.DUR, 175);
 

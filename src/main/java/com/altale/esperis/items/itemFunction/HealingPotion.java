@@ -58,7 +58,7 @@ public class HealingPotion extends Item {
         this.potionName = potionName;
         this.particle = ParticleTypes.HAPPY_VILLAGER;
         INSTANCES.add(this);
-        this.infinite = true;
+        this.infinite = false;
     }
     public HealingPotion(Settings settings,
                         float baseHeal, float hpCoeff, int duration, int healTickDelta,int cooltime,

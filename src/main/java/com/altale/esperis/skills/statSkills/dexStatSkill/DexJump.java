@@ -15,13 +15,15 @@ import net.minecraft.util.math.Vec3d;
 
 public class DexJump {
     public static final String skillName = SkillsId.DEX_1.getSkillName();
+    public static final int cooltime = 80;
+    public static final int airborneDuration = 6;
     public static void dexJump(ServerPlayerEntity player, ServerWorld world) {
         long now = world.getTime();
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
 
         }
         else{
-            CoolTimeManager.setCoolTime(player, skillName, 80);
+            CoolTimeManager.setCoolTime(player, skillName, cooltime);
             doDexJump(player, world);
         }
 
@@ -38,7 +40,7 @@ public class DexJump {
             Vec3d velocity= new Vec3d(look.x * power ,0.30,look.z* power);
             targetEntity.addVelocity(velocity.x, velocity.y, velocity.z);
             targetEntity.velocityModified = true;
-            KnockedAirborneVer2.giveKnockedAirborneVer2(targetEntity, 4,2);//0.3초 에어본
+            KnockedAirborneVer2.giveKnockedAirborneVer2(targetEntity, airborneDuration-2,2);//0.3초 에어본
             double playerPower = -1-((spd)/2);
             Vec3d playerVelocity = new Vec3d(look.x * playerPower, 0.45, look.z * playerPower);
             player.addVelocity(playerVelocity.x, playerVelocity.y, playerVelocity.z);

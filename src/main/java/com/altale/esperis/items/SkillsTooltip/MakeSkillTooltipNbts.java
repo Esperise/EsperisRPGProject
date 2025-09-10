@@ -7,8 +7,10 @@ import net.minecraft.nbt.NbtElement;
 
 import java.util.Map;
 
-public class SkillTooltipItems {
+public class MakeSkillTooltipNbts {
     public static final String SKILL_TOOLTIP = "skill_tooltip";
+        public static final String SKILL_TOOLTIP_INFO="skill_tooltip:info";
+        public static final String SKILL_TOOLTIP_ADDITIONAL_INFO="skill_tooltip:additional_info";
         public static final String SKILL_TOOLTIP_NAME = "skill_tooltip:name";
         public static final String SKILL_TOOLTIP_REQUIRE_STATS = "skill_tooltip:require_stat";
             public static final String SKILL_TOOLTIP_REQUIRE_STATS_TYPE = "skill_tooltip:require_stat:type";
@@ -21,8 +23,11 @@ public class SkillTooltipItems {
                 public static final String FUNCTION_DAMAGE_STATS_COEFFICIENT = "skill_tooltip:function:damage:stats_coefficient";
             public static final String FUNCTION_BUFF = "skill_tooltip:function:buff";
             public static final String FUNCTION_BARRIER = "skill_tooltip:function:barrier";
-            public static final String FUNCTION_BARRIER_BASE = "skill_tooltip:function:barrier:base";
-            public static final String FUNCTION_BARRIER_STATS_COEFFICIENT = "skill_tooltip:function:barrier:stats_coefficient";
+                public static final String FUNCTION_BARRIER_BASE = "skill_tooltip:function:barrier:base";
+                public static final String FUNCTION_BARRIER_STATS_COEFFICIENT = "skill_tooltip:function:barrier:stats_coefficient";
+            public static final String FUNCTION_HEAL = "skill_tooltip:function:heal";
+                public static final String FUNCTION_HEAL_BASE = "skill_tooltip:function:heal:base";
+                public static final String FUNCTION_HEAL_STATS_COEFFICIENT = "skill_tooltip:function:heal:stats_coefficient";
     public static void makeSkillTooltipNbt(ItemStack stack){
         if(hasSkillTooltip(stack)){
             return;
@@ -32,6 +37,18 @@ public class SkillTooltipItems {
                 root.put(SKILL_TOOLTIP, new NbtCompound());
             }
         }
+    }
+    public static void setInfo(ItemStack stack, String info){
+        if(!hasSkillTooltip(stack)) return;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip= root.getCompound(SKILL_TOOLTIP);
+        skillTooltip.putString(SKILL_TOOLTIP_INFO, info);
+    }
+    public static void setAdditionalInfo(ItemStack stack, String additionalInfo){
+        if(!hasSkillTooltip(stack)) return;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip= root.getCompound(SKILL_TOOLTIP);
+        skillTooltip.putString(SKILL_TOOLTIP_ADDITIONAL_INFO, additionalInfo);
     }
     public static void setEssentials(ItemStack stack, String skillName, String requiredStat, int requiredStatAmount, String skillType){
         if(hasSkillTooltip(stack)){
@@ -68,13 +85,15 @@ public class SkillTooltipItems {
         }
         //baseDamage
         NbtCompound functionTooltip = skillTooltip.getCompound(SKILL_TOOLTIP_FUNCTION);
-        functionTooltip.putFloat(FUNCTION_DAMAGE_BASE, baseDamage);
+        NbtCompound damage = new NbtCompound();
+        damage.putFloat(FUNCTION_DAMAGE_BASE, baseDamage);
         //stat:coefficient(percent, *100 된 상태) - ATK = 75 형태로 저장 , 공격력 계수 75%라는 의미
         NbtCompound statsCoefficientNbt = new NbtCompound();
         for(StatType statType: statsCoefficients.keySet()){
             statsCoefficientNbt.putFloat(statType.toString(), statsCoefficients.get(statType));
         }
-        functionTooltip.put(FUNCTION_DAMAGE_STATS_COEFFICIENT, statsCoefficientNbt);
+        damage.put(FUNCTION_DAMAGE_STATS_COEFFICIENT, statsCoefficientNbt);
+        functionTooltip.put(FUNCTION_DAMAGE, damage);
     }
     public static void setBarrierTooltip(ItemStack stack , int baseAmount , Map<StatType, Float> statsCoefficients){
         if(!hasSkillTooltip(stack)) return;
@@ -84,12 +103,31 @@ public class SkillTooltipItems {
             skillTooltip.put(SKILL_TOOLTIP_FUNCTION, new NbtCompound());
         }
         NbtCompound functionTooltip = skillTooltip.getCompound(SKILL_TOOLTIP);
-        functionTooltip.putFloat(FUNCTION_BARRIER_BASE, baseAmount);
+        NbtCompound barrier = new NbtCompound();
+        barrier.putFloat(FUNCTION_BARRIER_BASE, baseAmount);
         NbtCompound statsCoefficientNbt = new NbtCompound();
         for(StatType statType: statsCoefficients.keySet()){
             statsCoefficientNbt.putFloat(statType.toString(), statsCoefficients.get(statType));
         }
-        functionTooltip.put(FUNCTION_BARRIER_STATS_COEFFICIENT, statsCoefficientNbt);
+        barrier.put(FUNCTION_BARRIER_STATS_COEFFICIENT, statsCoefficientNbt);
+        functionTooltip.put(FUNCTION_BARRIER, barrier);
+    }
+    public static void setHealTooltip(ItemStack stack, int baseAmount, Map<StatType, Float> statsCoefficients){
+        if(!hasSkillTooltip(stack)) return;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        if(!hasFunctionTooltip(stack)){
+            skillTooltip.put(SKILL_TOOLTIP_FUNCTION, new NbtCompound());
+        }
+        NbtCompound functionTooltip = skillTooltip.getCompound(SKILL_TOOLTIP);
+        NbtCompound barrier = new NbtCompound();
+        barrier.putFloat(FUNCTION_HEAL_BASE, baseAmount);
+        NbtCompound statsCoefficientNbt = new NbtCompound();
+        for(StatType statType: statsCoefficients.keySet()){
+            statsCoefficientNbt.putFloat(statType.toString(), statsCoefficients.get(statType));
+        }
+        barrier.put(FUNCTION_HEAL_STATS_COEFFICIENT, statsCoefficientNbt);
+        functionTooltip.put(FUNCTION_HEAL, barrier);
     }
     public static boolean hasSkillTooltip(ItemStack stack){
         if(stack.hasNbt()){

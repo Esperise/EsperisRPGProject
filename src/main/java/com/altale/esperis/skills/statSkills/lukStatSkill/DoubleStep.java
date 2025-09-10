@@ -42,11 +42,11 @@ public class DoubleStep {
         ServerWorld serverWorld = (ServerWorld) world1;
         long now = world1.getTime();
 
-        if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player,"더블스텝")){
-            CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, "더블스텝");
+        if(CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player,skillName)){
+            CoolTimeManager.showRemainCoolTime((ServerPlayerEntity) player, skillName);
         }
         else{
-            CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "더블스텝", 60);
+            CoolTimeManager.setCoolTime((ServerPlayerEntity) player, skillName, cooltime);
 
             // 즉시 효과 실행
             doStepEffect((ServerPlayerEntity) player, serverWorld);
@@ -216,7 +216,7 @@ public class DoubleStep {
             living.velocityModified = true;
             // 출혈 DOT
             DotDamageVer2.giveDotDamage(living, player, 50, 10, dotDamage, DotTypeVer2.Bleed, false,0f, skillName);
-            CoolTimeManager.specificCoolTimeReduction(player, "그림자이동", 20);
+            CoolTimeManager.specificCoolTimeReduction(player, SkillsId.LUK_75.getSkillName(), 20);
         }
         else{
             Box box2 = player.getBoundingBox().stretch(dir.multiply(2.5F)).expand(randint, 0.5, randint);
@@ -248,7 +248,7 @@ public class DoubleStep {
                 living.setVelocity(Vec3d.ZERO);
                 living.velocityModified = true;
                 // 출혈 DOT
-                DotDamageVer2.giveDotDamage(living, player, 50, 10, dotDamage, DotTypeVer2.Bleed, true,0.1f, "doubleStep");
+                DotDamageVer2.giveDotDamage(living, player, 50, 10, dotDamage, DotTypeVer2.Bleed, true,0.1f, skillName);
                 if(world.getOtherEntities(player, box).isEmpty()){
 
                 }
