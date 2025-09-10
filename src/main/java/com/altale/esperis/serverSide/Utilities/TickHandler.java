@@ -26,8 +26,8 @@ public class TickHandler {
         ServerTickEvents.END_WORLD_TICK.register(world -> {
 
             int count = worldTickCounters.getOrDefault(world, 0 )+1;
-            if(count % 2==0){
-                count = 0;
+//            if(count % 2==0){
+//                count = 0;
                 //0.1초 마다 서버에서 실행할 거 기술
                 for (ServerPlayerEntity player :world.getPlayers()){
                     String coolTimeText= CoolTimeManager.coolTimeText(player);
@@ -43,7 +43,7 @@ public class TickHandler {
 //                    PassiveSkillManager.hpFallBelowXPercent(player,30);
 //                }
 
-            }
+//            }
             if(count % 100 ==0 && world.getRegistryKey() == World.NETHER){
                 for (ServerPlayerEntity player :world.getPlayers()){
                     if(player.getY()>= 120){

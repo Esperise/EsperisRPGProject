@@ -3,7 +3,6 @@ package com.altale.esperis.player_data.skill_data;
 import com.altale.esperis.player_data.stat_data.StatType;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public enum SkillsId {
 
@@ -96,12 +95,12 @@ public enum SkillsId {
 
     private final String skillName;
     private final StatType skillStatType;
-    private final int skillRequiredLevel;
+    private final int skillRequiredStatAmount;
 
     SkillsId(String string1, StatType statType, int i) {
         this.skillName = string1;
         this.skillStatType = statType;
-        this.skillRequiredLevel = i;
+        this.skillRequiredStatAmount = i;
     }
     public String getSkillName(){
         return skillName;
@@ -109,8 +108,8 @@ public enum SkillsId {
     public StatType getSkillStatType(){
         return skillStatType;
     }
-    public int getSkillRequiredLevel(){
-        return skillRequiredLevel;
+    public int getSkillRequiredStatAmount(){
+        return skillRequiredStatAmount;
     }
 
 

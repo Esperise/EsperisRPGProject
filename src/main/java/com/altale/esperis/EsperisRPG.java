@@ -3,6 +3,7 @@ import com.altale.esperis.combat.AvdDamage;
 import com.altale.esperis.combat.CalculateDamage;
 import com.altale.esperis.commands.ModCommands;
 import com.altale.esperis.items.ModItems;
+import com.altale.esperis.items.SkillsTooltip.SkillTooltipItemRegister;
 import com.altale.esperis.player_data.equipmentStat.DetectPlayerEquipmentChange;
 import com.altale.esperis.screenHandlers.ModScreenHandlers;
 import com.altale.esperis.player_data.level_data.KillOtherEntityEXP;
@@ -76,6 +77,7 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
         //ITEM
         ModItems.registerAll();
         ModScreenHandlers.register();
+        SkillTooltipItemRegister.registerAll();
 
         //exp
         KillOtherEntityEXP.register();

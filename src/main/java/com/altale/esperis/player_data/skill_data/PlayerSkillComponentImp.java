@@ -78,7 +78,7 @@ public class PlayerSkillComponentImp implements PlayerSkillComponent, AutoSynced
             List<SkillsId> tempSkillList= new ArrayList<>();
 
             for(SkillsId skillId : SkillsId.getStatTypeSkillsId(currentStat)){
-                if(playerStatMap.get(currentStat) >= skillId.getSkillRequiredLevel()){
+                if(playerStatMap.get(currentStat) >= skillId.getSkillRequiredStatAmount()){
                     playerUnlockedSkillSet.add(skillId);
                     tempSkillList.add(skillId);
                     if(isPassiveSkill(skillId)){

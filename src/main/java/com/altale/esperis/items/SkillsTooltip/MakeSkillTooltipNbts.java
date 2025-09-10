@@ -75,7 +75,7 @@ public class MakeSkillTooltipNbts {
         NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
         skillTooltip.putFloat(SKILL_TOOLTIP_COOLTIME, cooltimeSeconds);
     }
-    public static void setDamageTooltip(ItemStack stack, int baseDamage, Map<StatType, Float> statsCoefficients){
+    public static void setDamageTooltip(ItemStack stack, float baseDamage, Map<StatType, Float> statsCoefficients){
         //baseDamage와 특정 스탯에 대한 계수가 하위 nbt로 저장됨.
         if(!hasSkillTooltip(stack)) return;
         NbtCompound root = stack.getOrCreateNbt();
@@ -95,7 +95,7 @@ public class MakeSkillTooltipNbts {
         damage.put(FUNCTION_DAMAGE_STATS_COEFFICIENT, statsCoefficientNbt);
         functionTooltip.put(FUNCTION_DAMAGE, damage);
     }
-    public static void setBarrierTooltip(ItemStack stack , int baseAmount , Map<StatType, Float> statsCoefficients){
+    public static void setBarrierTooltip(ItemStack stack , float baseAmount , Map<StatType, Float> statsCoefficients){
         if(!hasSkillTooltip(stack)) return;
         NbtCompound root = stack.getOrCreateNbt();
         NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
@@ -112,7 +112,7 @@ public class MakeSkillTooltipNbts {
         barrier.put(FUNCTION_BARRIER_STATS_COEFFICIENT, statsCoefficientNbt);
         functionTooltip.put(FUNCTION_BARRIER, barrier);
     }
-    public static void setHealTooltip(ItemStack stack, int baseAmount, Map<StatType, Float> statsCoefficients){
+    public static void setHealTooltip(ItemStack stack, float baseAmount, Map<StatType, Float> statsCoefficients){
         if(!hasSkillTooltip(stack)) return;
         NbtCompound root = stack.getOrCreateNbt();
         NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
