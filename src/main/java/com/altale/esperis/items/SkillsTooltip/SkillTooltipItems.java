@@ -59,6 +59,7 @@ public class SkillTooltipItems {
         skillTooltip.putFloat(SKILL_TOOLTIP_COOLTIME, cooltimeSeconds);
     }
     public static void setDamageTooltip(ItemStack stack, int baseDamage, Map<StatType, Float> statsCoefficients){
+        //baseDamage와 특정 스탯에 대한 계수가 하위 nbt로 저장됨.
         if(!hasSkillTooltip(stack)) return;
         NbtCompound root = stack.getOrCreateNbt();
         NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
