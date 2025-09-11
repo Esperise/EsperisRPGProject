@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -165,6 +166,19 @@ public class MakeSkillTooltipNbts {
         barrier.put(FUNCTION_BARRIER_STATS_COEFFICIENT, statsCoefficientNbt);
         functionTooltip.put(FUNCTION_BARRIER, barrier);
     }
+    public static boolean hasBarrier(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return false;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        NbtCompound functionTooltip = skillTooltip.getCompound(SKILL_TOOLTIP);
+        return functionTooltip.contains(FUNCTION_BARRIER);
+    }
+    public static float getBaseBarrier(ItemStack stack){
+        return 1;
+    }
+    public static Map<StatType, Double> getBarrierCoefficients(ItemStack stack){
+        return Collections.EMPTY_MAP;
+    }
     public static void setHealTooltip(ItemStack stack, float baseAmount, Map<StatType, Float> statsCoefficients){
         if(!hasSkillTooltip(stack)) return;
         NbtCompound root = stack.getOrCreateNbt();
@@ -181,6 +195,19 @@ public class MakeSkillTooltipNbts {
         }
         barrier.put(FUNCTION_HEAL_STATS_COEFFICIENT, statsCoefficientNbt);
         functionTooltip.put(FUNCTION_HEAL, barrier);
+    }
+    public static boolean hasHealTooltip(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return false;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        NbtCompound functionTooltip = skillTooltip.getCompound(SKILL_TOOLTIP);
+        return functionTooltip.contains(FUNCTION_HEAL);
+    }
+    public static float getBaseHeal(ItemStack stack){
+        return 1;
+    }
+    public static Map<StatType, Double> getHealCoefficients(ItemStack stack){
+        return Collections.EMPTY_MAP;
     }
     public static boolean hasSkillTooltip(ItemStack stack){
         if(stack.hasNbt()){

@@ -16,9 +16,9 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Environment(EnvType.CLIENT)
 public class SkillTooltip {
@@ -65,22 +65,39 @@ public class SkillTooltip {
             tooltips.add(tempLine);
             tempLine= Text.literal("");
         }
-        String info= MakeSkillTooltipNbts.getInfo(stack);
-//        String[] splits = info.split("(_damageFlag)|(_barrierFlag)|(_healFlag)");
-        if(MakeSkillTooltipNbts.hasDamage(stack)){
-            float baseDamage = MakeSkillTooltipNbts.getBaseDamage(stack);
-            Map<StatType, Double> damageCoefficientsMap = MakeSkillTooltipNbts.getDamageCoefficients(stack);
-            float totalDamage= baseDamage;
-            String damageCoefficientString = String.format("=( %.2f ",baseDamage);
-            for(StatType statType : damageCoefficientsMap.keySet()) {
-                double statValue = statsMap.get(statType);
-                totalDamage += (float) (statValue * damageCoefficientsMap.get(statType));
-                damageCoefficientString += String.format("+ %.2f%% %s", damageCoefficientsMap.get(statType), getSpecialCharByStatType(statType));
+        //info 예시: 검을 휘둘러 _damageFlag_ 의 피해를 입히고, 체력을 _healFlag_ 만큼 회복한다.
+        //info안의 _*Flag_를 구분자로 하여 분리,
+        String temp= MakeSkillTooltipNbts.getInfo(stack);
+        List<MutableText> info = new ArrayList<>();
+        Pattern pattern = Pattern.compile("(_damageFlag_)|(_barrierFlag_)|(_healFlag_)|([^_]+)");
+        Matcher matcher = pattern.matcher(temp);
+
+        while(matcher.find()){
+            String split = matcher.group();
+            if(split.equals("_damageFlag_")){
+                if(MakeSkillTooltipNbts.hasDamage(stack)){
+                    float baseDamage = MakeSkillTooltipNbts.getBaseDamage(stack);
+                    Map<StatType, Double> damageCoefficientsMap = MakeSkillTooltipNbts.getDamageCoefficients(stack);
+                    float totalDamage= baseDamage;
+                    String damageCoefficientString = String.format("=( %.2f ",baseDamage);
+                    for(StatType statType : Objects.requireNonNull(damageCoefficientsMap).keySet()) {
+                        double statValue = statsMap.get(statType);
+                        totalDamage += (float) (statValue * damageCoefficientsMap.get(statType));
+                        damageCoefficientString += String.format("+ %.2f%% %s", damageCoefficientsMap.get(statType), getSpecialCharByStatType(statType));
+                    }
+                    damageCoefficientString+=" )";
+                    damageCoefficientString=String.format("%.2f ", totalDamage)+ damageCoefficientString;
+                    info.add(Text.literal(damageCoefficientString));
+                }
+            }else if(split.equals("_barrierFlag_")){
+
+            }else if(split.equals("_healFlag_")){
+
+            }else{
+                info.add(Text.literal(split));
             }
-            damageCoefficientString+=" )";
-            damageCoefficientString=String.format("%.2f ", totalDamage)+ damageCoefficientString;
-            info= info.replace("{damageFlag}", damageCoefficientString);
         }
+
 
 
         tempLine.append(MakeSkillTooltipNbts.getInfo(stack));
