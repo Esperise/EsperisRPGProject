@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class MakeSkillTooltipNbts {
@@ -44,11 +45,23 @@ public class MakeSkillTooltipNbts {
         NbtCompound skillTooltip= root.getCompound(SKILL_TOOLTIP);
         skillTooltip.putString(SKILL_TOOLTIP_INFO, info);
     }
+    public static String getInfo(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return "";
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip= root.getCompound(SKILL_TOOLTIP);
+        return skillTooltip.getString(SKILL_TOOLTIP_INFO);
+    }
     public static void setAdditionalInfo(ItemStack stack, String additionalInfo){
         if(!hasSkillTooltip(stack)) return;
         NbtCompound root = stack.getOrCreateNbt();
         NbtCompound skillTooltip= root.getCompound(SKILL_TOOLTIP);
         skillTooltip.putString(SKILL_TOOLTIP_ADDITIONAL_INFO, additionalInfo);
+    }
+    public static String getAdditionalInfo(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return "";
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip= root.getCompound(SKILL_TOOLTIP);
+        return skillTooltip.getString(SKILL_TOOLTIP_ADDITIONAL_INFO);
     }
     public static void setEssentials(ItemStack stack, String skillName, String requiredStat, int requiredStatAmount, String skillType){
         if(hasSkillTooltip(stack)){
@@ -75,6 +88,13 @@ public class MakeSkillTooltipNbts {
         NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
         skillTooltip.putFloat(SKILL_TOOLTIP_COOLTIME, cooltimeSeconds);
     }
+    public static float getCooltime(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return -1f;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        if(!skillTooltip.contains(SKILL_TOOLTIP_COOLTIME)) return -1f;
+        return skillTooltip.getFloat(SKILL_TOOLTIP_COOLTIME);
+    }
     public static void setDamageTooltip(ItemStack stack, float baseDamage, Map<StatType, Float> statsCoefficients){
         //baseDamage와 특정 스탯에 대한 계수가 하위 nbt로 저장됨.
         if(!hasSkillTooltip(stack)) return;
@@ -95,6 +115,39 @@ public class MakeSkillTooltipNbts {
         damage.put(FUNCTION_DAMAGE_STATS_COEFFICIENT, statsCoefficientNbt);
         functionTooltip.put(FUNCTION_DAMAGE, damage);
     }
+    public static boolean hasDamage(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return false;
+        NbtCompound root = stack.getOrCreateNbt();
+        if(!root.contains(SKILL_TOOLTIP)) return false;
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        if(!skillTooltip.contains(SKILL_TOOLTIP_FUNCTION)) return false;
+        NbtCompound function = skillTooltip.getCompound(SKILL_TOOLTIP_FUNCTION);
+        return function.contains(FUNCTION_DAMAGE_STATS_COEFFICIENT);
+    }
+    public static float getBaseDamage(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return -1f;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        if(!skillTooltip.contains(SKILL_TOOLTIP_FUNCTION)) return -1f;
+        NbtCompound function = skillTooltip.getCompound(SKILL_TOOLTIP_FUNCTION);
+        return function.getFloat(FUNCTION_DAMAGE_BASE);
+    }
+    public static Map<StatType, Double> getDamageCoefficients(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return null;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        if(!skillTooltip.contains(SKILL_TOOLTIP_FUNCTION)) return null;
+        NbtCompound function = skillTooltip.getCompound(SKILL_TOOLTIP_FUNCTION);
+        if(!function.contains(FUNCTION_DAMAGE_STATS_COEFFICIENT)) return null;
+        NbtCompound dmgCoefficients = function.getCompound(FUNCTION_DAMAGE_STATS_COEFFICIENT);
+        Map<StatType, Double> coefficients = new HashMap<StatType, Double>();
+        for(String stringStatType: dmgCoefficients.getKeys()){
+            StatType statType= StatType.valueOf(stringStatType);
+            coefficients.put(statType, dmgCoefficients.getDouble(stringStatType));
+        }
+        return coefficients;
+    }
+
     public static void setBarrierTooltip(ItemStack stack , float baseAmount , Map<StatType, Float> statsCoefficients){
         if(!hasSkillTooltip(stack)) return;
         NbtCompound root = stack.getOrCreateNbt();

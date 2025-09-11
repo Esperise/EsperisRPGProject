@@ -1,5 +1,10 @@
 package com.altale.esperis.player_data.stat_data;
 
+import com.altale.esperis.player_data.skill_data.SkillsId;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public enum StatType {
     //순서 변경하면 안됨!!!!!!!!!!!!!!!!!!!
     ATK("공격력"),//공격력
@@ -23,6 +28,18 @@ public enum StatType {
     }
     public String getDisplayName(){
         return displayName;
+    }
+    private static final Map<String, StatType> BY_NAME = new HashMap<>();
+
+    static {
+        for (StatType statType : values()) {
+            BY_NAME.put(statType.displayName, statType);
+        }
+    }//Enum이 처음 JVM에 로드될때 한번 실행됨
+
+
+    public static StatType getStatTypeByString(String statType) {
+        return BY_NAME.getOrDefault(statType, null);
     }
     private static final StatType[] NORMAL_STATS = { STR, DEX, LUK, DUR };
     private static final StatType[] SPECIAL_STATS={SPD,ATTACK_SPEED,CRIT,CRIT_DAMAGE,ACC,AVD,DefPenetrate,FinalDamagePercent};
