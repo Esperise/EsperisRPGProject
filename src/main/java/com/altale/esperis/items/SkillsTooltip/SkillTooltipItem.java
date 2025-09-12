@@ -5,7 +5,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class SkillTooltipItem extends Item {
@@ -50,27 +49,27 @@ public class SkillTooltipItem extends Item {
     @Override
     public ItemStack getDefaultStack(){
         ItemStack stack = new ItemStack(this);
-        MakeSkillTooltipNbts.makeSkillTooltipNbt(stack);
+        SkillTooltipManager.makeSkillTooltipNbt(stack);
         //(스킬 이름) , 요구 스탯 타입, 요구 스탯 타입의 양, 패시브/액티브인 스킬 종류
-        MakeSkillTooltipNbts.setEssentials(stack, skillName, requiredStatType.getDisplayName(), requiredStatAmount, skillType);
+        SkillTooltipManager.setEssentials(stack, skillName, requiredStatType.getDisplayName(), requiredStatAmount, skillType);
         //데미지 관련 nbt 설정
         if(!(baseDamage == 0 && damageCoefficients.isEmpty())){
-            MakeSkillTooltipNbts.setDamageTooltip(stack, baseDamage, damageCoefficients);
+            SkillTooltipManager.setDamageTooltip(stack, baseDamage, damageCoefficients);
         }
         //보호막 관련 nbt 설정
         if(!(baseBarrier ==0 && barrierCoefficients.isEmpty())){
-            MakeSkillTooltipNbts.setBarrierTooltip(stack, baseBarrier, barrierCoefficients);
+            SkillTooltipManager.setBarrierTooltip(stack, baseBarrier, barrierCoefficients);
         }
         //힐 관련 nbt 설정
         if(!(baseHeal ==0 && healCoefficients.isEmpty())){
-            MakeSkillTooltipNbts.setHealTooltip(stack, baseHeal, healCoefficients);
+            SkillTooltipManager.setHealTooltip(stack, baseHeal, healCoefficients);
         }
         //쿨타임 nbt 설정
         if(cooltimeTicks != 0){
-            MakeSkillTooltipNbts.setCooltimeTooltip(stack, cooltimeTicks);
+            SkillTooltipManager.setCooltimeTooltip(stack, cooltimeTicks);
         }
-        MakeSkillTooltipNbts.setInfo(stack, info);
-        MakeSkillTooltipNbts.setAdditionalInfo(stack, addtionalInfo);
+        SkillTooltipManager.setInfo(stack, info);
+        SkillTooltipManager.setAdditionalInfo(stack, addtionalInfo);
         return stack;
     }
 

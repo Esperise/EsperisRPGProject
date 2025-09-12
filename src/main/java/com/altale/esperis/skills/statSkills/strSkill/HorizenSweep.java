@@ -11,6 +11,7 @@ import com.altale.esperis.skills.visualEffect.RandomStraight3DLines;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleTypes;
@@ -163,6 +164,12 @@ public class HorizenSweep {
             CoolTimeManager.setCoolTime(player,skillName , Math.max( maxReducedCoolTime ,cooltime -(int) ((as- 1) * cooltimeReduceCoeffi)));//쿹타임: 3%당 0.05초, 120%에서 최대
             doHorizenSweep(player, world);
         }
+    }
+    public static float calculateCooltime(PlayerEntity player){
+        PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
+        float as = (float) finalStatComponent.getFinalStat(StatType.ATTACK_SPEED);
+        return Math.max( maxReducedCoolTime ,cooltime -(int) ((as- 1) * cooltimeReduceCoeffi));
+
     }
 
 }

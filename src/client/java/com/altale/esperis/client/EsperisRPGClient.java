@@ -2,6 +2,7 @@ package com.altale.esperis.client;
 import com.altale.esperis.client.SkillKeyBinding.SkillKeyBinding;
 import com.altale.esperis.client.cache.AbsorptionCacheCleaner;
 import com.altale.esperis.client.HUD.*;
+import com.altale.esperis.client.item.toolTipManager.SkillTooltip;
 import com.altale.esperis.client.item.tooltip.*;
 import com.altale.esperis.client.packet.AbsorptionSyncReceiver;
 import com.altale.esperis.client.packet.CoolTimePacketReceiver;
@@ -34,6 +35,7 @@ public class EsperisRPGClient implements ClientModInitializer {
         Scope.register();
         PotionTooltip.registerTooltip();
         GenericItemTooltip.register();
+        SkillTooltip.register();
         SpecialBow1Tooltip.registerTooltip();
         TomoriTooltip.registerTooltip();
         ExpCouponTooltip.registerTooltip();
