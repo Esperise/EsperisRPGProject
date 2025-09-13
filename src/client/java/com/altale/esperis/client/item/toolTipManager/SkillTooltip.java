@@ -38,7 +38,7 @@ public class SkillTooltip {
             case DEX -> specialChar = "민첩";
             case LUK -> specialChar = "행운";
             case DUR -> specialChar = "내구";
-            case MAX_HEALTH -> specialChar = "♥";
+            case MAX_HEALTH -> specialChar = "❤";
             case SPD -> specialChar = "이동 속도";
             case ATTACK_SPEED -> specialChar = "공격 속도";
             case AVD -> specialChar = "회피율";
@@ -61,7 +61,17 @@ public class SkillTooltip {
         Map<StatType, Double> statsMap = playerFinalStatComponent.getAllFinalStat();
 
         if(SkillTooltipManager.getCooltime(stack) > 0){
-            tempLine.append(String.format("쿨타임: %.2f초", SkillTooltipManager.getCooltime(stack)));
+            float cooltime = SkillTooltipManager.getCooltime(stack);
+            if(SkillTooltipManager.getCooltimeReduceByAS(stack) > 0){
+                Double as = statsMap.get(StatType.ATTACK_SPEED);
+                float reduce  = (float) Math.max(0.5 ,1-((as- 1) * SkillTooltipManager.getCooltimeReduceByAS(stack)));
+                cooltime = cooltime *  reduce;
+
+            }
+//            if(SkillTooltipManager.getCooltimeReduce(stack) > 0){
+//                cooltime = cooltime * SkillTooltipManager.getCooltimeReduce(stack);
+//            }
+            tempLine.append(String.format("쿨타임: %.2f초",cooltime ));
             tooltips.add(tempLine);
             tempLine= Text.literal("");
         }
@@ -89,7 +99,6 @@ public class SkillTooltip {
                     String barrierCoefficientString = valueWithCoefficientText(stack, statsMap,baseBarrier, barrierCoefficientsMap);
                     info.add(Text.literal(barrierCoefficientString).formatted(Formatting.GRAY));
                 }
-
             }else if(split.equals("_healFlag_")){
                 if(SkillTooltipManager.hasHeal(stack)){
                     float baseHeal = SkillTooltipManager.getBaseHeal(stack);
@@ -115,6 +124,7 @@ public class SkillTooltip {
         }
         tempLine = insertIntoTooltips(tempLine, tooltips, infoLine);
         if(!SkillTooltipManager.getAdditionalInfo(stack).equals("")){
+            tempLine=insertIntoTooltips(tempLine, tooltips, Text.literal("   "));
             tempLine = insertIntoTooltips(tempLine, tooltips, Text.literal(SkillTooltipManager.getAdditionalInfo(stack)).formatted(Formatting.ITALIC, Formatting.DARK_GRAY));
         }
 
@@ -135,11 +145,18 @@ public class SkillTooltip {
     public static String valueWithCoefficientText(ItemStack stack, Map<StatType, Double> playerStatsMap,
             float baseValue, Map<StatType, Double> coefficientsMap){
         float totalDamage= calculateValue(playerStatsMap, baseValue,coefficientsMap);
-        String damageCoefficientString = String.format("=( %.2f ",baseValue);
+        String damageCoefficientString = String.format("=( %.1f + ",baseValue);
+        if(baseValue <= 0){
+            damageCoefficientString ="=(";
+        }
+        int count = 0;
         for(StatType statType : Objects.requireNonNull(coefficientsMap).keySet()) {
-//            double statValue = playerStatsMap.get(statType);
-//            totalDamage += (float) (statValue * damageCoefficientsMap.get(statType));
-            damageCoefficientString += String.format("+ %.2f%% %s", coefficientsMap.get(statType)*100, getSpecialCharByStatType(statType));
+            count ++;
+            if(count >=2){
+                damageCoefficientString += String.format("+ %.1f%%%s", coefficientsMap.get(statType)*100, getSpecialCharByStatType(statType));
+            }else{
+                damageCoefficientString += String.format("%.1f%%%s", coefficientsMap.get(statType)*100, getSpecialCharByStatType(statType));
+            }
         }
         damageCoefficientString+=" )";
         damageCoefficientString=String.format("%.2f ", totalDamage)+ damageCoefficientString;

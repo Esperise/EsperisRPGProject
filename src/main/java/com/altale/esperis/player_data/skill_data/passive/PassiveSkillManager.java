@@ -3,6 +3,7 @@ package com.altale.esperis.player_data.skill_data.passive;
 import com.altale.esperis.items.itemFunction.SpecialBowItem;
 import com.altale.esperis.player_data.skill_data.PlayerSkillComponent;
 import com.altale.esperis.player_data.skill_data.SkillsId;
+import com.altale.esperis.player_data.stat_data.StatComponents.BaseAbilityComponent;
 import com.altale.esperis.player_data.stat_data.StatComponents.PlayerFinalStatComponent;
 import com.altale.esperis.player_data.stat_data.StatType;
 import com.altale.esperis.serverSide.Utilities.DelayedTaskManager;
@@ -56,14 +57,16 @@ public class PassiveSkillManager {
             System.out.println("죽음의 저항으로 유예된 피해: " + damage);
         }
         if(playerSkillComponent.hasPassiveSkill(SkillsId.DUR_100)){
-            if(attacker != null && !CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, "패시브: 반격")){
-                CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "패시브: 반격", 30);
-                float def = (float) playerFinalStatComponent.getFinalStat(StatType.DEF);
-                attacker.damage(player.getDamageSources().playerAttack(player), def * 0.045f);
-            }
+//            if(attacker != null && !CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, "패시브: 반격")){
+//                CoolTimeManager.setCoolTime((ServerPlayerEntity) player, "패시브: 반격", 200);
+//                float def = (float) playerFinalStatComponent.getFinalStat(StatType.DEF);
+//                attacker.damage(player.getDamageSources().playerAttack(player), def * 0.045f);
+//            }
             if(!CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, SkillsId.DUR_100.getSkillName())){
-                float maxHealth = (float) playerFinalStatComponent.getFinalStat(StatType.MAX_HEALTH);
-                float barrierAmount = maxHealth * 0.04f;
+                BaseAbilityComponent baseAbilityComponent = BaseAbilityComponent.KEY.get(player);
+//                float maxHealth = (float) playerFinalStatComponent.getFinalStat(StatType.MAX_HEALTH);
+                float maxHealth = (float) baseAbilityComponent.getBaseAbility(StatType.MAX_HEALTH);
+                float barrierAmount = maxHealth * 0.03f;
                 if(barrierAmount > damage){
                     player.setAbsorptionAmount(barrierAmount);
                     barrierAmount-=damage;
@@ -72,7 +75,7 @@ public class PassiveSkillManager {
                     barrierAmount=0;
                 }
 
-                AbsorptionBuff.giveAbsorptionBuff((ServerWorld) player.getWorld(), player, SkillsId.DUR_100.getSkillName(), barrierAmount, 40);
+                AbsorptionBuff.giveAbsorptionBuff((ServerWorld) player.getWorld(), player, SkillsId.DUR_100.getSkillName(), barrierAmount, 30);
                 CoolTimeManager.setCoolTime((ServerPlayerEntity) player,SkillsId.DUR_100.getSkillName(),200 );
             }
 
@@ -84,7 +87,7 @@ public class PassiveSkillManager {
         if(playerSkillComponent.hasPassiveSkill(SkillsId.STR_50)){
             PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
             double atk = playerFinalStatComponent.getFinalStat(StatType.ATK);
-            if(atk*0.0075 < 0.15){
+            if(atk*0.01 < 0.1){
                 AbilityBuff.giveBuff(player,SkillsId.STR_50.getSkillName(), StatType.ATK,160,0,0.15,20);
             }else{
                 AbilityBuff.giveBuff(player,SkillsId.STR_50.getSkillName(), StatType.ATK,160,0.75,0,20);
@@ -182,7 +185,7 @@ public class PassiveSkillManager {
         if(currentHealthPercentage < percent){
             if(playerSkillComponent.hasPassiveSkill(SkillsId.STR_100) && !CoolTimeManager.isOnCoolTime((ServerPlayerEntity) player, SkillsId.STR_100.getSkillName() )){
                 String skillName = SkillsId.STR_100.getSkillName();
-                float barrierAmount = player.getMaxHealth()/5;
+                float barrierAmount = player.getMaxHealth()/4;
                 if(barrierAmount > damage){
                     System.out.println("보호막 일단 바로 적용: " + damage);
                     player.setAbsorptionAmount(barrierAmount);
@@ -192,7 +195,8 @@ public class PassiveSkillManager {
                     player.setAbsorptionAmount(barrierAmount);
                     barrierAmount=0;
                 }
-                HealBuff.giveHealBuff(player, 100, 5,player.getMaxHealth()*3/20,skillName);
+                HealBuff.giveHealBuff(player, 100, 5,player.getMaxHealth()/10,skillName);
+                HealBuff.giveHealBuff(player, 100, 5,player.getMaxHealth()/10,skillName);
                 AbsorptionBuff.giveAbsorptionBuff((ServerWorld) player.getWorld(),player, skillName, barrierAmount,100);
                 CoolTimeManager.setCoolTime((ServerPlayerEntity) player, skillName, 1200);
             }

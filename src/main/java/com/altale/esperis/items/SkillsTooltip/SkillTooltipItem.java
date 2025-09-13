@@ -21,15 +21,19 @@ public class SkillTooltipItem extends Item {
     private final float baseHeal;
     private final Map<StatType, Float> healCoefficients;
     private final int cooltimeTicks;
+    private final float asCooltimeReduce;
+    private final float normalCooltimeReduce;
 
 
 
     public SkillTooltipItem(Settings settings,String skillType, String skillName, StatType requiredStatType, int requiredStatAmount
             , String info, float baseDamage, Map<StatType, Float> damageCoefficients, float baseBarrier, Map<StatType, Float> barrierCoefficients
-            , float baseHeal, Map<StatType, Float> healCoefficients, int cooltimeTicks, String additionalInfo) {
+            , float baseHeal, Map<StatType, Float> healCoefficients, int cooltimeTicks,float asCooltimeReduce, float normalCooltimeReduce ,String additionalInfo) {
         super(settings.maxCount(1));
         this.skillType = skillType;
         this.info = info;
+        this.asCooltimeReduce = asCooltimeReduce;
+        this.normalCooltimeReduce = normalCooltimeReduce;
         this.addtionalInfo = additionalInfo;
         this.skillName = skillName;
         this.requiredStatType = requiredStatType;
@@ -67,6 +71,12 @@ public class SkillTooltipItem extends Item {
         //쿨타임 nbt 설정
         if(cooltimeTicks != 0){
             SkillTooltipManager.setCooltimeTooltip(stack, cooltimeTicks);
+        }
+        if(asCooltimeReduce != 0){
+            SkillTooltipManager.setCooltimeReduceByAS(stack, asCooltimeReduce);
+        }
+        if(normalCooltimeReduce != 0){
+            SkillTooltipManager.setCooltimeReduce(stack, normalCooltimeReduce);
         }
         SkillTooltipManager.setInfo(stack, info);
         SkillTooltipManager.setAdditionalInfo(stack, addtionalInfo);

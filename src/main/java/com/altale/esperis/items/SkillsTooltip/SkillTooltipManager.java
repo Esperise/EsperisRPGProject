@@ -17,12 +17,16 @@ public class SkillTooltipManager {
             public static final String SKILL_TOOLTIP_REQUIRE_STATS_TYPE = "skill_tooltip:require_stat:type";
             public static final String SKILL_TOOLTIP_REQUIRE_STATS_AMOUNT = "skill_tooltip:require_stat:amount";
         public static final String SKILL_TOOLTIP_COOLTIME = "skill_tooltip:cooltime";
+        public static final String SKILL_TOOLTIP_AS_COOLTIME_REDUCE = "skill_tooltip:cooltime_as";
+        public static final String SKILL_TOOLTIP_COOLTIME_REDUCE = "skill_tooltip:cooltime_normal";
         public static final String SKILL_TOOLTIP_SKILL_TYPE= "skill_tooltip:skill_type";
         public static final String SKILL_TOOLTIP_FUNCTION = "skill_tooltip:function";
             public static final String FUNCTION_DAMAGE = "skill_tooltip:function:damage";
                 public static final String FUNCTION_DAMAGE_BASE = "skill_tooltip:function:damage:base";
                 public static final String FUNCTION_DAMAGE_STATS_COEFFICIENT = "skill_tooltip:function:damage:stats_coefficient";
             public static final String FUNCTION_BUFF = "skill_tooltip:function:buff";
+                public static final String FUNCTION_BUFF_1= "skill_tooltip:function:buff:1";
+                public static final String FUNCTION_BUFF_2= "skill_tooltip:function:buff:2";
             public static final String FUNCTION_BARRIER = "skill_tooltip:function:barrier";
                 public static final String FUNCTION_BARRIER_BASE = "skill_tooltip:function:barrier:base";
                 public static final String FUNCTION_BARRIER_STATS_COEFFICIENT = "skill_tooltip:function:barrier:stats_coefficient";
@@ -94,6 +98,32 @@ public class SkillTooltipManager {
         NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
         if(!skillTooltip.contains(SKILL_TOOLTIP_COOLTIME)) return -1f;
         return skillTooltip.getFloat(SKILL_TOOLTIP_COOLTIME);
+    }
+    public static void setCooltimeReduceByAS(ItemStack stack, float asCoefficient){
+        if(!hasSkillTooltip(stack)) return;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        skillTooltip.putFloat(SKILL_TOOLTIP_AS_COOLTIME_REDUCE, asCoefficient);
+    }
+    public static float getCooltimeReduceByAS(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return -1f;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        if(!skillTooltip.contains(SKILL_TOOLTIP_COOLTIME)) return -1f;
+        return skillTooltip.getFloat(SKILL_TOOLTIP_AS_COOLTIME_REDUCE);
+    }
+    public static void setCooltimeReduce(ItemStack stack, float coefficient){
+        if(!hasSkillTooltip(stack)) return;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        skillTooltip.putFloat(SKILL_TOOLTIP_COOLTIME_REDUCE, coefficient);
+    }
+    public static float getCooltimeReduce(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return -1f;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip = root.getCompound(SKILL_TOOLTIP);
+        if(!skillTooltip.contains(SKILL_TOOLTIP_COOLTIME)) return -1f;
+        return skillTooltip.getFloat(SKILL_TOOLTIP_AS_COOLTIME_REDUCE);
     }
     public static void setDamageTooltip(ItemStack stack, float baseDamage, Map<StatType, Float> statsCoefficients){
         //baseDamage와 특정 스탯에 대한 계수가 하위 nbt로 저장됨.

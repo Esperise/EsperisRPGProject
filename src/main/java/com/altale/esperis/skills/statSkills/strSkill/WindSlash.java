@@ -28,10 +28,9 @@ public class WindSlash {
     public static final String skillName = SkillsId.STR_75.getSkillName();
     public static final float atkCoeffi = 0.85f;
     public static final float baseDamage= 6.0f;
-    public static final float targetHpCoeffi= 0.06f;
-    public static final float targetHpPerAtk= 0.002f;
+    public static final float HpCoeffi= 0.06f;
     public static final int cooltime = 280;
-    public static final float cooltimeReduceCoeffi = 100/3.0f;
+    public static final float cooltimeReduceCoeffi = 0.3333f;
     public static final int maxReducedCoolTime = 140;
     public static final DefaultParticleType particle= ParticleTypes.ELECTRIC_SPARK;
 
@@ -44,7 +43,7 @@ public class WindSlash {
             float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);
             float as = (float) finalStatComponent.getFinalStat(StatType.ATTACK_SPEED);
 
-            CoolTimeManager.setCoolTime(player, skillName, Math.max(maxReducedCoolTime, cooltime- (int)((as-1)* cooltimeReduceCoeffi)));
+            CoolTimeManager.setCoolTime(player, skillName, Math.max(maxReducedCoolTime, (int) (cooltime * (1-((as- 1) * cooltimeReduceCoeffi)))));
             int maxRadius = 12;
             double halfAngleDeg = 80;
             double yOffset = -0.5;
@@ -85,7 +84,7 @@ public class WindSlash {
                     if (entity instanceof LivingEntity livingTarget && livingTarget.isAlive()) {
                         if (allCandidates.contains(entity)) {
                             float targetMaxHealth = livingTarget.getMaxHealth();
-                            livingTarget.damage(livingTarget.getWorld().getDamageSources().playerAttack(player), baseDamage + atk * atkCoeffi + targetMaxHealth*(targetHpCoeffi+ atk* targetHpPerAtk));
+                            livingTarget.damage(livingTarget.getWorld().getDamageSources().playerAttack(player), baseDamage + atk * atkCoeffi + (player.getMaxHealth()*HpCoeffi));
                             for (int i = 0; i < 2; i++) {
                                 player.getWorld().playSound(
                                         null,

@@ -34,7 +34,7 @@ public class HorizenSweep {
     public static final float baseHealAmount = 2f;
     public static final int cooltime = 100;
     public static final float delayReduceCoeffi = 100/5.0f;
-    public static final float cooltimeReduceCoeffi = 100/3.0f;
+    public static final float cooltimeReduceCoeffi = 0.3333f;
     public static final int maxReducedCoolTime = 50;
     public static final int maxReducedDelay = 5;
     public static final BlockStateParticleEffect particle= new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.CHERRY_LEAVES.getDefaultState());
@@ -161,7 +161,7 @@ public class HorizenSweep {
             PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
             float as= (float) finalStatComponent.getFinalStat(StatType.ATTACK_SPEED);
             int spd = (int) ((as- 1) * delayReduceCoeffi) ;//5%당 0.05초 감소(딜레이)
-            CoolTimeManager.setCoolTime(player,skillName , Math.max( maxReducedCoolTime ,cooltime -(int) ((as- 1) * cooltimeReduceCoeffi)));//쿹타임: 3%당 0.05초, 120%에서 최대
+            CoolTimeManager.setCoolTime(player,skillName , Math.max( maxReducedCoolTime ,(int) (cooltime * (1-((as- 1) * cooltimeReduceCoeffi)))));//쿹타임: 3%당 0.05초, 120%에서 최대
             doHorizenSweep(player, world);
         }
     }
