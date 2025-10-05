@@ -143,6 +143,9 @@ public class PassiveSkillManager {
     public static void bowHit(PlayerEntity player, LivingEntity target){
         PlayerSkillComponent playerSkillComponent = PlayerSkillComponent.KEY.get(player);
         PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
+        if(playerSkillComponent.isUnlockedSkill(SkillsId.DEX_1)){
+            CoolTimeManager.specificCoolTimeReduction((ServerPlayerEntity) player, SkillsId.DEX_25.getSkillName(), 15);
+        }
         if(playerSkillComponent.isUnlockedSkill(SkillsId.DEX_75)){
             CoolTimeManager.specificCoolTimeReduction((ServerPlayerEntity) player, SkillsId.DEX_75.getSkillName(), FastAccurateAdvanced.hitCooltimeReduce);
         }
@@ -161,12 +164,12 @@ public class PassiveSkillManager {
         if(itemStack.hasNbt()){
             NbtCompound nbtCompound = itemStack.getOrCreateNbt();
                 if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_50)){
-                    damage = damage+  4 + target.getMaxHealth()*1/20;
+                    damage = damage+  3 + target.getMaxHealth()/20;
             }
 
                 if(playerSkillComponent.hasPassiveSkill(SkillsId.DEX_150)){
                     DotDamageVer2.giveDotDamage(target, player, 60, 10,
-                            2+target.getMaxHealth()/25, DotTypeVer2.Bleed,true, 1, SkillsId.DEX_150.getSkillName());
+                            2+target.getMaxHealth()*3/100, DotTypeVer2.Bleed,true, 1, SkillsId.DEX_150.getSkillName());
                 }
         }
 

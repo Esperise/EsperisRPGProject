@@ -21,20 +21,21 @@ import net.minecraft.util.Hand;
 
 public class TripleShot {
     public static final String skillName = SkillsId.DEX_25.getSkillName();
+    public static final int Cooltime = 200;
     public static void tripleShot(ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
 
         }else{
             PlayerFinalStatComponent statComponent = PlayerFinalStatComponent.KEY.get(player);
             double as = statComponent.getFinalStat(StatType.ATTACK_SPEED);
-            int cooltime = (int) Math.round(1/ Math.max(0.01,0.1*as)*20);
-            CoolTimeManager.setCoolTime(player, skillName,cooltime);
+//            int cooltime = (int) Math.round(20/ Math.max(0.01,0.125*as));
+            CoolTimeManager.setCoolTime(player, skillName,Cooltime);
             ItemStack hand = player.getMainHandStack();
             if (!(hand.getItem() instanceof SpecialBowItem bow)) {
                 player.sendMessage(Text.literal("특수 활을 들고 있어야 사용 가능합니다."), false);
                 return;
             }
-            Runnable task = () -> bow.useSpecialBow(player, world,0,20);
+            Runnable task = () -> bow.useSpecialBow(player, world,0,-20);
             DelayedTaskManager.addTask(world, player, task, 2, skillName, 3);
 
 

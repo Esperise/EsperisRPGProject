@@ -34,16 +34,16 @@ public class StormsPoem {
     public static final String skillName = SkillsId.DEX_175.getSkillName();
     public static final int cooltime = 2000;
     public static final float additionalShotAsCoefficient = 0.1f;
-    public static final int baseShot = 5;
+    public static final int baseShot = 1;
     public static final int maxShotCount= 40;
     public static final double maxDistance = 40;
-    public static final double baseDamage = 1;
+    public static final float baseDamage = 1;
     public static final float atkCoeffi =0.15f;
     public static final float slowPercent = -60;
-    public static final float baseHitHeal = 1.6f;
-    public static final float hitHealAtkCoefficient = 0.16f;
-    public static final float baseShotBarrier = 2f;
-    public static final float baseShotBarrierAtkCoefficient = 0.12f;
+    public static final float baseHitHeal = 2.3f;
+    public static final float hitHealAtkCoefficient = 0.1f;
+//    public static final float baseShotBarrier = 2f;
+//    public static final float baseShotBarrierAtkCoefficient = 0.12f;
     public static final int bowHitCooltimeReduceTick = 30;
     public static void stormsPoem(ServerPlayerEntity player, ServerWorld world){
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
@@ -56,7 +56,7 @@ public class StormsPoem {
             }
             CoolTimeManager.setCoolTime(player, skillName, cooltime);
             PlayerFinalStatComponent finalStats = PlayerFinalStatComponent.KEY.get(player);
-            float as = (float) finalStats.getFinalStat(StatType.ATTACK_SPEED)-1;
+            float as = (float) finalStats.getFinalStat(StatType.ATTACK_SPEED);
             int repeats = Math.min(maxShotCount, baseShot + (int) (as/additionalShotAsCoefficient));
             float atk = (float) finalStats.getFinalStat(StatType.ATK);
             IntConsumer task = step -> {
@@ -76,7 +76,7 @@ public class StormsPoem {
                         1.0   // yOffset (지면 위 0.2)
                 );
                 AbilityBuff.giveBuff(player, skillName+": 속도 감소", StatType.SPD, 6, slowPercent, 0, 1);
-                AbsorptionBuff.giveAbsorptionBuff(world, player, skillName+step, baseShotBarrier+ atk* baseShotBarrierAtkCoefficient, repeats+1);
+//                AbsorptionBuff.giveAbsorptionBuff(world, player, skillName+step, baseShotBarrier+ atk* baseShotBarrierAtkCoefficient, repeats+1);
                 useSpecialBow(player, world,0,0);
                 bow.incUsage(currentHand);
 
@@ -95,7 +95,6 @@ public class StormsPoem {
             if(target instanceof LivingEntity targetEntity){
                 float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);
                 player.heal(baseHitHeal + atk*hitHealAtkCoefficient);
-                System.out.println("폭풍의 시 명중 힐량: "+baseHitHeal + atk*atkCoeffi);
                 DamageSource src = world.getDamageSources().playerAttack(player);
                 targetEntity.timeUntilRegen = 0;
                 targetEntity.hurtTime = 0;

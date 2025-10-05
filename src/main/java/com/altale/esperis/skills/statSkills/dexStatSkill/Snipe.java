@@ -40,8 +40,8 @@ public class Snipe {
     public static final float maxDamageMultiplier = 300;
     public static final double maxDistance = 100;
     public static final double baseDamage = 10;
-    public static final double atkCoeffi =1.25;
-    public static final double dexCoeffi = 0.02;
+    public static final double atkCoeffi =1.8;
+//    public static final double dexCoeffi = 0.02;
 
     public static void snipe(ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
@@ -109,7 +109,7 @@ public class Snipe {
         PlayerFinalStatComponent statComponent = PlayerFinalStatComponent.KEY.get(user);
         double atk= statComponent.getFinalStat(StatType.ATK);
         double dex= statComponent.getFinalStat(StatType.DEX);
-        double shotDamage= baseDamage + (atk * atkCoeffi) + (dex * dexCoeffi);
+        double shotDamage= baseDamage + (atk * atkCoeffi);
         if(additionalDamage != 0.0){
             shotDamage += additionalDamage;
         }

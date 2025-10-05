@@ -2,6 +2,10 @@ package com.altale.esperis.items.SkillsTooltip;
 
 import com.altale.esperis.player_data.skill_data.SkillsId;
 import com.altale.esperis.player_data.stat_data.StatType;
+import com.altale.esperis.skills.statSkills.dexStatSkill.FastAccurateAdvanced;
+import com.altale.esperis.skills.statSkills.dexStatSkill.Snipe;
+import com.altale.esperis.skills.statSkills.dexStatSkill.StormsPoem;
+import com.altale.esperis.skills.statSkills.dexStatSkill.TripleShot;
 import com.altale.esperis.skills.statSkills.strSkill.GrandStarfall;
 import com.altale.esperis.skills.statSkills.strSkill.HorizenSweep;
 import com.altale.esperis.skills.statSkills.strSkill.StrJump;
@@ -129,6 +133,205 @@ public class SkillTooltipItemRegister {
             emptyValue,emptyMap,
             GrandStarfall.cooltime,0,0,
             "최대 피해량 72%⚔, 최대 보호막 96%⚔"
+    ));
+    public static final Item DEX_1 = register("dex1", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.STR_1.getSkillName(),
+            StatType.STR,SkillsId.STR_1.getSkillRequiredStatAmount(),
+            "전방으로 도약한다. _lineBreak_" +
+                    "4칸 안에 바라보는 대상이 있다면 그 대상을 0.2초 공중에 띄워 올리고 자신은 뒤로 도약한다.",
+            emptyValue, emptyMap,
+            emptyValue, emptyMap,
+            emptyValue,emptyMap,
+            StrJump.cooltime,0,0,
+            ""
+    ));
+    public static final Item DEX_25 = register("dex25", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.DEX_25.getSkillName(),
+            StatType.DEX,SkillsId.DEX_25.getSkillRequiredStatAmount(),
+            "활을 들고 있어야 사용가능 _lineBreak_ " +
+                    "바라보는 방향으로 활을 3번 쏜다. _lineBreak_" +
+                    "화살 한 발당 피해량: _damageFlag_"+
+                    "화살 적중시 이 스킬의 쿨타임이 0.75초 감소한다.",
+            3.2f, Map.of(StatType.ATK, 0.2f, StatType.DEX,0.04f),
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            TripleShot.Cooltime,HorizenSweep.cooltimeReduceCoeffi, 0,
+            ""
+    ));
+    public static final Item DEX_50 = register("dex50", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "패시브", SkillsId.DEX_50.getSkillName(),
+            StatType.DEX,SkillsId.DEX_50.getSkillRequiredStatAmount(),
+            "활 적중시 1스택을 얻고 4스택일때 모든 스택을 소모하고 _lineBreak_" +
+                    "3 + 대상 최대체력의 5% 의 추가 피해를 입힌다.",
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            -1,0,0,
+            ""
+    ));
+    public static final Item DEX_75 = register("dex75", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.DEX_75.getSkillName(),
+            StatType.DEX,SkillsId.DEX_75.getSkillRequiredStatAmount(),
+            "사용시 60초 동안 이동속도가 10%, 명중률이 2%, 크리티컬 확률이 4% 증가한다. (최대 3회 중첩) _lineBreak_" +
+                    "적중시 이 스킬의 쿨타임이 3초 감소한다.",
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            FastAccurateAdvanced.cooltime,0,0,
+            ""
+    ));
+    public static final Item DEX_100 = register("dex100", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "패시브", SkillsId.DEX_100.getSkillName(),
+            StatType.DEX,SkillsId.DEX_100.getSkillRequiredStatAmount(),
+            "활 적중시 12초동안 공격속도가 5% 증가한다. (최대 15회 중첩) _lineBreak_",
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            -1,0,0,
+            ""
+    ));
+    public static final Item DEX_125 = register("dex125", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.DEX_125.getSkillName(),
+            StatType.DEX,SkillsId.DEX_125.getSkillRequiredStatAmount(),
+            "사용 즉시 최대 6초동안 그 자리에 고정되고 3초동안 차징을 시작한다. _lineBreak_" +
+                    "6초안에 스킬을 재사용하면 충전 시간에 비례하여 최대 3배까지 증가하는 저격탄을 발사한다. _lineBreak_" +
+                    "저격탄 최소 피해량: _damageFlag_  ",
+            10,Map.of(StatType.ATK, 1.8f),
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            Snipe.cooltime,0,0,
+            "저격탄 사정거리: 100(피해감소 거리:50)"
+    ));
+    public static final Item DEX_150 = register("dex150", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "패시브", SkillsId.DEX_150.getSkillName(),
+            StatType.DEX,SkillsId.DEX_150.getSkillRequiredStatAmount(),
+            "\"패시브: 거인학살자\" 에 2초동안 2 + 대상 최대 체력의 3%의 피해를 입히는 출혈 효과를 부여한다. _lineBreak_" +
+                    "출혈효과는 남은 피해+ 새로운 피해로 무한히 중첩된다.",
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            -1,0,0,
+            ""
+    ));
+    public static final Item DEX_175 = register("dex175", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.DEX_175.getSkillName(),
+            StatType.DEX,SkillsId.DEX_175.getSkillRequiredStatAmount(),
+            "이동속도가 60% 감소하고  _lineBreak_" +
+                    "_damageFlag_ 의 피해를 입히는 화살을 _barrierFlag_ 만큼 발사한다. _lineBreak_" +
+                    "화살을 발사할 때 마다 _healFlag_ 만큼 체력을 회복한다. _lineBreak_" +
+                    "적중시 이 스킬의 쿨타임이 1.5초 감소한다.",
+            StormsPoem.baseDamage,Map.of(StatType.ATK, StormsPoem.atkCoeffi),
+            1,Map.of(StatType.ATTACK_SPEED, 10f),
+            StormsPoem.baseHitHeal,Map.of(StatType.ATK, StormsPoem.hitHealAtkCoefficient),
+            StormsPoem.cooltime,0,0,
+            ""
+    ));
+    public static final Item LUK_1 = register("luk1", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.LUK_1.getSkillName(),
+            StatType.LUK,SkillsId.LUK_1.getSkillRequiredStatAmount(),
+            "전방으로 2번 도약한다.",
+            emptyValue, emptyMap,
+            emptyValue, emptyMap,
+            emptyValue,emptyMap,
+            StrJump.cooltime,0,0,
+            ""
+    ));
+    public static final Item LUK_25 = register("luk25", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.LUK_25.getSkillName(),
+            StatType.LUK,SkillsId.LUK_25.getSkillRequiredStatAmount(),
+            "활을 들고 있어야 사용가능 _lineBreak_ " +
+                    "바라보는 방향으로 활을 3번 쏜다. _lineBreak_" +
+                    "화살 한 발당 피해량: _damageFlag_"+
+                    "화살 적중시 이 스킬의 쿨타임이 0.75초 감소한다.",
+            3.2f, Map.of(StatType.ATK, 0.2f, StatType.DEX,0.04f),
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            TripleShot.Cooltime,HorizenSweep.cooltimeReduceCoeffi, 0,
+            ""
+    ));
+    public static final Item LUK_50 = register("luk50", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "패시브", SkillsId.LUK_50.getSkillName(),
+            StatType.LUK,SkillsId.LUK_50.getSkillRequiredStatAmount(),
+            "활 적중시 1스택을 얻고 4스택일때 모든 스택을 소모하고 _lineBreak_" +
+                    "3 + 대상 최대체력의 5% 의 추가 피해를 입힌다.",
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            -1,0,0,
+            ""
+    ));
+    public static final Item LUK_75 = register("luk75", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.LUK_75.getSkillName(),
+            StatType.LUK,SkillsId.LUK_75.getSkillRequiredStatAmount(),
+            "사용시 60초 동안 이동속도가 10%, 명중률이 2%, 크리티컬 확률이 4% 증가한다. (최대 3회 중첩) _lineBreak_" +
+                    "적중시 이 스킬의 쿨타임이 3초 감소한다.",
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            FastAccurateAdvanced.cooltime,0,0,
+            ""
+    ));
+    public static final Item LUK_100 = register("luk100", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "패시브", SkillsId.LUK_100.getSkillName(),
+            StatType.LUK,SkillsId.LUK_100.getSkillRequiredStatAmount(),
+            "활 적중시 12초동안 공격속도가 5% 증가한다. (최대 15회 중첩) _lineBreak_",
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            -1,0,0,
+            ""
+    ));
+    public static final Item LUK_125 = register("luk125", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.LUK_125.getSkillName(),
+            StatType.LUK,SkillsId.LUK_125.getSkillRequiredStatAmount(),
+            "사용 즉시 최대 6초동안 그 자리에 고정되고 3초동안 차징을 시작한다. _lineBreak_" +
+                    "6초안에 스킬을 재사용하면 충전 시간에 비례하여 최대 3배까지 증가하는 저격탄을 발사한다. _lineBreak_" +
+                    "저격탄 최소 피해량: _damageFlag_  ",
+            10,Map.of(StatType.ATK, 1.8f),
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            Snipe.cooltime,0,0,
+            "저격탄 사정거리: 100(피해감소 거리:50)"
+    ));
+    public static final Item LUK_150 = register("luk150", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "패시브", SkillsId.LUK_150.getSkillName(),
+            StatType.LUK,SkillsId.LUK_150.getSkillRequiredStatAmount(),
+            "\"패시브: 거인학살자\" 에 2초동안 2 + 대상 최대 체력의 3%의 피해를 입히는 출혈 효과를 부여한다. _lineBreak_" +
+                    "출혈효과는 남은 피해+ 새로운 피해로 무한히 중첩된다.",
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            emptyValue,emptyMap,
+            -1,0,0,
+            ""
+    ));
+    public static final Item LUK_175 = register("luk175", new SkillTooltipItem(
+            new FabricItemSettings(),
+            "액티브", SkillsId.LUK_175.getSkillName(),
+            StatType.LUK,SkillsId.LUK_175.getSkillRequiredStatAmount(),
+            "이동속도가 60% 감소하고  _lineBreak_" +
+                    "_damageFlag_ 의 피해를 입히는 화살을 _barrierFlag_ 만큼 발사한다. _lineBreak_" +
+                    "화살을 발사할 때 마다 _healFlag_ 만큼 체력을 회복한다. _lineBreak_" +
+                    "적중시 이 스킬의 쿨타임이 1.5초 감소한다.",
+            StormsPoem.baseDamage,Map.of(StatType.ATK, StormsPoem.atkCoeffi),
+            1,Map.of(StatType.ATTACK_SPEED, 10f),
+            StormsPoem.baseHitHeal,Map.of(StatType.ATK, StormsPoem.hitHealAtkCoefficient),
+            StormsPoem.cooltime,0,0,
+            ""
     ));
 
     public static Item register(String name, Item item){

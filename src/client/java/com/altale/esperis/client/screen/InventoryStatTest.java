@@ -84,7 +84,7 @@ public class InventoryStatTest {
                         ctx.getVertexConsumers(),
                         15728880
                 );
-                    } else if (statType== StatType.SPD || statType==StatType.ATTACK_SPEED) {
+                    } else if (statType== StatType.SPD ) {
                         double value= (finalStatComp.getFinalStat(statType)-1) *100 ;
                         String sign;
                         if(value>  0){
@@ -94,6 +94,16 @@ public class InventoryStatTest {
                         }
                         renderer.drawWithOutline(
                                 Text.literal(String.format("%s : %s%.2f%%",label,sign,value)).asOrderedText(),
+                                statBaseX,statBaseY,0xFFFFFF, // 글자색
+                                0x000000, // 테두리색
+                                matrices.peek().getPositionMatrix(),
+                                ctx.getVertexConsumers(),
+                                15728880
+                        );
+                    }else if ( statType==StatType.ATTACK_SPEED) {
+                        double value= (finalStatComp.getFinalStat(statType)) ;
+                        renderer.drawWithOutline(
+                                Text.literal(String.format("%s : %.3f",label,value)).asOrderedText(),
                                 statBaseX,statBaseY,0xFFFFFF, // 글자색
                                 0x000000, // 테두리색
                                 matrices.peek().getPositionMatrix(),
