@@ -28,10 +28,10 @@ import static com.altale.esperis.skills.statSkills.strSkill.HorizenSweepEffects.
 
 public class HorizenSweep {
     public static final String skillName= SkillsId.STR_25.getSkillName();
-    public static final float atkCoeffi = 0.75f;
+    public static final float atkCoeffi = 0.65f;
     public static final float baseDamage= 5.0f;
-    public static final float healAtkCoeffi = 0.14f;
-    public static final float baseHealAmount = 2f;
+    public static final float healAtkCoeffi = 0.2f;
+    public static final float baseHealAmount = 1.5f;
     public static final int cooltime = 100;
     public static final float delayReduceCoeffi = 100/5.0f;
     public static final float cooltimeReduceCoeffi = 0.3333f;
