@@ -3,8 +3,8 @@
 ## 모드 소개
 본 모드는 야생을 기반으로 하는 RPG 모드입니다.<br>
 야생과 적대적 몬스터와의 전투로 경험치를 얻어 레벨을 올려 받는 스탯 포인트(SP)를 STR, DEX, LUK, DUR 중에 원하는 스탯을 투자하여 캐릭터의 스펙을 올릴 수 있습니다.<br> <br>
-<img src="./infoimg/기본 화면.png" width=1024>
-<img src="./infoimg/inventory.png" width=1024>
+<img src="./infoImg/기본 화면.png" width=1024>
+<img src="./infoImg/inventory.png" width=1024>
 ## 모드 필수 설정
 <p style="font-size: large; font-weight: bold; color: red;" >/gamerule mobGriefing false (몹 폭발 블록 파괴 꺼짐) <br> /gamerule mobGriefing false (인벤 세이브 켜짐)</p>
 <h3> 플레이어 기본 스펙</h3>
