@@ -6,7 +6,7 @@
 <img src="./infoimg/기본 화면.png" width=1024>
 <img src="./infoimg/inventory.png" width=1024>
 ## 모드 필수 설정
-<p class="bold red">/gamerule mobGriefing false (몹 폭발 블록 파괴 꺼짐) <br> /gamerule mobGriefing false (인벤 세이브 켜짐)</p>
+<p style="font-size: large; font-weight: bold; color: red;" >/gamerule mobGriefing false (몹 폭발 블록 파괴 꺼짐) <br> /gamerule mobGriefing false (인벤 세이브 켜짐)</p>
 <h3> 플레이어 기본 스펙</h3>
 <ul>
 <li>체력: 25</li><li>공격력: 2</li><li>방어력: 20</li>
