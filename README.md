@@ -1,11 +1,4 @@
-<style>
-.bold{
-    font-weight: bold;
-}
-.red{
-    color:red;
-}
-</style>
+
 # EsperisRPGProject
 ## 모드 소개
 본 모드는 야생을 기반으로 하는 RPG 모드입니다.<br>
