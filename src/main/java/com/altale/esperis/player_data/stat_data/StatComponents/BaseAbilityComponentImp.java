@@ -13,14 +13,18 @@ import java.util.Map;
 public class BaseAbilityComponentImp implements BaseAbilityComponent, AutoSyncedComponent {
     private final PlayerEntity player;
     private final Map<StatType, Double> BaseAbilityMap = new EnumMap<StatType, Double>(StatType.class);
+    public static final double levelAtk =0.2;
     public static final double StrAtk = 0.1;
     public static final double DexAtk = 0.025;
     public static final double LukAtk = 0.05;
+    public static final double levelDef = 0.8;
     public static final double DurDef = 1;
+    public static final double levelHp = 5;
     public static final double StrHp = 0.5;
     public static final double DurHp = 1;
     public static final double DexSpd = 0.0015;
     public static final double LukSpd = 0.00077;
+    public static final double levelAs = 0.015;
     public static final double DexAs = 0.004;
     public static final double LukAs = 0.00177;
     public static final double LukCrit = 0.002;
@@ -66,22 +70,22 @@ public class BaseAbilityComponentImp implements BaseAbilityComponent, AutoSynced
         double totalDefPen= eqDefPen;
         double atk= (
                 2 + (totalStr * StrAtk) + (totalDex * DexAtk) + (totalLuk * LukAtk)
-                        + ( 0.2 * level)+ eqAtk
+                        + ( levelAtk * level)+ eqAtk
                 //무기로 얻는 스탯 넣기
         );
         double def= (
-                20+ level + (totalDur * DurDef) + eqDef
+                20+ (level * levelDef) + (totalDur * DurDef) + eqDef
                 //+무기 방어력 추가
         );
         double maxHp= (//20+레벨당5+str당 1+ dur당5+ 장비체력
-                25 + (5*level)+(StrHp*totalStr)+(DurHp*totalDur)+eqMaxHealth
+                25 + (level* levelHp)+(StrHp*totalStr)+(DurHp*totalDur)+eqMaxHealth
                 //+무기 체력 추가
         );
         double spd= (
                 1+(totalDex * DexSpd)+(totalLuk*LukSpd)+eqSpd
         );//1.025의 이동속도 계수를 가짐
         double as=(
-                1+ (level * 0.015)+(totalDex * DexAs) + (totalLuk*LukAs)+eqAs
+                1+ (level * levelAs)+(totalDex * DexAs) + (totalLuk*LukAs)+eqAs
         );
         double crit=Math.min(1.0,
                 0.05+ (totalLuk *LukCrit)+(totalDex * DexCrit) + eqCrit
