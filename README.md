@@ -55,8 +55,8 @@
 또한 공격/피격시 <span class="bold">레벨 차이에 비례한 추가 피해/데미지 감소</span>가 적용됩니다.
 <p class="red">사망시 경험치를 0~25% 잃습니다.</p>
 
-## Skill 정보
-### 스탯: STR
+# Skill 정보
+## 스탯: STR
 STR 1당 체력 + 0.5 , 공격력 + 0.1
 <br>
 <img src="./skill_tooltips/str/str1.png">
@@ -69,7 +69,7 @@ STR 1당 체력 + 0.5 , 공격력 + 0.1
 <img src="./skill_tooltips/str/str150.png"><br>
 <img src="./skill_tooltips/str/str175.png"><br>
 
-### 스탯: DEX
+## 스탯: DEX
 DEX 1당 공격력+ 0.025, 공격속도 + 0.4%, 이동속도 + 0.015%, 크리티컬확률 + 0.008%, 회피율 소폭 상승
 <br>
 <img src="./skill_tooltips/dex/dex1.png"><br>
@@ -84,7 +84,7 @@ DEX 1당 공격력+ 0.025, 공격속도 + 0.4%, 이동속도 + 0.015%, 크리티
 
 
 
-### 스탯:  LUK
+## 스탯:  LUK
 LUK 1당 공격력+ 0.025, 공격속도 + 0.0177%, 이동속도 + 0.0077%, 크리티컬확률 + 0.02%,크리티컬 데미지 + 0.1%, 회피율 상승
 <br>
 <img src="./skill_tooltips/luk/luk1.png"><br>
@@ -95,7 +95,7 @@ LUK 1당 공격력+ 0.025, 공격속도 + 0.0177%, 이동속도 + 0.0077%, 크�
 <img src="./skill_tooltips/luk/luk125.png"><br>
 <img src="./skill_tooltips/luk/luk150.png"><br>
 <img src="./skill_tooltips/luk/luk175.png"><br>
-### 스탯:  DUR
+## 스탯:  DUR
 DUR 1당 체력 + 1, 방어력 + 1
 <br>
 <img src="./skill_tooltips/dur/dur1.png"><br>
