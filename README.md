@@ -2,19 +2,20 @@
 # EsperisRPGProject
 ## 모드 소개
 본 모드는 야생을 기반으로 하는 RPG 모드입니다.<br>
-야생과 적대적 몬스터와의 전투로 경험치를 얻어 레벨을 올려 받는 스탯 포인트(SP)를 STR, DEX, LUK, DUR 중에 원하는 스탯을 투자하여 캐릭터의 스펙을 올릴 수 있습니다.<br> <br>
+야생과 적대적 몬스터와의 전투로 경험치를 얻어 레벨을 올려 받는 스탯 포인트(SP)를 STR, DEX, LUK, DUR 중에 원하는 스탯을 투자하여 캐릭터의 스펙을 올릴 수 있습니다.<br>
+<span style= "font-size: 18px;font-weight: bold; color: red;">이 모드에서는 저레벨 구간에서 적대적 몹과의 전투를 피하는 것을 강력히 추천합니다.</span>   <br>
 <img src="./infoImg/기본 화면.png" width=1024>
 <img src="./infoImg/inventory.png" width=1024>
 ## 모드 필수 설정
 <p style="font-size: large; font-weight: bold; color: red;" >/gamerule mobGriefing false (몹 폭발 블록 파괴 꺼짐) <br> /gamerule mobGriefing false (인벤 세이브 켜짐)</p>
 <h3> 플레이어 기본 스펙</h3>
 <ul>
-<li>체력: 25</li><li>공격력: 2</li><li>방어력: 20</li>
+<li>체력: 25</li><li>공격력: 2</li><li>방어력: 20 방어력 (피해 감소 공식 : 방어력/(100+방어력) ) </li>
 </ul>
 <br> 
 <h2>바닐라 마크와 다른 사항들</h2>
 <ul>
-    <li> 스폰되는 모든 엔티티의 체력, 공격력, 이동속도가 랜덤으로 증가합니다.</li>
+    <li> 스폰되는 모든 엔티티의 체력, 공격력, 이동속도가 랜덤으로 증가하고 체력에 비례하여 방어력이 증가합니다.</li>
     <li>마인크래프트 기본 방어구의 방어도 수치와 보호 관련 데미지 감소 인챈트는 적용되지 않고 캐릭터 방어력으로 인한 데미지 감소가 적용됩니다.</li>
     <li>모든 도구류의 공격력이 80% 감소하고, 활 차징 시간이 대폭 증가합니다.</li>
     <li>배고픔이 감소하지 않으며 4초마다 체력이 1 + 1% ❤ 만큼 회복합니다.</li>
@@ -48,9 +49,13 @@
 또한 공격/피격시 <span class="bold">레벨 차이에 비례한 추가 피해/데미지 감소</span>가 적용됩니다.
 <p class="red">사망시 경험치를 0~25% 잃습니다.</p>
 
-# Skill 정보
-## 스탯: STR
-STR 1당 체력 + 0.5 , 공격력 + 0.1
+# Stat 정보
+<h3> SP를 사용하여 스탯을 올릴 수 있으며, SP로 올린 스탯으로만 스킬을 해금할 수 있습니다.</h3>
+<img src="./infoImg/use_statPoint.png" width=936>
+<img src="./infoImg/use_statPoint2.png" width=938> <br>
+<h2>스탯: STR</h2>
+<h3>STR(힘) 공격과 방어의 균형이 잘 잡혀있는 밸런스형 스탯입니다. </h3>
+<h4>STR 1당 체력 + 0.5 , 공격력 + 0.1 </h4>
 <br>
 <img src="./skill_tooltips/str/str1.png">
 <br>
@@ -62,7 +67,8 @@ STR 1당 체력 + 0.5 , 공격력 + 0.1
 <img src="./skill_tooltips/str/str150.png"><br>
 <img src="./skill_tooltips/str/str175.png"><br>
 
-## 스탯: DEX
+<h2>스탯: DEX</h2>
+<h3>DEX(민첩) 스탯은 특수활을 사용하는 원거리 딜러 스탯으로 공격력, 공격속도, 치명타 확률이 필요한 왕귀형 스탯입니다.</h3>
 DEX 1당 공격력+ 0.025, 공격속도 + 0.4%, 이동속도 + 0.015%, 크리티컬확률 + 0.008%, 회피율 소폭 상승
 <br>
 <img src="./skill_tooltips/dex/dex1.png"><br>
@@ -77,7 +83,8 @@ DEX 1당 공격력+ 0.025, 공격속도 + 0.4%, 이동속도 + 0.015%, 크리티
 
 
 
-## 스탯:  LUK
+<h2>스탯: LUK</h2>
+<h3>LUK(운) 스탯은 출혈 부여와 스킬 쿨타임 초기화 매커니즘을 이용한 폭발적 단일 피해량을 가지는 스탯입니다.</h3>
 LUK 1당 공격력+ 0.025, 공격속도 + 0.0177%, 이동속도 + 0.0077%, 크리티컬확률 + 0.02%,크리티컬 데미지 + 0.1%, 회피율 상승
 <br>
 <img src="./skill_tooltips/luk/luk1.png"><br>
@@ -88,7 +95,8 @@ LUK 1당 공격력+ 0.025, 공격속도 + 0.0177%, 이동속도 + 0.0077%, 크�
 <img src="./skill_tooltips/luk/luk125.png"><br>
 <img src="./skill_tooltips/luk/luk150.png"><br>
 <img src="./skill_tooltips/luk/luk175.png"><br>
-## 스탯:  DUR
+<h2>스탯: DUR</h2>
+<h3>DUR(내구) 스탯은 매우 높은 내구력으로 높은 전투 지속력과 CC, 총공세를 이용한 전투 방식 변경을 가지는 탱커형 스탯입니다.</h3>
 DUR 1당 체력 + 1, 방어력 + 1
 <br>
 <img src="./skill_tooltips/dur/dur1.png"><br>
