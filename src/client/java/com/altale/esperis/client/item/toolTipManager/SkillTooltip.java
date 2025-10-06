@@ -59,7 +59,9 @@ public class SkillTooltip {
         if(player == null) return tooltips;
         PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
         Map<StatType, Double> statsMap = playerFinalStatComponent.getAllFinalStat();
-
+        tempLine.append(String.format("요구 스탯 : %s = %d",SkillTooltipManager.getRequireStatType(stack),SkillTooltipManager.getRequireStatAmount(stack)));
+        tooltips.add(tempLine);
+        tempLine= Text.literal("");
         if(SkillTooltipManager.getCooltime(stack) > 0){
             float cooltime = SkillTooltipManager.getCooltime(stack);
             if(SkillTooltipManager.getCooltimeReduceByAS(stack) > 0){

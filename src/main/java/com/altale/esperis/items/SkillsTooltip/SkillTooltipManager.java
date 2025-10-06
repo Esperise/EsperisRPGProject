@@ -85,6 +85,20 @@ public class SkillTooltipManager {
             skillTooltip.putString(SKILL_TOOLTIP_SKILL_TYPE, skillType);
         }
     }
+    public static String getRequireStatType(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return "";
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip= root.getCompound(SKILL_TOOLTIP);
+        NbtCompound requiredStatInfo= skillTooltip.getCompound(SKILL_TOOLTIP_REQUIRE_STATS);
+        return requiredStatInfo.getString(SKILL_TOOLTIP_REQUIRE_STATS_TYPE);
+    }
+    public static int getRequireStatAmount(ItemStack stack){
+        if(!hasSkillTooltip(stack)) return -1;
+        NbtCompound root = stack.getOrCreateNbt();
+        NbtCompound skillTooltip= root.getCompound(SKILL_TOOLTIP);
+        NbtCompound requiredStatInfo= skillTooltip.getCompound(SKILL_TOOLTIP_REQUIRE_STATS);
+        return requiredStatInfo.getInt(SKILL_TOOLTIP_REQUIRE_STATS_AMOUNT);
+    }
     public static void setCooltimeTooltip(ItemStack stack, int cooltimeTicks){
         if(!hasSkillTooltip(stack)) return;
         float cooltimeSeconds = Math.round(cooltimeTicks*100/20f)/100f;
