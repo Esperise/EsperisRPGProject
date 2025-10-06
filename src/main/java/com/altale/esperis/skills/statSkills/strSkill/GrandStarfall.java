@@ -23,7 +23,7 @@ public class GrandStarfall {
     public static final String skillName= SkillsId.STR_125.getSkillName();
     public static final float barrierAtkCoeffi= 0.8f;
     public static final float baseBarrierAmount= 10;
-    public static final int cooltime = 460;
+    public static final int cooltime = 560;
     public static void grandStarfall(ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
 

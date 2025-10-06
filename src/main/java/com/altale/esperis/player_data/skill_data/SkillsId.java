@@ -31,7 +31,7 @@ public enum SkillsId {
 
 
     LUK_1("트리플점프", StatType.LUK, 5),
-    LUK_25("더블스텝",StatType.LUK, 25),
+    LUK_25("트리플 스텝",StatType.LUK, 25),
     LUK_50("치명적 회복",StatType.LUK, 50),
     LUK_75("그림자이동",StatType.LUK, 75),
     LUK_100("출혈 폭발",StatType.LUK, 100),
@@ -45,7 +45,7 @@ public enum SkillsId {
     DUR_50("재생의 바람",StatType.DUR, 50),
     DUR_75("길을 여는 자",StatType.DUR, 75),
     DUR_100("방어 태세",StatType.DUR, 100),
-    DUR_125("절대 영도",StatType.DUR, 125),
+    DUR_125("혹한의 타격",StatType.DUR, 125),
     DUR_150("보호막 타격",StatType.DUR, 150),
     DUR_175("총공세",StatType.DUR, 175);
 

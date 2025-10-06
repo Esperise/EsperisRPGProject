@@ -33,7 +33,7 @@ public class DoubleStep {
     public static final String skillName= SkillsId.LUK_25.getSkillName();
     public static final int cooltime= 60;
     public static final float baseDamage= 1;
-    public static final float atkCoeffi = 0.37f;
+    public static final float atkCoeffi = 0.57f;
     public static final float baseDotDamage = 2.5f;
     public static final float dotAtkCoeffi= 0.77f;
 

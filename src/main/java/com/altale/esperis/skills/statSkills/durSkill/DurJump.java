@@ -22,13 +22,14 @@ public class DurJump {
     public static final float barrierAlloutAtkCoeffi = 0.6f;
     public static final int barrierDuration = 20;
     public static final int allloutCooltimeReducePercent = 40;
+    public static final int cooltime = 80;
 
     public static void durJump(ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
 
         }
         else{
-            CoolTimeManager.setCoolTime(player, skillName, 80);
+            CoolTimeManager.setCoolTime(player, skillName, cooltime);
             doDurJump(player, world);
         }
 

@@ -23,20 +23,22 @@ import net.minecraft.util.math.Vec3d;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-public class AbsoluteZero {
+public class ArcticSlam {
     public static final String skillName = SkillsId.DUR_125.getSkillName();
-    public static final int coolTime = 700;
-    public static final float baseDamage = 10;
-    public static final float alloutHealAtkCoeffi = 1f;
-    public static final float alloutBarrierAtkCoeffi = 3.5f;
-    public static final float barrierCount = 5;
-    public static final float barrierHpcoeffi = 0.2f;
-    public static final float damageHpCoeffi = 0.0007f;
-    public static final float damageDefCoeffi =  0.0007f;
-    public static final float alloutDamageHpCoeffi = 0.0001f;
-    public static final float alloutDamageAtkCoeffi = 0.023f;
+    public static final int cooltime = 700;
+    public static final float barrierHpcoeffi = 0.03f;
+    public static final float barrierAtkcoeffi = 0.5f;
+    public static final float damageHpCoeffi = 0.0006f;
+    public static final float damageDefCoeffi =  0.0008f;
+    public static final float damageAtkCoeffi =  0.016f;
+    public static final float damageHpPerSecondCoeffi = damageHpCoeffi *20;
+    public static final float damageDefPerSecondCoeffi =  damageDefCoeffi*20;
+    public static final float damageAtkPerSecondCoeffi =  damageAtkCoeffi *20;
+    public static final float maxDamageHpCoeffi = 0.06f;
+    public static final float maxDamageDefCoeffi =  0.08f;
+    public static final float maxDamageAtkCoeffi =  1.6f;
+//    public static final float alloutHealAtkCoeffi = 1.3f;
     public static final int repeats = 100;
-    public static final int selfCCDuration = 80;
     public static final int alloutSkillSpeed = 2;
     public static  int skillSpeed = 1;
 
@@ -53,35 +55,36 @@ public class AbsoluteZero {
             Box box = player.getBoundingBox().expand(radius, 10, radius);
             List<Entity> entities = player.getWorld().getOtherEntities(player, box);
             Vec3d pos = player.getEyePos();
-            float damage = baseDamage + ((hp* damageHpCoeffi + def *damageDefCoeffi)  * chargedTick);
+            float damage =  (( hp * damageHpCoeffi + def *damageDefCoeffi + atk* damageAtkCoeffi)  * Math.max(20,chargedTick));
             if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
-                damage = baseDamage + ((hp* alloutDamageHpCoeffi + atk * alloutDamageAtkCoeffi)  * chargedTick);
+                damage *= skillSpeed;
+            }
+            if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
+                AbilityBuff.giveBuff(player, "총공세:"+skillName, StatType.SPD, 70, 70, 0, 1);
             }
             for(Entity entity : entities) {
                 if (entity instanceof LivingEntity livingTarget) {
                     livingTarget.damage(livingTarget.getWorld().getDamageSources().playerAttack(player), damage);
-                    if(livingTarget instanceof PlayerEntity playerTarget) {
-                        CoolTimeManager.ccCoolTime((ServerPlayerEntity) playerTarget, selfCCDuration);
-                    }
                 }
             }
             world.spawnParticles(ParticleTypes.SNOWFLAKE, pos.x,pos.y, pos.z, 500 *(int) radius, radius, 0.5, radius, 0);
-            CoolTimeManager.setCoolTime(player, skillName, coolTime);
+            CoolTimeManager.setCoolTime(player, skillName, cooltime);
             Runnable deleteTask = ()->{
                 DelayedTaskManager.deleteTask(world, player, skillName);
             };
             DelayedTaskManager.addTask(world, player,deleteTask, 1, skillName+"delete", 20 );
 
-        }else if(!CoolTimeManager.isOnCoolTime(player, skillName)){
+        }else if(!CoolTimeManager.isOnCoolTime(player, skillName)){//스킬 사용시(쿨타임 아님)
             PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
             float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);
-            boolean allOutAttack = false;
-            float barrier= player.getMaxHealth() * barrierHpcoeffi;
+            boolean allOutAttack;
+            float barrier= player.getMaxHealth() *( barrierHpcoeffi) + atk* barrierAtkcoeffi;
             if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
                 allOutAttack = true;
-                player.heal(atk * alloutDamageHpCoeffi);
-                barrier=atk* alloutBarrierAtkCoeffi;
-                skillSpeed= alloutSkillSpeed;
+//                player.heal(atk * alloutHealAtkCoeffi);//총공세 상태일때 사용 즉시 체력 회복
+                skillSpeed= alloutSkillSpeed;//스킬 차징 속도 2배
+            } else {
+                allOutAttack = false;
             }
             List<Entity> nearby = player.getWorld().getOtherEntities(player, player.getBoundingBox().expand(10));
             for (Entity entity : nearby) {
@@ -95,7 +98,6 @@ public class AbsoluteZero {
             }
 
 
-            float finalBarrier = barrier;
             Vec3d pos = player.getPos();
             PlayerFinalStatComponent playerFinalStatComponent = PlayerFinalStatComponent.KEY.get(player);
             float hp =(float) playerFinalStatComponent.getFinalStat(StatType.MAX_HEALTH);
@@ -123,17 +125,20 @@ public class AbsoluteZero {
                     player.requestTeleportAndDismount(pos.x, pos.y, pos.z);
                     if(step % (20/skillSpeed) == 1){
                         String buffName= skillName+step;
-                        AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, finalBarrier/5, 120);
+                        AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, barrier /5, 120);
                         CoolTimeManager.ccCoolTime( player, 30);
                     }
                 }
                 else if(step == repeats -1 ){
                     String buffName= skillName+step;
-                    AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, finalBarrier/5, 120);
-                    CoolTimeManager.ccCoolTime( player, 30);
+                    AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, barrier /5, 120);
+//                    CoolTimeManager.ccCoolTime( player, 30);
+                    if(allOutAttack){
+                        AbilityBuff.giveBuff(player, "총공세:"+skillName, StatType.SPD, 70, 70, 0, 1);
+                    }
                     Box box = player.getBoundingBox().expand(radius, 5, radius);
                     List<Entity> entities = player.getWorld().getOtherEntities(player, box);
-                    float damage = 10 + (hp* 0.007f * step) + (def * 0.015f * step);
+                    float damage =  ((hp* damageHpCoeffi)  + (def * damageDefCoeffi) +(atk * damageAtkCoeffi)) * (step+1) * skillSpeed ;
                     for(Entity entity : entities) {
                         if (entity instanceof LivingEntity livingTarget) {
                             livingTarget.damage(livingTarget.getWorld().getDamageSources().playerAttack(player), damage);

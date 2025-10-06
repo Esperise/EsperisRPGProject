@@ -41,6 +41,8 @@ public class Snipe {
     public static final double maxDistance = 100;
     public static final double baseDamage = 10;
     public static final double atkCoeffi =1.8;
+    public static final double maxBaseDamage = 30;
+    public static final double maxAtkCoeffi =5.4;
 //    public static final double dexCoeffi = 0.02;
 
     public static void snipe(ServerPlayerEntity player, ServerWorld world) {

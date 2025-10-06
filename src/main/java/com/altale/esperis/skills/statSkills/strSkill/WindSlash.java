@@ -28,7 +28,7 @@ public class WindSlash {
     public static final String skillName = SkillsId.STR_75.getSkillName();
     public static final float atkCoeffi = 0.85f;
     public static final float baseDamage= 6.0f;
-    public static final float HpCoeffi= 0.06f;
+    public static final float HpCoeffi= 0.045f;
     public static final int cooltime = 280;
     public static final float cooltimeReduceCoeffi = 0.3333f;
     public static final int maxReducedCoolTime = 140;

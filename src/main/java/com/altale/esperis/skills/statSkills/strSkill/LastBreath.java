@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 public class LastBreath implements SkillsInterface {
     public static final String skillName = SkillsId.STR_175.getSkillName();
-    public static final int cooltime = 800;
+    public static final int cooltime = 1000;
     public static final  float atkCoeffi = 0.18f;//4번 적용됨, 총 1 + 평타 2-3번 가능 = 3.4
     public static final  float barrierAtkCoeffi = 0.24f;
     public static final  int keepAirTime = 40;

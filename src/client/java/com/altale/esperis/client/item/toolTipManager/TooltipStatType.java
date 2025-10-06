@@ -3,7 +3,7 @@ package com.altale.esperis.client.item.toolTipManager;
 public enum TooltipStatType {
     ATK("⚔"),
     DEF("🛡"),
-    MAX_HEALTH("♥"),
+    MAX_HEALTH("❤"),
     STR("STR"),
     DEX("DEX"),
     LUK("LUK"),

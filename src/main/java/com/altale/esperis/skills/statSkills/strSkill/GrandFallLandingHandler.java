@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.function.IntConsumer;
 
 public class GrandFallLandingHandler {
-    public static final float baseDamage= 10;
+    public static final float baseDamage= 15;
     public static final float hpCoeffi = 0.045f;
-    public static final float atkCoeffi = 1.44f;
+    public static final float atkCoeffi = 1.98f;
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {

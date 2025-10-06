@@ -32,8 +32,8 @@ public class SkillTooltip {
     public static String getSpecialCharByStatType(StatType statType){
         String specialChar;
         switch(statType){
-            case ATK -> specialChar = "⚔";
-            case DEF -> specialChar = "🛡";
+            case ATK -> specialChar = "🗡";
+            case DEF -> specialChar = "🔘";
             case STR -> specialChar = "힘";
             case DEX -> specialChar = "민첩";
             case LUK -> specialChar = "행운";
@@ -138,7 +138,11 @@ public class SkillTooltip {
     public static float calculateValue(Map<StatType, Double> statsMap,float baseValue, Map<StatType, Double> coefficientsMap){
         float totalValue =baseValue;
         for(StatType statType: coefficientsMap.keySet()){
-            totalValue += (float) (statsMap.get(statType) * coefficientsMap.get(statType));
+            double coefficientValue = coefficientsMap.get(statType);
+            if(statType.equals(StatType.AVD)){
+                coefficientValue *=100;
+            }
+            totalValue += (float) (statsMap.get(statType) * coefficientValue);
         }
         return totalValue;
     }
@@ -152,10 +156,11 @@ public class SkillTooltip {
         int count = 0;
         for(StatType statType : Objects.requireNonNull(coefficientsMap).keySet()) {
             count ++;
+            double coefficientsValue = coefficientsMap.get(statType) * 100;
             if(count >=2){
-                damageCoefficientString += String.format("+ %.1f%%%s", coefficientsMap.get(statType)*100, getSpecialCharByStatType(statType));
+                damageCoefficientString += String.format("+ %.1f%%%s", coefficientsValue, getSpecialCharByStatType(statType));
             }else{
-                damageCoefficientString += String.format("%.1f%%%s", coefficientsMap.get(statType)*100, getSpecialCharByStatType(statType));
+                damageCoefficientString += String.format("%.1f%%%s",coefficientsValue, getSpecialCharByStatType(statType));
             }
         }
         damageCoefficientString+=" )";

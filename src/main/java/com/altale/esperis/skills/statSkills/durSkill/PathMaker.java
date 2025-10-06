@@ -29,11 +29,12 @@ public class PathMaker {
     public static final int airborneDelay = 2;
     public static final int airborneDuration = 50 - airborneDelay;
     public static final float xzRange= 5.5f;
-    public static final float baseDamage = 12f;
-    public static final float hpCoeffi = 0.04f;
-    public static final float defCoeffi = 0.06f;
-    public static final float allOutAtkCoeffi = 2.3f;
+    public static final float baseDamage = 11f;
+    public static final float hpCoeffi = 0.027f;
+    public static final float defCoeffi = 0.046f;
+    public static final float allOutAtkCoeffi = 1.55f;
     public static final int cooltime = 200;
+    public static final float alloutHealPercent = 0.15f;
     public static void pathMaker( ServerPlayerEntity player, ServerWorld world) {
         if(CoolTimeManager.isOnCoolTime(player, skillName)){
 
@@ -110,7 +111,7 @@ public class PathMaker {
                                 );
                                 if (allOutAttack) {
                                     livingTarget.damage(livingTarget.getWorld().getDamageSources().playerAttack(player), damage);
-                                    player.heal(damage * 0.1f);
+                                    player.heal(damage * alloutHealPercent);
                                 }else{
                                     livingTarget.damage(livingTarget.getWorld().getDamageSources().playerAttack(player), damage);
                                     KnockedAirborneVer2.giveKnockedAirborneVer2(livingTarget, airborneDuration, airborneDelay);

@@ -28,10 +28,10 @@ import java.util.List;
 public class FatalBlitz {
     public  static final double maxDistance = 6.0;
     public  static final String skillName = SkillsId.LUK_125.getSkillName();
-    public static final float baseDotDamage = 5f;
-    public static final float dotDamageAtkCoeffi = 1.13f;
+    public static final float baseDotDamage = 7f;
+    public static final float dotDamageAtkCoeffi = 1.47f;
     public static final int shadowTeleportCooltimeReduceTick = 80;
-    public static final int dotDuration = 60;
+    public static final int dotDuration = 80;
     public static final int  cooltime = 160;
 
     public static void fatalBlitz(ServerPlayerEntity player, ServerWorld world) {

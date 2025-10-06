@@ -63,7 +63,7 @@ public class SkillManager {
             case DUR_1 -> DurJump.durJump(player, world);
             case DUR_25 -> GroundSlam.GroundSlam(player, world);
             case DUR_75 -> PathMaker.pathMaker(player, world);
-            case DUR_125 -> AbsoluteZero.earthQuake(player, world);
+            case DUR_125 -> ArcticSlam.earthQuake(player, world);
             case DUR_175 -> AllOutAttack.AllOutAttack(player, world);
         }
     }
