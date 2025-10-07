@@ -37,6 +37,12 @@
     </li>
     <br>
     <li>
+        <ul>
+            <span style="font-size: large" class="bold red"> 스킬 정보 보기 </span>
+            <li class="bold"> /skill : 모든 스킬 목록을 채팅창에 띄우며 마우스를 올리면 해당 스킬의 툴팁이 보입니다. </li>  <br>
+    </ul>
+    </li>
+    <li>
         <ul> 
             <span style="font-size: large" class="bold">기타</span> 
             <li>/비틱 : 현재 오른손에 들고 있는 아이템을 채팅으로 자랑합니다. 채팅에 올라온 아이템링크에 마우스를 올려놓으면 그 아이템의 정보가 보입니다.</li>

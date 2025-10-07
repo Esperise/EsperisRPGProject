@@ -15,9 +15,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class SkillTooltipItemRegister {
     public static final String MODID = "esperis";
@@ -429,6 +427,27 @@ public class SkillTooltipItemRegister {
             AllOutAttack.cooltime,0,0,
             ""
     ));
+    public static final List<Item> strList = new ArrayList<>(Arrays.asList(STR_1, STR_25, STR_50, STR_75,STR_100, STR_125, STR_150, STR_175));
+    public static final List<Item> dexList = new ArrayList<>(Arrays.asList(DEX_1, DEX_25, DEX_50, DEX_75, DEX_100, DEX_125, DEX_150, DEX_175));
+    public static final List<Item> lukList = new ArrayList<>(Arrays.asList(LUK_1, LUK_25, LUK_50, LUK_75, LUK_100, LUK_125, LUK_150, LUK_175));
+    public static final List<Item> durList = new ArrayList<>(Arrays.asList(DUR_1, DUR_25, DUR_50, DUR_75,DUR_100, DUR_125, DUR_150, DUR_175));
+    public static List<Item> getStatTypeSkillTooltipItems(StatType statType) {
+        switch (statType) {
+            case STR -> {
+                return strList;
+            }
+            case DEX -> {
+                return dexList;
+            }
+            case LUK -> {
+                return lukList;
+            }
+            case DUR -> {
+                return durList;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + statType);
+        }
+    }
 
     public static Item register(String name, Item item){
         MAP.put(name, item);
@@ -438,4 +457,5 @@ public class SkillTooltipItemRegister {
         MAP.forEach((name, item) -> Registry.register(Registries.ITEM, new Identifier(MODID, name), item));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> MAP.values().forEach(item -> entries.add(item.getDefaultStack())));
     }
+
 }

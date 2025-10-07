@@ -1,6 +1,7 @@
 package com.altale.esperis.commands;
 
 import com.altale.esperis.items.ModItems;
+import com.altale.esperis.items.SkillsTooltip.SkillTooltipItemRegister;
 import com.altale.esperis.player_data.level_data.PlayerLevelComponent;
 import com.altale.esperis.player_data.money_data.PlayerMoneyComponent;
 import com.altale.esperis.player_data.skill_data.PlayerSkillComponent;
@@ -19,6 +20,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -49,6 +51,7 @@ public class ModCommands {
         CommandRegistrationCallback.EVENT.register(ModCommands::setSkillKeyBinding);
         CommandRegistrationCallback.EVENT.register(ModCommands::registerSetShopItemInfo);
         CommandRegistrationCallback.EVENT.register(ModCommands::registerShowItemInfo);
+        CommandRegistrationCallback.EVENT.register(ModCommands::registerShowSkillInfo);
 
     }
 
@@ -68,7 +71,7 @@ public class ModCommands {
             CommandManager.RegistrationEnvironment env) {
 
         dispatcher.register(
-                literal("입금").requires(ctx -> ctx.hasPermissionLevel(1))
+                literal("입금").requires(ctx -> ctx.hasPermissionLevel(4))
                                 .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     PlayerMoneyComponent  component = PlayerMoneyComponent.KEY.get(Objects.requireNonNull(player));
@@ -424,6 +427,31 @@ public class ModCommands {
                         ctx.getSource().getServer().getPlayerManager().broadcast(msg, false);
                         return 1;
                     }
+                })
+        );
+
+    }
+    private static void registerShowSkillInfo(
+            CommandDispatcher<ServerCommandSource> dispatcher,
+            CommandRegistryAccess access,
+            CommandManager.RegistrationEnvironment env) {
+        dispatcher.register(
+                literal("skill").requires(ctx -> ctx.hasPermissionLevel(0)).executes(ctx->{
+                    PlayerEntity player = ctx.getSource().getPlayer();
+                    for(StatType statType : StatType.getNormalStatType()){
+                        List<Item> tooltipItems = SkillTooltipItemRegister.getStatTypeSkillTooltipItems(statType);
+                        player.sendMessage(Text.literal(String.format("================%s 스킬 목록================",statType.getDisplayName())), false);
+                        for(Item item : tooltipItems){
+                            ItemStack stack = item.getDefaultStack();
+                            Text msg = Text.empty()
+                                    .append(stack.toHoverableText().copy().formatted(Formatting.AQUA)); // ← 마우스 올리면 아이템 툴팁이 뜸
+
+                            player.sendMessage(msg, false);
+                        }
+
+                    }
+
+                    return 1;
                 })
         );
 

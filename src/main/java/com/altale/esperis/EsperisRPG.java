@@ -23,7 +23,7 @@ import com.altale.esperis.serverSide.Utilities.DelayedTaskManager;
 import com.altale.esperis.serverSide.Utilities.TickHandler;
 import com.altale.esperis.serverSide.packet.EquipmentAdditionalStatRerollRequestSender;
 import com.altale.esperis.serverSide.packet.ShowRerollGuiRequestReceiver;
-import com.altale.esperis.serverSide.packet.StatAddRequestReceiver;
+import com.altale.esperis.serverSide.packet.StatAddRequestReceiverAndSkillUnlock;
 import com.altale.esperis.serverSide.packet.StatUpdateRequestReceiver;
 import com.altale.esperis.skills.statSkills.strSkill.GrandFallLandingHandler;
 import com.altale.esperis.skills.buff.AbilityBuff;
@@ -68,7 +68,7 @@ public class EsperisRPG implements ModInitializer , EntityComponentInitializer {
 
         PlayerCustomExpSystem.register();
         StatUpdateRequestReceiver.register();
-        StatAddRequestReceiver.register();
+        StatAddRequestReceiverAndSkillUnlock.register();
 
         AvdDamage.register();
         CalculateDamage.register();
