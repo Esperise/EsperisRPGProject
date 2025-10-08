@@ -67,6 +67,7 @@
 <img src="./skill_tooltips/str/str1.png">
 <br>
 <img src="./skill_tooltips/str/str25.png"><br>
+[https://github.com/Esperise/EsperisRPGProject/commit/d023636c88c3cc5a18f62966706d111bae947590#commitcomment-167500792](https://github.com/user-attachments/assets/f0ca51dd-44cd-44e0-962b-32658ad20349)
 <img src="./skill_tooltips/str/str50.png"><br>
 <img src="./skill_tooltips/str/str75.png"><br>
 <img src="./skill_tooltips/str/str100.png"><br>
