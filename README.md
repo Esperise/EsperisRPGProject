@@ -167,9 +167,6 @@ LUK 1당 공격력+ 0.025, 공격속도 + 0.0177%, 이동속도 + 0.0077%, 크�
 <img src="./skill_tooltips/luk/luk1.png"><br>
 
 
-https://github.com/user-attachments/assets/b0b1ce14-26ef-49ba-b35d-e7160620563e
-
-
 <img src="./skill_tooltips/luk/luk25.png"><br>
 
 
