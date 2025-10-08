@@ -31,43 +31,48 @@ public class GrandFallLandingHandler {
                 if (PlayerFallHandler.grandStarFall(player)) {
                     if (player.isOnGround()) {
                         DelayedTaskManager.deleteTask(player.getServerWorld(), player,SkillsId.STR_75.getSkillName());
-                        // 파티클 효과
-                        PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
-                        float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);
-                        float hp = (float) finalStatComponent.getFinalStat(StatType.MAX_HEALTH);
-                        float damage = baseDamage+ ( hp*hpCoeffi + atk*atkCoeffi);
-                        List<Entity> nearby = player.getWorld().getOtherEntities(player, player.getBoundingBox().expand(15));
-                        for (Entity entity : nearby) {
-                            if (entity instanceof LivingEntity living) {
-                                DamageSource source = (player.getWorld()).getDamageSources().playerAttack(player);
-                                float distance = player.distanceTo(entity);
-                                float finaldamage = damage * Math.max(0.3f, (1.15f - (distance / 10 )) );
-                                int airborneDuration = (int) Math.max(10 , Math.min( 4.5 * distance, 50) );
-                                living.damage(source, finaldamage);
-                                KnockedAirborneVer2.giveKnockedAirborneVer2(living,airborneDuration,3);
+                        Runnable task1 = ()->{
+                            PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
+                            float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);
+                            float hp = (float) finalStatComponent.getFinalStat(StatType.MAX_HEALTH);
+                            float damage = baseDamage+ ( hp*hpCoeffi + atk*atkCoeffi);
+                            List<Entity> nearby = player.getWorld().getOtherEntities(player, player.getBoundingBox().expand(15));
+                            for (Entity entity : nearby) {
+                                if (entity instanceof LivingEntity living) {
+                                    DamageSource source = (player.getWorld()).getDamageSources().playerAttack(player);
+                                    float distance = player.distanceTo(entity);
+                                    float finaldamage = damage * Math.max(0.3f, (1.15f - (distance / 10 )) );
+                                    int airborneDuration = (int) Math.max(10 , Math.min( 4.5 * distance, 50) );
+                                    living.damage(source, finaldamage);
+                                    KnockedAirborneVer2.giveKnockedAirborneVer2(living,airborneDuration,3);
+                                }
                             }
-                        }
-                        IntConsumer action = ParticleHelper.expandingCircleXZ(
+                            IntConsumer action = ParticleHelper.expandingCircleXZ(
                                     (ServerWorld) player.getWorld(), player,
                                     new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.DIRT.getDefaultState()),  // 원하는 파티클로 교체 가능
                                     0.5, 0.475, 0.1, 180);
 
-                        Runnable task = ()->{
-                            for(int i =0 ; i < 1; i++){
-                                player.getWorld().playSound(
-                                        null,
-                                        player.getX(),
-                                        player.getY(),
-                                        player.getZ(),
-                                        SoundEvents.ENTITY_GENERIC_EXPLODE,
-                                        SoundCategory.PLAYERS,
-                                        15.0f,
-                                        1.0f
-                                );
-                            }
+                            Runnable task = ()->{
+                                for(int i =0 ; i < 1; i++){
+                                    player.getWorld().playSound(
+                                            null,
+                                            player.getX(),
+                                            player.getY(),
+                                            player.getZ(),
+                                            SoundEvents.ENTITY_GENERIC_EXPLODE,
+                                            SoundCategory.PLAYERS,
+                                            15.0f,
+                                            1.0f
+                                    );
+                                }
+                            };
+
+                            DelayedTaskManager.addTask(player.getServerWorld(),player, action, 1, "Earth Quake Effects", 20);
+                            DelayedTaskManager.addTask(player.getServerWorld(),player, task, 1, "Earth Quake Sounds", 10);
                         };
-                        DelayedTaskManager.addTask(player.getServerWorld(),player, action, 1, "Earth Quake Effects", 20);
-                        DelayedTaskManager.addTask(player.getServerWorld(),player, task, 1, "Earth Quake Sounds", 10);
+                        DelayedTaskManager.addTask(player.getServerWorld(),player,task1, 3,"Earth Quake Landing Delay",1);
+                        // 파티클 효과
+
 
                         PlayerFallHandler.consumeIgnoreFall(player);
                     }

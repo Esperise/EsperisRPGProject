@@ -46,9 +46,9 @@ public class GrandStarfall {
                         Vec3d velocity2;
                         System.out.println(look.y);
                         if(look.y >= 0.0f ){
-                            velocity2 = new Vec3d(0,  -10 ,0);
+                            velocity2 = new Vec3d(0,  -20 ,0);
                         }else{
-                            velocity2 = new Vec3d(look.x * 4, -10 + (look.y*5) , look.z * 4);
+                            velocity2 = new Vec3d(look.x * 4, -10 + (look.y*10) , look.z * 4);
                         }
                         player.addVelocity(velocity2.x, velocity2.y  , velocity2.z);
                         player.velocityModified = true;
@@ -64,7 +64,7 @@ public class GrandStarfall {
                 DelayedTaskManager.addTask(world, player,landingTask, 2, skillName+" Landing", 8 );
 
             }else{
-                Vec3d velocity = new Vec3d(0, 1.7f, 0);
+                Vec3d velocity = new Vec3d(0, 3f, 0);
                 player.addVelocity(0, velocity.y, 0);
                 player.velocityModified = true;
                 int repeats = 60;

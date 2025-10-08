@@ -43,7 +43,7 @@ public class FatalBlitz {
 
         }else{
             CoolTimeManager.setCoolTime(player, skillName, cooltime);
-            CoolTimeManager.specificCoolTimeReduction(player, skillName, shadowTeleportCooltimeReduceTick);
+            CoolTimeManager.specificCoolTimeReduction(player, SkillsId.LUK_75.getSkillName(), shadowTeleportCooltimeReduceTick);
             PlayerFinalStatComponent playerFinalStatComponent= PlayerFinalStatComponent.KEY.get(player);
             double atk= playerFinalStatComponent.getFinalStat(StatType.ATK);
             Vec3d cameraPos = player.getCameraPosVec(1.0F);

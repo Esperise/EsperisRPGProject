@@ -75,10 +75,11 @@ public class ArcticSlam {
             DelayedTaskManager.addTask(world, player,deleteTask, 1, skillName+"delete", 20 );
 
         }else if(!CoolTimeManager.isOnCoolTime(player, skillName)){//스킬 사용시(쿨타임 아님)
+            skillSpeed=1;
             PlayerFinalStatComponent finalStatComponent = PlayerFinalStatComponent.KEY.get(player);
             float atk = (float) finalStatComponent.getFinalStat(StatType.ATK);
             boolean allOutAttack;
-            float barrier= player.getMaxHealth() *( barrierHpcoeffi) + atk* barrierAtkcoeffi;
+            float barrier=  (player.getMaxHealth() * barrierHpcoeffi) + atk* barrierAtkcoeffi;
             if(AbilityBuff.hasBuff(player, SkillsId.DUR_175.getSkillName())){
                 allOutAttack = true;
 //                player.heal(atk * alloutHealAtkCoeffi);//총공세 상태일때 사용 즉시 체력 회복
@@ -104,9 +105,8 @@ public class ArcticSlam {
             float def =(float) playerFinalStatComponent.getFinalStat(StatType.DEF);
             IntConsumer task = step->{
                 float radius = 1+ (step * 0.14f) * skillSpeed;
-                if(step <= repeats-2){
+                if(step <= (repeats/skillSpeed)-2){
                     player.sendMessage(Text.literal(String.format( "재사용 가능 시간: %.2f ", Math.round(100* ( repeats-step-1)/20.0f)/(skillSpeed* 100f)) ), true);
-                    player.sendMessage(Text.literal( "radius "+ radius ), false);
                     player.requestTeleport(pos.x, pos.y, pos.z);
                     ParticleHelper.drawCircleXZ(world, pos, ParticleTypes.SNOWFLAKE, radius, (int) radius * 24);
                     Box box = player.getBoundingBox().expand(15, 4, 15);
@@ -125,13 +125,14 @@ public class ArcticSlam {
                     player.requestTeleportAndDismount(pos.x, pos.y, pos.z);
                     if(step % (20/skillSpeed) == 1){
                         String buffName= skillName+step;
-                        AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, barrier /5, 120);
+                        AbsorptionBuff.giveAbsorptionBuff(world, player, buffName+step, barrier, 120);
                         CoolTimeManager.ccCoolTime( player, 30);
                     }
                 }
-                else if(step == repeats -1 ){
+                else if(step == (repeats/skillSpeed) -1 ){
                     String buffName= skillName+step;
-                    AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, barrier /5, 120);
+                    CoolTimeManager.setCoolTime(player, skillName,cooltime);
+                    AbsorptionBuff.giveAbsorptionBuff(world, player, buffName, barrier , 120);
 //                    CoolTimeManager.ccCoolTime( player, 30);
                     if(allOutAttack){
                         AbilityBuff.giveBuff(player, "총공세:"+skillName, StatType.SPD, 70, 70, 0, 1);

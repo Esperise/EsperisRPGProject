@@ -33,9 +33,9 @@ public class PassiveBarrierBash {
             if(entity instanceof LivingEntity livingTarget){
                 livingTarget.damage(player.getWorld().getDamageSources().playerAttack(player), (atk*0.8f) +  (barrierAmount * 0.3f));
                 if(livingTarget instanceof PlayerEntity playerTarget){
-                    AbilityBuff.giveBuff(playerTarget, SkillsId.DUR_150.getSkillName(), StatType.SPD,10,-15,0,1);
+                    AbilityBuff.giveBuff(playerTarget, SkillsId.DUR_150.getSkillName(), StatType.SPD,30,-15,0,1);
                 }else{
-                    livingTarget.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 10, 0));
+                    livingTarget.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 30, 0));
                 }
             }
         }

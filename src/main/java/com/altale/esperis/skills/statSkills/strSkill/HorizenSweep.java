@@ -76,7 +76,7 @@ public class HorizenSweep {
         List<Entity> totalEntityList = player.getWorld().getOtherEntities(player, totalBox);
         int targets = totalEntityList.size();
         if( targets>0 ){
-            player.heal((baseHealAmount+healAtkCoeffi) *targets );
+            player.heal((baseHealAmount + (atk* healAtkCoeffi)) *targets );
         }
 // 2) 스케줄에 넘길 action: 매 틱 현재 step을 스윕에 전달 + 박스 계산
         IntConsumer action = step -> {
