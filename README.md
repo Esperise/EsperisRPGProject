@@ -19,7 +19,7 @@
     <li> 스폰되는 모든 엔티티의 체력, 공격력, 이동속도가 랜덤으로 증가하고 체력에 비례하여 방어력이 증가합니다.</li>
     <li>마인크래프트 기본 방어구의 방어도 수치와 보호 관련 데미지 감소 인챈트는 적용되지 않고 캐릭터 방어력으로 인한 데미지 감소가 적용됩니다.</li>
     <li>모든 도구류의 공격력이 80% 감소하고, 활 차징 시간이 대폭 증가합니다.</li>
-    <li>배고픔이 감소하지 않으며 4초마다 체력이 1 + 1% ❤ 만큼 회복합니다.</li>
+    <li>배고픔이 감소하지 않으며 4초마다 체력이 1 + 최대체력의 1% 만큼 회복합니다.</li>
 </ul>
 <h2>명령어</h2> 
 <ul>
@@ -67,13 +67,47 @@
 <img src="./skill_tooltips/str/str1.png">
 <br>
 <img src="./skill_tooltips/str/str25.png"><br>
-[https://github.com/Esperise/EsperisRPGProject/commit/d023636c88c3cc5a18f62966706d111bae947590#commitcomment-167500792](https://github.com/user-attachments/assets/f0ca51dd-44cd-44e0-962b-32658ad20349)
+
+
+https://github.com/user-attachments/assets/9d541ea9-947b-4c68-8510-7f9dfb191286
+
+
 <img src="./skill_tooltips/str/str50.png"><br>
+
+
+https://github.com/user-attachments/assets/f1b15c33-69c1-481a-8a9a-e4a9e08510fe
+
+
 <img src="./skill_tooltips/str/str75.png"><br>
+
+
+https://github.com/user-attachments/assets/df19ae4e-924f-4683-80f5-0bb05f75d7b6
+
+
 <img src="./skill_tooltips/str/str100.png"><br>
+
+
+https://github.com/user-attachments/assets/3b9194c2-42ed-42c5-8691-e9a8bcfb1917
+
+
 <img src="./skill_tooltips/str/str125.png"><br>
+
+
+https://github.com/user-attachments/assets/b1195d3d-415f-44d6-b55b-4177d9ce6cd5
+
+
 <img src="./skill_tooltips/str/str150.png"><br>
+
+
+https://github.com/user-attachments/assets/8a3a130d-04f8-4784-b431-6cf951e18851
+
+
 <img src="./skill_tooltips/str/str175.png"><br>
+
+
+https://github.com/user-attachments/assets/c1085a95-eb2a-4826-b7b0-159fd1ebcfc4
+
+
 
 <h2>스탯: DEX</h2>
 <h3>DEX(민첩) 스탯은 특수활을 사용하는 원거리 딜러 스탯으로 공격력, 공격속도, 치명타 확률이 필요한 왕귀형 스탯입니다.</h3>
@@ -81,12 +115,47 @@ DEX 1당 공격력+ 0.025, 공격속도 + 0.4%, 이동속도 + 0.015%, 크리티
 <br>
 <img src="./skill_tooltips/dex/dex1.png"><br>
 <img src="./skill_tooltips/dex/dex25.png"><br>
+
+
+https://github.com/user-attachments/assets/84bbd2f7-f598-4a36-abc0-4fd256c2d82f
+
+
 <img src="./skill_tooltips/dex/dex50.png"><br>
+
+
+https://github.com/user-attachments/assets/d0e0ddf1-83b0-4550-b53f-b3c8d299d717
+
+
 <img src="./skill_tooltips/dex/dex75.png"><br>
+
+
+https://github.com/user-attachments/assets/a62edbaf-e534-4157-ad98-8ae061655915
+
+
 <img src="./skill_tooltips/dex/dex100.png"><br>
+
+
+https://github.com/user-attachments/assets/685b5f48-06a4-49ba-8751-5ca2de839db9
+
+
 <img src="./skill_tooltips/dex/dex125.png"><br>
+
+
+https://github.com/user-attachments/assets/680221ce-4c75-4e7d-bb3e-2323e850a36d
+
+
 <img src="./skill_tooltips/dex/dex150.png"><br>
+
+
+https://github.com/user-attachments/assets/b591d917-a528-4177-866b-ea7351d91e80
+
+
 <img src="./skill_tooltips/dex/dex175.png"><br>
+
+
+https://github.com/user-attachments/assets/10b84885-bc93-4e81-91f3-26af2ee92f4e
+
+
 
 
 
@@ -96,22 +165,97 @@ DEX 1당 공격력+ 0.025, 공격속도 + 0.4%, 이동속도 + 0.015%, 크리티
 LUK 1당 공격력+ 0.025, 공격속도 + 0.0177%, 이동속도 + 0.0077%, 크리티컬확률 + 0.02%,크리티컬 데미지 + 0.1%, 회피율 상승
 <br>
 <img src="./skill_tooltips/luk/luk1.png"><br>
+
+
+https://github.com/user-attachments/assets/b0b1ce14-26ef-49ba-b35d-e7160620563e
+
+
 <img src="./skill_tooltips/luk/luk25.png"><br>
+
+
+https://github.com/user-attachments/assets/631986aa-840d-4deb-9c42-9d5680f48e8f
+
+
 <img src="./skill_tooltips/luk/luk50.png"><br>
+
+
+https://github.com/user-attachments/assets/a2b8f868-cedf-4e33-b6f3-ca51c261601d
+
+
 <img src="./skill_tooltips/luk/luk75.png"><br>
+
+
+https://github.com/user-attachments/assets/e6c28379-d059-49b0-94cb-b45a1233038e
+
+
 <img src="./skill_tooltips/luk/luk100.png"><br>
+
+
+https://github.com/user-attachments/assets/4710233b-e5c4-47d9-86ed-2a8f44130627
+
+
 <img src="./skill_tooltips/luk/luk125.png"><br>
+
+
+https://github.com/user-attachments/assets/4a044727-25be-4618-bc8c-508e1ac28b0a
+
+
 <img src="./skill_tooltips/luk/luk150.png"><br>
+
+
+https://github.com/user-attachments/assets/9033a6ca-488c-41d0-9ad1-1a19b8805f1d
+
+
 <img src="./skill_tooltips/luk/luk175.png"><br>
+
+
+https://github.com/user-attachments/assets/afc0d003-799b-453b-9788-bb9460bef4ee
+
+
 <h2>스탯: DUR</h2>
 <h3>DUR(내구) 스탯은 매우 높은 내구력으로 높은 전투 지속력과 CC, 총공세를 이용한 전투 방식 변경을 가지는 탱커형 스탯입니다.</h3>
 DUR 1당 체력 + 1, 방어력 + 1
 <br>
 <img src="./skill_tooltips/dur/dur1.png"><br>
 <img src="./skill_tooltips/dur/dur25.png"><br>
+
+
+https://github.com/user-attachments/assets/aa7353e1-9fcf-4116-808a-6d3a82259034
+
+
 <img src="./skill_tooltips/dur/dur50.png"><br>
+
+
+https://github.com/user-attachments/assets/02a2dd20-6272-4c28-9950-8eb62b4498ea
+
+
 <img src="./skill_tooltips/dur/dur75.png"><br>
+
+
+https://github.com/user-attachments/assets/e1ba3791-f028-4aad-bb43-1f6770322ba4
+
+
 <img src="./skill_tooltips/dur/dur100.png"><br>
+
+
+https://github.com/user-attachments/assets/e87814f7-7389-4919-8d5a-075fa941c449
+
+
 <img src="./skill_tooltips/dur/dur125.png"><br>
+
+
+https://github.com/user-attachments/assets/0541947b-dfdb-4645-be44-2d4ed3d8eb04
+
+
 <img src="./skill_tooltips/dur/dur150.png"><br>
+
+
+https://github.com/user-attachments/assets/71b0a099-b2fc-40f8-b3cb-5305be3fe374
+
+
 <img src="./skill_tooltips/dur/dur175.png"><br>
+
+
+https://github.com/user-attachments/assets/27612e28-da04-48b8-9ead-6358b0a4a993
+
+
