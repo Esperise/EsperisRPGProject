@@ -19,7 +19,7 @@ import java.util.Random;
 
 @Mixin(MobEntity.class)
 public abstract class MobEntityMixin {
-
+//a
     @Inject(method = "initialize", at = @At("TAIL"))
     private void multiplyMaxHealthOnSpawn(
             ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir
