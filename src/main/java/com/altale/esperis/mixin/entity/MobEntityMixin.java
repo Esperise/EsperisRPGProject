@@ -31,8 +31,8 @@ public abstract class MobEntityMixin {
         int atkBoost= 0;
         switch(currentDifficulty){
             case EASY ->{
-                hpBoost = self.getRandom().nextInt(8)+8;
-                atkBoost = self.getRandom().nextInt(5);
+                hpBoost = self.getRandom().nextInt(6)+8;
+                atkBoost = self.getRandom().nextInt(4)+1;
             }
             case NORMAL ->{
                 hpBoost = self.getRandom().nextInt(10)+10;

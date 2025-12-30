@@ -69,6 +69,17 @@
 <img src="./skill_tooltips/str/str1.png">
 <br>
 <img src="./skill_tooltips/str/str25.png"><br>
+<strong> '25. 12. 30 패치</strong><br>
+수평 베기 너프
+<div>
+<strong style="color: aliceblue">기본 데미지:</strong>
+<span style="text-decoration-line: line-through">5.0</span> -> <span style="color: red">3.5</span>
+<br>
+<strong style="color: aliceblue">공격력 계수:</strong>
+<span style="text-decoration-line: line-through">65%</span> -> <span style="color: red">50%</span>
+
+</div>
+
 
 
 https://github.com/user-attachments/assets/9d541ea9-947b-4c68-8510-7f9dfb191286
@@ -81,7 +92,19 @@ https://github.com/user-attachments/assets/f1b15c33-69c1-481a-8a9a-e4a9e08510fe
 
 
 <img src="./skill_tooltips/str/str75.png"><br>
+<strong> '25. 12. 30 패치</strong><br>
+바람 가르기 너프
+<div>
+<strong style="color: aliceblue">기본 데미지:</strong>
+<span style="text-decoration-line: line-through">6.0</span> -> <span style="color: red">4.0</span>
+<br>
+<strong style="color: aliceblue">공격력 계수:</strong>
+<span style="text-decoration-line: line-through">85%</span> -> <span style="color: red">70%</span>
+<br>
+<strong style="color: aliceblue">체력 계수:</strong>
+<span style="text-decoration-line: line-through">4.5%</span> -> <span style="color: red">3.6%</span>
 
+</div>
 
 https://github.com/user-attachments/assets/df19ae4e-924f-4683-80f5-0bb05f75d7b6
 
@@ -129,7 +152,12 @@ https://github.com/user-attachments/assets/d0e0ddf1-83b0-4550-b53f-b3c8d299d717
 
 
 <img src="./skill_tooltips/dex/dex75.png"><br>
-
+<strong> '25. 12. 30 패치</strong><br>
+신속 정확 고급 너프
+<div>
+<strong style="color: aliceblue">추가 이동 속도</strong>
+<span style="text-decoration-line: line-through">+10%</span> -> <span style="color: red">+2.5%</span>
+</div>
 
 https://github.com/user-attachments/assets/a62edbaf-e534-4157-ad98-8ae061655915
 
@@ -141,7 +169,13 @@ https://github.com/user-attachments/assets/685b5f48-06a4-49ba-8751-5ca2de839db9
 
 
 <img src="./skill_tooltips/dex/dex125.png"><br>
+<strong> '25. 12. 30 패치</strong><br>
+저격 버프
+<div>
+<strong style="color: aliceblue">스킬 쿨타임:</strong>
+<span style="text-decoration-line: line-through">25초</span> -> <span style="color: aqua">12초</span>
 
+</div>
 
 https://github.com/user-attachments/assets/680221ce-4c75-4e7d-bb3e-2323e850a36d
 

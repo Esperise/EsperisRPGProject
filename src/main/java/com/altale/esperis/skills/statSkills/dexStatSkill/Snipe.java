@@ -33,7 +33,7 @@ import java.util.function.IntConsumer;
 
 public class Snipe {
     public static final String skillName = SkillsId.DEX_125.getSkillName();
-    public static final int cooltime = 500;
+    public static final int cooltime = 240;
     public static final int maxAimingTime = 120;
     public static final int aimingMaxDamageTime = maxAimingTime / 2;
     public static final float aimingDamagePercentPerSecond = 100;

@@ -9,7 +9,7 @@ import net.minecraft.server.world.ServerWorld;
 
 public class FastAccurateAdvanced {
     public static final String skillName = SkillsId.DEX_75.getSkillName();
-    public static final double spdBuff = 0.1;
+    public static final double spdBuff = 0.025;
     public static final double accuracyBuff = 0.02;
     public static final double critBuff = 0.04;
     public static final int maxStack = 3;
