@@ -7,18 +7,18 @@
     "AvdMixin",
     "CalculateDamageMixin",
     "ExpMixin",
+    "FallDamageMixin",
     "HungerManagerMixin",
     "InvalidateModifyApplyDamage",
     "InvalidateShieldMixin",
     "ItemAttackDamageModifierIdAccessorMixin",
     "JumpCritInvalidationMixin",
     "LivingEntityMixin",
-    "entity.MobEntityMixin",
     "NormalBowAttackSpeedMixin",
     "VanillaToolDamageMixin",
+    "entity.MobEntityMixin",
     "entity.Creeper.CreeperMixin",
-    "entity.Creeper.CreeperMixin2",
-    "FallDamageMixin"
+    "entity.Creeper.CreeperMixin2"
   ],
   "injectors": {
     "defaultRequire": 1

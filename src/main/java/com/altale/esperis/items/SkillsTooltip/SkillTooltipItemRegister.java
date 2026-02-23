@@ -169,7 +169,7 @@ public class SkillTooltipItemRegister {
             new FabricItemSettings(),
             "액티브", SkillsId.DEX_75.getSkillName(),
             StatType.DEX,SkillsId.DEX_75.getSkillRequiredStatAmount(),
-            "사용시 60초 동안 이동속도가 10%, 명중률이 2%, 크리티컬 확률이 4% 증가한다. (최대 3회 중첩) _lineBreak_" +
+            "사용시 60초 동안 이동속도가 2.5%, 명중률이 2%, 크리티컬 확률이 4% 증가한다. (최대 3회 중첩) _lineBreak_" +
                     "적중시 이 스킬의 쿨타임이 3초 감소한다.",
             emptyValue,emptyMap,
             emptyValue,emptyMap,
